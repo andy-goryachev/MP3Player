@@ -1,5 +1,6 @@
 // Copyright © 2023 Andy Goryachev <andy@goryachev.com>
 package goryachev.mp3player;
+import goryachev.common.log.Log;
 import goryachev.common.util.D;
 import goryachev.fx.CPane;
 import goryachev.fx.FxButton;
@@ -19,11 +20,21 @@ import javafx.stage.Stage;
  */
 public class MP3PlayerApp extends Application
 {
+	private static MusicRepo repo;
 	private MediaPlayer player;
 	
 	
 	public static void main(String[] args) 
 	{
+		// init logging
+		Log.initConsoleForDebug();
+		
+		// try and catch, show swing dialog if failed to launch
+		// check database, show set up dialog if not found
+		// setup: source directory, db directory
+		String dir = "D:/Music";
+		repo = MusicRepo.load(dir);
+		
 		Application.launch(MP3PlayerApp.class, args);
 	}
 	
@@ -50,7 +61,8 @@ public class MP3PlayerApp extends Application
 		stage.setHeight(200);
 		stage.show();
 		
-		String path = "D:/Music/Russian/А/Полина Агуреева/d2/Полина Агуреева - В этой роще берёзовой.mp3";
+		// ha, does not play ogg
+		String path = "user.data/sample.ogg";
 		Media media = new Media(new File(path).toURI().toString());
 		D.print(media.getMetadata());
 		
