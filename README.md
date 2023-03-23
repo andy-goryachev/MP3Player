@@ -1,3 +1,5 @@
 # MP3Player
 
-A Simple MP3 Player.  Work in progress.
+A simple MP3 player, a modern version of an older project.
+
+Work in progress.
