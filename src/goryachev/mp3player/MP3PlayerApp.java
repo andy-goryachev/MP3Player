@@ -1,5 +1,5 @@
 // Copyright © 2023 Andy Goryachev <andy@goryachev.com>
-package research.media;
+package goryachev.mp3player;
 import goryachev.common.util.D;
 import goryachev.fx.CPane;
 import goryachev.fx.FxButton;
@@ -15,16 +15,16 @@ import javafx.stage.Stage;
 
 
 /**
- * MP3Player.
+ * MP3 Player Application.
  */
-public class MP3Player extends Application
+public class MP3PlayerApp extends Application
 {
 	private MediaPlayer player;
 	
 	
 	public static void main(String[] args) 
 	{
-		Application.launch(MP3Player.class, args);
+		Application.launch(MP3PlayerApp.class, args);
 	}
 	
 	

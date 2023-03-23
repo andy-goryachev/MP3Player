@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Copyright © 2016-2021 Andy Goryachev <andy@goryachev.com> -->
+<!-- Copyright © 2016-203 Andy Goryachev <andy@goryachev.com> -->
 
 
 <project default="build-all" basedir=".">
 
 	<!-- project name -->
 	<property name="TARGET" value="MP3Player"/>
-	<property name="MAIN_CLASS" value="goryachev.player.MP3PlayerApp"/>
+	<property name="MAIN_CLASS" value="goryachev.mp3player.MP3PlayerApp"/>
 	
 	<!-- libraries -->
 	<path id="libs">
