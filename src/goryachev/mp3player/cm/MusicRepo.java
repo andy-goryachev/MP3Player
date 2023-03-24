@@ -3,9 +3,15 @@ package goryachev.mp3player.cm;
 import goryachev.common.log.Log;
 import goryachev.common.util.CKit;
 import goryachev.common.util.CList;
+import goryachev.common.util.SB;
+import goryachev.mp3player.TrackInfo;
 import goryachev.mp3player.util.ID3_Info;
 import goryachev.mp3player.util.Utils;
 import java.io.File;
+import java.security.SecureRandom;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
 
 
 /**
@@ -15,13 +21,15 @@ public class MusicRepo
 {
 	private static final Log log = Log.get("MusicRepo");
 	private final File root;
-	private final CList<Entry> entries = new CList<>();
+	private final CList<Album> albums = new CList<>();
+	private final SecureRandom random;
 	private int trackCount;
 	
 	
 	public MusicRepo(File root)
 	{
 		this.root = root;
+		this.random = new SecureRandom();
 	}
 	
 	
@@ -84,7 +92,7 @@ public class MusicRepo
 				if(ts != null)
 				{
 					Track[] tracks = CKit.toArray(Track.class, ts);
-					entries.add(new Entry(tracks));
+					albums.add(new Album(trackCount, tracks));
 					trackCount += tracks.length;
 					log.info("%s: %d", dir, tracks.length);
 				}
@@ -124,13 +132,15 @@ public class MusicRepo
 	//
 
 
-	protected static class Entry
+	protected static class Album
 	{
+		public final int index;
 		public final Track[] tracks;
 		
 		
-		public Entry(Track[] tracks)
+		public Album(int index, Track[] tracks)
 		{
+			this.index = index;
 			this.tracks = tracks;
 		}
 	}
@@ -159,13 +169,125 @@ public class MusicRepo
 		
 		public String toString()
 		{
-			return
-				"{title=" + title +
-				", artist=" + artist +
-				", album=" + album +
-				", year=" + year +
-				", file=" + file +
-				"}";
+			SB sb = new SB();
+			sb.append("{");
+			boolean sep = false;
+			
+			if(title != null)
+			{
+				sb.append("title=").append(title);
+				sep = true;
+			}
+			
+			if(artist != null)
+			{
+				if(sep)
+				{
+					sb.append(", ");
+				}
+				sb.append("artist=").append(artist);
+				sep = true;
+			}
+			
+			if(album != null)
+			{
+				if(sep)
+				{
+					sb.append(", ");
+				}
+				sb.append("album=").append(album);
+				sep = true;
+			}
+			
+			if(year != null)
+			{
+				if(sep)
+				{
+					sb.append(", ");
+				}
+				sb.append("year=").append(year);
+				sep = true;
+			}
+			
+			if(sep)
+			{
+				sb.append(", ");
+			}
+			sb.append("file=").append(file);
+			
+			return sb.toString();
 		}
+	}
+
+
+	public TrackInfo randomJump()
+	{
+		int ix = random.nextInt(trackCount);
+		TrackInfo t = getTrackAt(ix);
+		return t;
+	}
+	
+	
+	protected TrackInfo getTrackAt(int index)
+	{
+		int ix = binarySearch(index);
+		Album a = albums.get(ix);
+		int tix = index - a.index;
+		Track t = a.tracks[tix];
+		return trackInfo(t, ix, tix);
+	}
+
+
+	protected TrackInfo trackInfo(Track t, int ix, int tix)
+	{
+		return new TrackInfo()
+		{
+			public File getFile()
+			{
+				return t.file;
+			}
+		};
+	}
+
+
+	protected int binarySearch(int index)
+	{
+		int low = 0;
+		int high = albums.size() - 1;
+
+		while(low <= high)
+		{
+			int mid = (low + high) >>> 1;
+			Album a = albums.get(mid);
+			int cmp = compare(a, index);
+			if(cmp < 0)
+			{
+				low = mid + 1;
+			}
+			else if(cmp > 0)
+			{
+				high = mid - 1;
+			}
+			else
+			{
+				return mid;
+			}
+		}
+		return -(low + 1);
+	}
+
+
+	protected int compare(Album a, int index)
+	{
+		int ix = index - a.index; 
+		if(ix > a.tracks.length)
+		{
+			return -1;
+		}
+		else if(ix < 0)
+		{
+			return 1;
+		}
+		return 0;
 	}
 }

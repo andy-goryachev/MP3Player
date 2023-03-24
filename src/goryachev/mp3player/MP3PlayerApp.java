@@ -39,7 +39,17 @@ public class MP3PlayerApp extends Application
 	}
 	
 	
-	public void start(Stage stage) throws Exception
+	public void start(Stage s) throws Exception
+	{
+		MainWindow w = new MainWindow(repo);
+		w.open();
+		w.jump();
+		// TODO play saved track or jump
+	}
+	
+	
+	// FIX
+	public void start2(Stage stage) throws Exception
 	{
 		FxButton playButton = new FxButton("Play", this::playPause);
 
