@@ -137,7 +137,10 @@ public class MainWindow extends FxWindow
 		
 		Media media = new Media(f.toURI().toString());
 				
-		stop();
+		if(player != null)
+		{
+			player.dispose();
+		}
 		
 		MediaPlayer p = new MediaPlayer(media);
 		p.currentTimeProperty().addListener((s,pr,c) ->

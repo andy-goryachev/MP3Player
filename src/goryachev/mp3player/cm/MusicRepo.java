@@ -277,10 +277,10 @@ public class MusicRepo
 	}
 
 
-	protected int compare(Album a, int index)
+	protected static int compare(Album a, int index)
 	{
 		int ix = index - a.index; 
-		if(ix > a.tracks.length)
+		if(ix >= a.tracks.length)
 		{
 			return -1;
 		}
