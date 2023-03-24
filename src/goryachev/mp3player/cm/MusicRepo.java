@@ -290,4 +290,11 @@ public class MusicRepo
 		}
 		return 0;
 	}
+
+
+	public TrackInfo nextTrack(TrackInfo t)
+	{
+		// FIX
+		return randomJump();
+	}
 }

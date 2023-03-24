@@ -20,6 +20,7 @@ public class MainWindow extends FxWindow
 	protected final MusicRepo repo;
 	protected final Slider timeSlider;
 	private MediaPlayer player;
+	private TrackInfo currentTrack;
 
 	
 	public MainWindow(MusicRepo r)
@@ -127,6 +128,8 @@ public class MainWindow extends FxWindow
 	public void nextTrack()
 	{
 		// TODO
+		TrackInfo t = repo.nextTrack(currentTrack);
+		play(t);
 	}
 	
 	
@@ -147,6 +150,11 @@ public class MainWindow extends FxWindow
 		{
 			timeSlider.setValue(player.getCurrentTime().toMillis() / player.getTotalDuration().toMillis() * 100);
 		});
+		p.setOnEndOfMedia(() ->
+		{
+			nextTrack();
+		});
+		currentTrack = t;
 		p.play();
 		player = p;
 	}
