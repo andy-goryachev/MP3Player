@@ -4,6 +4,7 @@ import goryachev.common.log.Log;
 import goryachev.common.util.D;
 import goryachev.fx.CPane;
 import goryachev.fx.FxButton;
+import goryachev.mp3player.cm.MusicRepo;
 import java.io.File;
 import javafx.application.Application;
 import javafx.scene.Scene;
