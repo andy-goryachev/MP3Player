@@ -3,7 +3,6 @@ package goryachev.mp3player;
 import java.io.RandomAccessFile;
 
 
-
 // Class parses ID3 v1 tag data
 /*
  3 (0-2)    Tag identification. Must contain 'TAG' if tag exists and is correct.
@@ -21,33 +20,25 @@ public class ID3v1Info
 	{
 		if(tag.length == 128)
 		{
-			title   = parse(tag,3,30);
-			artist  = parse(tag,33,30);
-			album   = parse(tag,63,30);
-			year    = parse(tag,93,4);
+			title = parse(tag, 3, 30);
+			artist = parse(tag, 33, 30);
+			album = parse(tag, 63, 30);
+			year = parse(tag, 93, 4);
 			//comment = parse(tag,97,30);
 		}
 	}
-	
-	
+
+
 	protected String parse(byte[] tag, int offset, int length)
 	{
-		String s;
 		try
 		{
-			s = new String(tag,offset,length,DEFAULT_ENCODING).trim();
-		} 
+			return new String(tag, offset, length, DEFAULT_ENCODING).trim();
+		}
 		catch(Exception e)
 		{
-			// will never happen
-			s = null;
+			return null;
 		}
-		
-		if(isRussian(s))
-		{
-			s = toRussian(s);
-		}
-		return s;
 	}
 
 
@@ -59,11 +50,11 @@ public class ID3v1Info
 			long length = in.length();
 			if(length >= 128)
 			{
-				in.seek(length-128);
+				in.seek(length - 128);
 				byte[] tag = new byte[128];
 				in.read(tag);
-				
-				if((tag[0]=='T') && (tag[1]=='A') && (tag[2]=='G'))
+
+				if((tag[0] == 'T') && (tag[1] == 'A') && (tag[2] == 'G'))
 				{
 					// it's a valid IDv1 tag
 					return new ID3v1Info(tag);
@@ -73,7 +64,7 @@ public class ID3v1Info
 		catch(Throwable e)
 		{
 		}
-		
+
 		return null;
 	}
 }

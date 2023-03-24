@@ -56,7 +56,7 @@ public class MusicRepo
 					}
 				}
 				
-				CList<File> ts = null;
+				CList<Track> ts = null;
 				for(File f: fs)
 				{
 					if(Utils.isMP3(f))
@@ -65,14 +65,23 @@ public class MusicRepo
 						{
 							ts = new CList<>();
 						}
-						ts.add(f);
-						// TODO scan tags
+
+						Track t = extractTrackInfo(f);
+						if(t == null)
+						{
+							log.warn("NO TAG " + f);
+						}
+						else
+						{
+							log.info(t);
+							ts.add(t);
+						}
 					}
 				}
 				
 				if(ts != null)
 				{
-					File[] tracks = CKit.toArray(File.class, ts);
+					Track[] tracks = CKit.toArray(Track.class, ts);
 					entries.add(new Entry(tracks));
 					trackCount += tracks.length;
 					log.info("%s: %d", dir, tracks.length);
@@ -82,17 +91,79 @@ public class MusicRepo
 	}
 	
 	
+	protected Track extractTrackInfo(File f)
+	{
+		ID3_Info t = ID3_Info.parseID3(f);
+		
+		String title;
+		String artist;
+		String album;
+		String year;
+		
+		if(t == null)
+		{
+			title = null;
+			artist = null;
+			album = null;
+			year = null;
+		}
+		else
+		{
+			title = t.getTitle();
+			artist = t.getArtist();
+			album = t.getAlbum();
+			year = t.getYear();
+		}
+		
+		return new Track(f, title, artist, album, year);
+	}
+	
+	
 	//
-	
-	
+
+
 	protected static class Entry
 	{
-		public final File[] tracks;
+		public final Track[] tracks;
 		
 		
-		public Entry(File[] tracks)
+		public Entry(Track[] tracks)
 		{
 			this.tracks = tracks;
+		}
+	}
+	
+	
+	//
+	
+	protected static class Track
+	{
+		public final File file;
+		public final String title;
+		public final String artist;
+		public final String album;
+		public final String year;
+		
+		
+		public Track(File f, String title, String artist, String album, String year)
+		{
+			this.file = f;
+			this.title = title;
+			this.artist = artist;
+			this.album = album;
+			this.year = year;
+		}
+		
+		
+		public String toString()
+		{
+			return
+				"{title=" + title +
+				", artist=" + artist +
+				", album=" + album +
+				", year=" + year +
+				", file=" + file +
+				"}";
 		}
 	}
 }

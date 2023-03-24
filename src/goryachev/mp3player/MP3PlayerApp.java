@@ -6,7 +6,6 @@ import goryachev.fx.CPane;
 import goryachev.fx.FxButton;
 import java.io.File;
 import javafx.application.Application;
-import javafx.application.Platform;
 import javafx.scene.Scene;
 import javafx.scene.control.Slider;
 import javafx.scene.layout.HBox;
@@ -70,11 +69,8 @@ public class MP3PlayerApp extends Application
 		player.play();
 		player.currentTimeProperty().addListener((s,pr,c) ->
 		{
-			D.print(c, Platform.isFxApplicationThread());
 			timeSlider.setValue(player.getCurrentTime().toMillis() / player.getTotalDuration().toMillis() * 100);
 		});
-//		MediaView v = new MediaView();
-//		v.setMediaPlayer(player);
 	}
 	
 	

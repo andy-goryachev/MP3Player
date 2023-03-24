@@ -143,8 +143,7 @@ public class ID3v2Info
 	extends ID3_Info
 {
 	// position in random access file is already set right after the header
-	public ID3v2Info(RandomAccessFile in) 
-		throws Exception
+	public ID3v2Info(RandomAccessFile in) throws Exception
 	{
 		int flags = in.read();
 		int size = syncSafeInt(in);
@@ -226,8 +225,7 @@ public class ID3v2Info
 		  Terminated with $00 00.
 	$03   UTF-8 [UTF-8] encoded Unicode [UNICODE]. Terminated with $00.
 	*/
-	protected String readString(RandomAccessFile in, int frameSize) 
-		throws Exception
+	protected String readString(RandomAccessFile in, int frameSize) throws Exception
 	{
 		String enc;
 		
@@ -250,13 +248,7 @@ public class ID3v2Info
 		
 		byte[] buf = new byte[frameSize-1];
 		in.read(buf);
-		
-		String s = new String(buf,enc).trim();
-		if(isRussian(s))
-		{
-			s = toRussian(s);
-		}
-		return s;
+		return new String(buf,enc).trim();
 	}
 
 
