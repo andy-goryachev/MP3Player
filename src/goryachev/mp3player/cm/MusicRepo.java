@@ -30,10 +30,10 @@ public class MusicRepo
 	}
 	
 	
-	public static MusicRepo load(String dir)
+	public static MusicRepo load(File musicDir, File repoDir)
 	{
-		File root = new File(dir);
-		MusicRepo r = new MusicRepo(root);
+		// TODO load db
+		MusicRepo r = new MusicRepo(musicDir);
 		r.load();
 		return r;
 	}
@@ -146,9 +146,9 @@ public class MusicRepo
 
 	protected Track trackInfo(RAlbum a, RTrack t, int ix, int tix)
 	{
-		Album album = new Album(ix, a.trackCount(), a.getName(), a.getDir());
+		Album album = new Album(ix, a);
 		String name = t.getName();
-		return new Track(ix, tix, album, name, t.file);
+		return new Track(album, tix, name, t.file.getName());
 	}
 
 

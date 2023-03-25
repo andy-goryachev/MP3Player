@@ -6,7 +6,7 @@ import java.io.File;
 /**
  * Repository Album.
  */
-class RAlbum
+public class RAlbum
 {
 	private final File dir;
 	public final int index;
@@ -37,5 +37,17 @@ class RAlbum
 	public File getDir()
 	{
 		return dir;
+	}
+	
+	
+	public String getArtist()
+	{
+		return null; // TODO
+	}
+
+
+	public String getYear()
+	{
+		return null; // TODO
 	}
 }

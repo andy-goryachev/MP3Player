@@ -1,5 +1,6 @@
 // Copyright © 2023 Andy Goryachev <andy@goryachev.com>
 package goryachev.mp3player;
+import goryachev.mp3player.cm.RAlbum;
 import java.io.File;
 
 
@@ -8,23 +9,43 @@ import java.io.File;
  */
 public class Album
 {
-	private final int albumIndex;
-	private final int trackCount;
-	private final String name;
-	private final File dir;
+	private final int index;
+	private final RAlbum album;
 	
 	
-	public Album(int albumIndex, int trackCount, String name, File dir)
+	public Album(int albumIndex, RAlbum a)
 	{
-		this.albumIndex = albumIndex;
-		this.trackCount = trackCount;
-		this.name = name;
-		this.dir = dir;
+		this.index = albumIndex;
+		this.album = a;
 	}
 	
 	
 	public int getTrackCount()
 	{
-		return trackCount;
+		return album.trackCount();
+	}
+
+
+	public File getDir()
+	{
+		return album.getDir();
+	}
+
+
+	public String getName()
+	{
+		return album.getName();
+	}
+
+
+	public String getArtist()
+	{
+		return album.getArtist();
+	}
+
+
+	public String getYear()
+	{
+		return album.getYear();
 	}
 }

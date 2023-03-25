@@ -2,6 +2,7 @@
 package goryachev.mp3player;
 import goryachev.common.log.Log;
 import goryachev.fx.CPane;
+import goryachev.fx.FX;
 import goryachev.fx.FxButton;
 import goryachev.fx.FxWindow;
 import goryachev.mp3player.cm.MusicRepo;
@@ -12,6 +13,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.Slider;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
+import javafx.scene.paint.Color;
 import javafx.util.Duration;
 
 
@@ -21,7 +23,12 @@ import javafx.util.Duration;
 public class MainWindow extends FxWindow
 {
 	protected static final Log log = Log.get("MainWindow");
-	protected final MusicRepo repo;
+	protected MusicRepo repo;
+	protected final Label artField;
+	protected final Label trackNameField;
+	protected final Label albumField;
+	protected final Label artistField;
+	protected final Label yearField;
 	protected final Label trackField;
 	protected final Label timeField;
 	protected final Label durationField;
@@ -31,13 +38,29 @@ public class MainWindow extends FxWindow
 	
 
 	
-	public MainWindow(MusicRepo r)
+	public MainWindow()
 	{
 		super("MainWindow");
-		this.repo = r;
 		setTitle("Player");
+
+		artField = new Label();
+		artField.setId("artField");
+		artField.setBackground(FX.background(Color.GRAY));
+
+		trackNameField = new Label("Track Name");
+		trackNameField.setId("trackNameField");
+		trackNameField.setStyle("-fx-font-weight:bold; -fx-font-size:150%;");
 		
-		trackField = new Label("1/1");
+		albumField = new Label("Album");
+		albumField.setId("albumField");
+		
+		artistField = new Label("Artist");
+		artistField.setId("artistField");
+		
+		yearField = new Label("2023");
+		yearField.setId("yearField");
+		
+		trackField = new Label();
 		trackField.setId("trackField");
 		
 		timeField = new Label("00:00");
@@ -53,15 +76,33 @@ public class MainWindow extends FxWindow
 			handleSliderMoved();
 		});
 		
-		int w0 = 70;
-		int w1 = 35;
+		CPane fp = new CPane();
+		fp.setPadding(0, 5);
+		fp.setHGap(2);
+		fp.setVGap(2);
+		fp.addRows
+		(
+			CPane.PREF,
+			CPane.PREF,
+			CPane.PREF,
+			CPane.PREF
+		);
+		fp.addColumns(CPane.FILL);
+		fp.add(0, 0, trackNameField);
+		fp.add(0, 1, albumField);
+		fp.add(0, 2, artistField);
+		fp.add(0, 3, yearField);
+		
+		int w0 = 60;
+		int w1 = 30;
 		
 		CPane p = new CPane();
-		p.setPadding(5);
-		p.setGaps(5);
+		p.setPadding(2);
+		p.setHGap(2);
+		p.setVGap(2);
 		p.addRows
 		(
-			CPane.FILL,
+			w0 + w0,
 			CPane.PREF,
 			CPane.PREF,
 			w1
@@ -77,6 +118,8 @@ public class MainWindow extends FxWindow
 			w1,
 			w1
 		);
+		p.add(0, 0, 2, 1, artField);
+		p.add(2, 0, 5, 1, fp);
 		p.add(4, 1, trackField);
 		p.add(0, 1, 1, 3, new FxButton("Play", this::togglePlay));
 		p.add(1, 1, 1, 3, new FxButton("Jump", this::jump));
@@ -88,7 +131,8 @@ public class MainWindow extends FxWindow
 		p.add(6, 3, new FxButton(">|", this::nextTrack));
 		p.add(7, 3, new FxButton(">>|", this::nextAlbum));
 		setCenter(p);
-		setSize(550, 200);
+		setWidth(550);
+		setResizable(false);
 	}
 	
 	
@@ -165,6 +209,11 @@ public class MainWindow extends FxWindow
 		int trackNum = t.getIndex() + 1;
 		trackField.setText(trackNum + "/" + a.getTrackCount());
 		
+		trackNameField.setText(t.getName());
+		albumField.setText(a.getName());
+		artistField.setText(a.getArtist());
+		yearField.setText(a.getYear());
+		
 		Media media = new Media(f.toURI().toString());
 
 		if(player != null)
@@ -208,5 +257,18 @@ public class MainWindow extends FxWindow
 		{
 			player.play();
 		}
+	}
+	
+	
+	public void initRepo()
+	{
+		// try and catch, show swing dialog if failed to launch
+		// check database, show set up dialog if not found
+		// setup: source directory, db directory
+//		File repoDir = new File(CPlatform.getSettingsFolder(), "MP3Player");		
+//		File musicDir = new File("D:/Music/Western");
+//		repo = MusicRepo.load(musicDir, repoDir);
+		
+
 	}
 }
