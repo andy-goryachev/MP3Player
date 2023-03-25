@@ -3,6 +3,7 @@ package goryachev.mp3player.cm;
 import goryachev.common.log.Log;
 import goryachev.common.util.CKit;
 import goryachev.common.util.CList;
+import goryachev.common.util.FileTools;
 import goryachev.mp3player.Album;
 import goryachev.mp3player.Track;
 import goryachev.mp3player.util.ID3_Info;
@@ -42,13 +43,24 @@ public class MusicRepo
 	protected void load()
 	{
 		long start = System.nanoTime();
-		scan(root);
+		scanDir(root);
 		double sec = (System.nanoTime() - start) / 1_000_000_000.0; 
 		log.info("%d track(s) loaded in %.1f sec.", trackCount, sec);
 	}
 	
 	
-	protected void scan(File dir)
+	public static MusicRepo scan(File dir)
+	{
+		MusicRepo d = new MusicRepo(dir);
+		long start = System.nanoTime();
+		d.scanDir(dir);
+		double sec = (System.nanoTime() - start) / 1_000_000_000.0; 
+		log.info("%d track(s) loaded in %.1f sec.", d.trackCount, sec);
+		return d;
+	}
+	
+	
+	protected void scanDir(File dir)
 	{
 		if(dir.isDirectory())
 		{
@@ -59,7 +71,7 @@ public class MusicRepo
 				{
 					if(f.isDirectory())
 					{
-						scan(f);
+						scanDir(f);
 					}
 				}
 				
@@ -200,5 +212,19 @@ public class MusicRepo
 		int tix = t.getIndex();
 		// FIX
 		return randomJump();
+	}
+
+
+	public static MusicRepo loadData(File db)
+	{
+		// TODO
+		return null;
+	}
+
+
+	public void store(File f)
+	{
+		FileTools.ensureParentFolder(f);
+		// TODO
 	}
 }

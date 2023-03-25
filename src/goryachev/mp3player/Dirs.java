@@ -1,5 +1,6 @@
 // Copyright © 2023 Andy Goryachev <andy@goryachev.com>
 package goryachev.mp3player;
+import goryachev.common.util.CPlatform;
 import goryachev.common.util.GlobalSettings;
 import java.io.File;
 
@@ -10,6 +11,8 @@ import java.io.File;
 public class Dirs
 {
 	protected static final String MUSIC_DIR = "MUSIC_DIR";
+	protected static final String DATA_DIR = "MP3Player";
+	protected static final String DATA_FILE = "tracks.dat";
 
 	
 	public static File getMusicDirectory()
@@ -21,5 +24,14 @@ public class Dirs
 	public static void setMusicDirectory(File f)
 	{
 		GlobalSettings.setFile(MUSIC_DIR, f);
+	}
+
+
+	public static File getDataFile()
+	{
+		File d1 = CPlatform.getSettingsFolder();
+		File d2 = new File(d1, DATA_DIR);
+		File f = new File(d2, DATA_FILE);
+		return f;
 	}
 }

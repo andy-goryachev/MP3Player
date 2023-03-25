@@ -23,7 +23,7 @@ import javafx.util.Duration;
 public class MainWindow extends FxWindow
 {
 	protected static final Log log = Log.get("MainWindow");
-	protected MusicRepo repo;
+	protected MusicRepo database;
 	protected final Label artField;
 	protected final Label trackNameField;
 	protected final Label albumField;
@@ -169,7 +169,7 @@ public class MainWindow extends FxWindow
 	
 	public void jump()
 	{
-		Track t = repo.randomJump();
+		Track t = database.randomJump();
 		play(t);
 	}
 	
@@ -195,7 +195,7 @@ public class MainWindow extends FxWindow
 	public void nextTrack()
 	{
 		// TODO
-		Track t = repo.nextTrack(currentTrack);
+		Track t = database.nextTrack(currentTrack);
 		play(t);
 	}
 	
@@ -260,32 +260,52 @@ public class MainWindow extends FxWindow
 	}
 	
 	
+	protected void setDB(MusicRepo d)
+	{
+		database = d;
+	}
+	
+	
 	public void initialize()
 	{
-		// check music dir preference.  if not found -> welcome dialog
-		File musicDir = Dirs.getMusicDirectory();
-		if((musicDir == null) || (!musicDir.exists()) || (!musicDir.isDirectory()))
+		for(;;)
 		{
-			new WelcomeDialog(this).open();
+			// check music dir preference.  if not found -> welcome dialog
+			File musicDir = Dirs.getMusicDirectory();
+			if((musicDir == null) || (!musicDir.exists()) || (!musicDir.isDirectory()))
+			{
+				new WelcomeDialog(this).open();
+				continue;
+			}
+			
+			File db = Dirs.getDataFile();
+			MusicRepo repo = MusicRepo.loadData(db);
+			if(repo == null)
+			{
+				repo = MusicRepo.scan(musicDir);
+				repo.store(db);
+			}
+			
+			setDB(repo);
+			jump();
 			return;
+			
+			
+			// load db.  if error -> scan dialog, scan, save db
+			
+			// load db.  if error -> err dialog, exit
+			
+			// if current track  exists, play it
+			
+			// otherwise, jump
+			
+			
+			// try and catch, show swing dialog if failed to launch
+			// check database, show set up dialog if not found
+			// setup: source directory, db directory
+	//		File repoDir = new File(CPlatform.getSettingsFolder(), "MP3Player");		
+	//		File musicDir = new File("D:/Music/Western");
+	//		repo = MusicRepo.load(musicDir, repoDir);
 		}
-		
-		// load db.  if error -> scan dialog, scan, save db
-		
-		// load db.  if error -> err dialog, exit
-		
-		// if current track  exists, play it
-		
-		// otherwise, jump
-		
-		
-		// try and catch, show swing dialog if failed to launch
-		// check database, show set up dialog if not found
-		// setup: source directory, db directory
-//		File repoDir = new File(CPlatform.getSettingsFolder(), "MP3Player");		
-//		File musicDir = new File("D:/Music/Western");
-//		repo = MusicRepo.load(musicDir, repoDir);
-		
-
 	}
 }
