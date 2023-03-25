@@ -21,4 +21,15 @@ public class Utils
 		}
 		return false;
 	}
+
+
+	public static String trimExtension(String name)
+	{
+		int ix = name.lastIndexOf('.');
+		if(ix >= 0)
+		{
+			return name.substring(0, ix);
+		}
+		return name;
+	}
 }

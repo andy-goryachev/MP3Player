@@ -4,14 +4,12 @@ import goryachev.common.log.Log;
 import goryachev.common.util.CKit;
 import goryachev.common.util.CList;
 import goryachev.common.util.SB;
+import goryachev.mp3player.AlbumInfo;
 import goryachev.mp3player.TrackInfo;
 import goryachev.mp3player.util.ID3_Info;
 import goryachev.mp3player.util.Utils;
 import java.io.File;
 import java.security.SecureRandom;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.List;
 
 
 /**
@@ -92,7 +90,7 @@ public class MusicRepo
 				if(ts != null)
 				{
 					Track[] tracks = CKit.toArray(Track.class, ts);
-					albums.add(new Album(trackCount, tracks));
+					albums.add(new Album(dir, trackCount, tracks));
 					trackCount += tracks.length;
 					log.info("%s: %d", dir, tracks.length);
 				}
@@ -134,14 +132,35 @@ public class MusicRepo
 
 	protected static class Album
 	{
+		private final File dir;
 		public final int index;
 		public final Track[] tracks;
 		
 		
-		public Album(int index, Track[] tracks)
+		public Album(File dir, int index, Track[] tracks)
 		{
+			this.dir = dir;
 			this.index = index;
 			this.tracks = tracks;
+		}
+		
+		
+		public int trackCount()
+		{
+			return tracks.length;
+		}
+		
+		
+		public String getName()
+		{
+			// TODO
+			return dir.getName();
+		}
+		
+		
+		public File getDir()
+		{
+			return dir;
 		}
 	}
 	
@@ -164,6 +183,16 @@ public class MusicRepo
 			this.artist = artist;
 			this.album = album;
 			this.year = year;
+		}
+		
+		
+		public String getName()
+		{
+			if(title == null)
+			{
+				return Utils.trimExtension(file.getName());
+			}
+			return title;
 		}
 		
 		
@@ -234,19 +263,15 @@ public class MusicRepo
 		Album a = albums.get(ix);
 		int tix = index - a.index;
 		Track t = a.tracks[tix];
-		return trackInfo(t, ix, tix);
+		return trackInfo(a, t, ix, tix);
 	}
 
 
-	protected TrackInfo trackInfo(Track t, int ix, int tix)
+	protected TrackInfo trackInfo(Album a, Track t, int ix, int tix)
 	{
-		return new TrackInfo()
-		{
-			public File getFile()
-			{
-				return t.file;
-			}
-		};
+		AlbumInfo album = new AlbumInfo(ix, a.trackCount(), a.getName(), a.getDir());
+		String name = t.getName();
+		return new TrackInfo(ix, tix, album, name, t.file);
 	}
 
 

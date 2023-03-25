@@ -6,7 +6,27 @@ import java.io.File;
 /**
  * Track Info.
  */
-public interface TrackInfo
+public class TrackInfo
 {
-	public File getFile();
+	private final int albumIndex; // not needed
+	private final int trackIndex;
+	private final AlbumInfo album;
+	private final String name;
+	private final File file; // file name
+	
+	
+	public TrackInfo(int albumIndex, int trackIndex, AlbumInfo album, String name, File file)
+	{
+		this.albumIndex = albumIndex;
+		this.trackIndex = trackIndex;
+		this.album = album;
+		this.name = name;
+		this.file = file;
+	}
+	
+	
+	public File getFile()
+	{
+		return file;
+	}
 }
