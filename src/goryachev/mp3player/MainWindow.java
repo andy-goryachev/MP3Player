@@ -260,8 +260,19 @@ public class MainWindow extends FxWindow
 	}
 	
 	
-	public void initRepo()
+	public void initialize()
 	{
+		// check music dir preference.  if not found -> welcome dialog
+		
+		// load db.  if error -> scan dialog, scan, save db
+		
+		// load db.  if error -> err dialog, exit
+		
+		// if current track  exists, play it
+		
+		// otherwise, jump
+		
+		
 		// try and catch, show swing dialog if failed to launch
 		// check database, show set up dialog if not found
 		// setup: source directory, db directory

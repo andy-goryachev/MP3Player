@@ -29,8 +29,6 @@ public class MP3PlayerApp extends Application
 	{
 		MainWindow w = new MainWindow();
 		w.open();
-		w.initRepo();
-		// TODO play saved track or jump
-		//w.jump();
+		w.initialize();
 	}
 }
