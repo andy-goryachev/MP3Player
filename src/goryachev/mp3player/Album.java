@@ -6,7 +6,7 @@ import java.io.File;
 /**
  * Album Info.
  */
-public class AlbumInfo
+public class Album
 {
 	private final int albumIndex;
 	private final int trackCount;
@@ -14,7 +14,7 @@ public class AlbumInfo
 	private final File dir;
 	
 	
-	public AlbumInfo(int albumIndex, int trackCount, String name, File dir)
+	public Album(int albumIndex, int trackCount, String name, File dir)
 	{
 		this.albumIndex = albumIndex;
 		this.trackCount = trackCount;

@@ -27,7 +27,7 @@ public class MainWindow extends FxWindow
 	protected final Label durationField;
 	protected final Slider timeSlider;
 	private MediaPlayer player;
-	private TrackInfo currentTrack;
+	private Track currentTrack;
 	
 
 	
@@ -125,7 +125,7 @@ public class MainWindow extends FxWindow
 	
 	public void jump()
 	{
-		TrackInfo t = repo.randomJump();
+		Track t = repo.randomJump();
 		play(t);
 	}
 	
@@ -151,17 +151,17 @@ public class MainWindow extends FxWindow
 	public void nextTrack()
 	{
 		// TODO
-		TrackInfo t = repo.nextTrack(currentTrack);
+		Track t = repo.nextTrack(currentTrack);
 		play(t);
 	}
 	
 	
-	public void play(TrackInfo t)
+	public void play(Track t)
 	{
 		File f = t.getFile();
 		log.info(f);
 		
-		AlbumInfo a = t.getAlbum();
+		Album a = t.getAlbum();
 		int trackNum = t.getIndex() + 1;
 		trackField.setText(trackNum + "/" + a.getTrackCount());
 		

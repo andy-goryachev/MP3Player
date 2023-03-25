@@ -6,16 +6,16 @@ import java.io.File;
 /**
  * Track Info.
  */
-public class TrackInfo
+public class Track
 {
 	private final int albumIndex; // not needed
 	private final int trackIndex;
-	private final AlbumInfo album;
+	private final Album album;
 	private final String name;
 	private final File file; // file name
 	
 	
-	public TrackInfo(int albumIndex, int trackIndex, AlbumInfo album, String name, File file)
+	public Track(int albumIndex, int trackIndex, Album album, String name, File file)
 	{
 		this.albumIndex = albumIndex;
 		this.trackIndex = trackIndex;
@@ -37,7 +37,7 @@ public class TrackInfo
 	}
 	
 	
-	public AlbumInfo getAlbum()
+	public Album getAlbum()
 	{
 		return album;
 	}

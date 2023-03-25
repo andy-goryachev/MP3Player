@@ -3,9 +3,8 @@ package goryachev.mp3player.cm;
 import goryachev.common.log.Log;
 import goryachev.common.util.CKit;
 import goryachev.common.util.CList;
-import goryachev.common.util.SB;
-import goryachev.mp3player.AlbumInfo;
-import goryachev.mp3player.TrackInfo;
+import goryachev.mp3player.Album;
+import goryachev.mp3player.Track;
 import goryachev.mp3player.util.ID3_Info;
 import goryachev.mp3player.util.Utils;
 import java.io.File;
@@ -19,7 +18,7 @@ public class MusicRepo
 {
 	private static final Log log = Log.get("MusicRepo");
 	private final File root;
-	private final CList<Album> albums = new CList<>();
+	private final CList<RAlbum> albums = new CList<>();
 	private final SecureRandom random;
 	private int trackCount;
 	
@@ -64,7 +63,7 @@ public class MusicRepo
 					}
 				}
 				
-				CList<Track> ts = null;
+				CList<RTrack> ts = null;
 				for(File f: fs)
 				{
 					if(Utils.isMP3(f))
@@ -74,7 +73,7 @@ public class MusicRepo
 							ts = new CList<>();
 						}
 
-						Track t = extractTrackInfo(f);
+						RTrack t = extractTrackInfo(f);
 						if(t == null)
 						{
 							log.warn("NO TAG " + f);
@@ -89,8 +88,8 @@ public class MusicRepo
 				
 				if(ts != null)
 				{
-					Track[] tracks = CKit.toArray(Track.class, ts);
-					albums.add(new Album(dir, trackCount, tracks));
+					RTrack[] tracks = CKit.toArray(RTrack.class, ts);
+					albums.add(new RAlbum(dir, trackCount, tracks));
 					trackCount += tracks.length;
 					log.info("%s: %d", dir, tracks.length);
 				}
@@ -99,7 +98,7 @@ public class MusicRepo
 	}
 	
 	
-	protected Track extractTrackInfo(File f)
+	protected RTrack extractTrackInfo(File f)
 	{
 		ID3_Info t = ID3_Info.parseID3(f);
 		
@@ -123,155 +122,33 @@ public class MusicRepo
 			year = t.getYear();
 		}
 		
-		return new Track(f, title, artist, album, year);
+		return new RTrack(f, title, artist, album, year);
 	}
 	
 	
-	//
-
-
-	protected static class Album
-	{
-		private final File dir;
-		public final int index;
-		public final Track[] tracks;
-		
-		
-		public Album(File dir, int index, Track[] tracks)
-		{
-			this.dir = dir;
-			this.index = index;
-			this.tracks = tracks;
-		}
-		
-		
-		public int trackCount()
-		{
-			return tracks.length;
-		}
-		
-		
-		public String getName()
-		{
-			// TODO
-			return dir.getName();
-		}
-		
-		
-		public File getDir()
-		{
-			return dir;
-		}
-	}
-	
-	
-	//
-	
-	protected static class Track
-	{
-		public final File file;
-		public final String title;
-		public final String artist;
-		public final String album;
-		public final String year;
-		
-		
-		public Track(File f, String title, String artist, String album, String year)
-		{
-			this.file = f;
-			this.title = title;
-			this.artist = artist;
-			this.album = album;
-			this.year = year;
-		}
-		
-		
-		public String getName()
-		{
-			if(title == null)
-			{
-				return Utils.trimExtension(file.getName());
-			}
-			return title;
-		}
-		
-		
-		public String toString()
-		{
-			SB sb = new SB();
-			sb.append("{");
-			boolean sep = false;
-			
-			if(title != null)
-			{
-				sb.append("title=").append(title);
-				sep = true;
-			}
-			
-			if(artist != null)
-			{
-				if(sep)
-				{
-					sb.append(", ");
-				}
-				sb.append("artist=").append(artist);
-				sep = true;
-			}
-			
-			if(album != null)
-			{
-				if(sep)
-				{
-					sb.append(", ");
-				}
-				sb.append("album=").append(album);
-				sep = true;
-			}
-			
-			if(year != null)
-			{
-				if(sep)
-				{
-					sb.append(", ");
-				}
-				sb.append("year=").append(year);
-				sep = true;
-			}
-			
-			if(sep)
-			{
-				sb.append(", ");
-			}
-			sb.append("file=").append(file);
-			
-			return sb.toString();
-		}
-	}
-
-
-	public TrackInfo randomJump()
+	public Track randomJump()
 	{
 		int ix = random.nextInt(trackCount);
-		TrackInfo t = getTrackAt(ix);
+		Track t = getTrackAt(ix);
 		return t;
 	}
 	
 	
-	protected TrackInfo getTrackAt(int index)
+	protected Track getTrackAt(int index)
 	{
 		int ix = binarySearch(index);
-		Album a = albums.get(ix);
+		RAlbum a = albums.get(ix);
 		int tix = index - a.index;
-		Track t = a.tracks[tix];
+		RTrack t = a.tracks[tix];
 		return trackInfo(a, t, ix, tix);
 	}
 
 
-	protected TrackInfo trackInfo(Album a, Track t, int ix, int tix)
+	protected Track trackInfo(RAlbum a, RTrack t, int ix, int tix)
 	{
-		AlbumInfo album = new AlbumInfo(ix, a.trackCount(), a.getName(), a.getDir());
+		Album album = new Album(ix, a.trackCount(), a.getName(), a.getDir());
 		String name = t.getName();
-		return new TrackInfo(ix, tix, album, name, t.file);
+		return new Track(ix, tix, album, name, t.file);
 	}
 
 
@@ -283,7 +160,7 @@ public class MusicRepo
 		while(low <= high)
 		{
 			int mid = (low + high) >>> 1;
-			Album a = albums.get(mid);
+			RAlbum a = albums.get(mid);
 			int cmp = compare(a, index);
 			if(cmp < 0)
 			{
@@ -302,7 +179,7 @@ public class MusicRepo
 	}
 
 
-	protected static int compare(Album a, int index)
+	protected static int compare(RAlbum a, int index)
 	{
 		int ix = index - a.index; 
 		if(ix >= a.tracks.length)
@@ -317,7 +194,7 @@ public class MusicRepo
 	}
 
 
-	public TrackInfo nextTrack(TrackInfo t)
+	public Track nextTrack(Track t)
 	{
 //		int aix = t.getAlbum().getAlbumIndex();
 		int tix = t.getIndex();
