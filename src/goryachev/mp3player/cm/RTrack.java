@@ -3,6 +3,7 @@ package goryachev.mp3player.cm;
 import goryachev.common.util.SB;
 import goryachev.mp3player.util.Utils;
 import java.io.File;
+import java.io.StringWriter;
 
 
 /**
@@ -11,29 +12,45 @@ import java.io.File;
 public class RTrack
 {
 	public final File file;
-	public final String title;
+	public final String name;
 	public final String artist;
 	public final String album;
 	public final String year;
+	private String filename;
 	
 	
-	public RTrack(File f, String title, String artist, String album, String year)
+	public RTrack(File f, String name, String artist, String album, String year)
 	{
 		this.file = f;
-		this.title = title;
+		this.name = name;
 		this.artist = artist;
 		this.album = album;
 		this.year = year;
 	}
 	
 	
+	// "T|name|artist|year|filename"
+	public void store(StringWriter wr)
+	{
+		wr.write("T|");
+		wr.write(Utils.encode(name));
+		wr.write("|");
+		wr.write(Utils.encode(artist));
+		wr.write("|");
+		wr.write(Utils.encode(year));
+		wr.write("|");
+		wr.write(Utils.encode(filename));
+		wr.write("\n");
+	}
+	
+	
 	public String getName()
 	{
-		if(title == null)
+		if(name == null)
 		{
 			return Utils.trimExtension(file.getName());
 		}
-		return title;
+		return name;
 	}
 	
 	
@@ -49,9 +66,9 @@ public class RTrack
 		sb.append("{");
 		boolean sep = false;
 		
-		if(title != null)
+		if(name != null)
 		{
-			sb.append("title=").append(title);
+			sb.append("title=").append(name);
 			sep = true;
 		}
 		

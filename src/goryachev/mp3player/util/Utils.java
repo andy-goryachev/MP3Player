@@ -10,6 +10,9 @@ import javafx.util.Duration;
  */
 public class Utils
 {
+	private static final String HEX = "0123456789abcdef";
+	
+	
 	public static boolean isMP3(File f)
 	{
 		if(f.isFile())
@@ -46,5 +49,116 @@ public class Utils
 			return String.format("%d:%02d:%02d", h, m, s);
 		}
 		return String.format("%02d:%02d", m, s);
+	}
+	
+	
+	/** |,\,(<0x20) -> \HH */
+	public static String encode(String text)
+	{
+		if(text == null)
+		{
+			return "";
+		}
+		
+		int ix = indexOfSpecialChar(text);
+		if(ix < 0)
+		{
+			return text;
+		}
+		
+		int sz = text.length();
+		StringBuilder sb = new StringBuilder(sz + 32);
+		for(int i=0; i<sz; i++)
+		{
+			char c = text.charAt(i);
+			if(isSpecialChar(c))
+			{
+				sb.append('\\');
+				sb.append(hex(c >> 4));
+				sb.append(hex(c));
+			}
+			else
+			{
+				sb.append(c);
+			}
+		}
+		return sb.toString();
+	}
+	
+	
+	public static String decode(String text)
+	{
+		int ix = text.indexOf('\\');
+		if(ix < 0)
+		{
+			return text;
+		}
+		
+		int sz = text.length();
+		StringBuilder sb = new StringBuilder(sz);
+		for(int i=0; i<sz; i++)
+		{
+			char c = text.charAt(i);
+			if(c == '\\')
+			{
+				int v = nibble(text.charAt(++i));
+				v = (v << 4) + nibble(text.charAt(++i));
+				sb.append((char)v);
+			}
+			else
+			{
+				sb.append(c);
+			}
+		}
+		return sb.toString();
+	}
+	
+	
+	private static int indexOfSpecialChar(String text)
+	{
+		int sz = text.length();
+		for(int i=0; i<sz; i++)
+		{
+			char c = text.charAt(i);
+			if(isSpecialChar(c))
+			{
+				return i;
+			}
+		}
+		return -1;
+	}
+	
+	
+	private static boolean isSpecialChar(char c)
+	{
+		if(c < 0x20)
+		{
+			return true;
+		}
+		
+		switch(c)
+		{
+		case '|':
+		case '\\':
+			return true;
+		}
+		return false;
+	}
+	
+	
+	private static char hex(int c)
+	{
+		return HEX.charAt(c & 0x0f);
+	}
+	
+	
+	private static int nibble(char c)
+	{
+		int ix = HEX.indexOf(Character.toLowerCase(c));
+		if(ix < 0)
+		{
+			throw new RuntimeException();
+		}
+		return ix;
 	}
 }

@@ -3,12 +3,12 @@ package goryachev.mp3player.cm;
 import goryachev.common.log.Log;
 import goryachev.common.util.CKit;
 import goryachev.common.util.CList;
-import goryachev.common.util.FileTools;
 import goryachev.mp3player.Album;
 import goryachev.mp3player.Track;
 import goryachev.mp3player.util.ID3_Info;
 import goryachev.mp3player.util.Utils;
 import java.io.File;
+import java.io.StringWriter;
 import java.security.SecureRandom;
 
 
@@ -219,7 +219,20 @@ public class MusicDB
 
 	public void store(File f)
 	{
-		FileTools.ensureParentFolder(f);
-		// TODO
+		try
+		{
+			StringWriter wr = new StringWriter(65536);
+			for(RAlbum a: albums)
+			{
+				a.store(wr);
+			}
+			
+			String s = wr.toString();
+			CKit.write(f, s);
+		}
+		catch(Exception e)
+		{
+			log.error(e);
+		}
 	}
 }
