@@ -263,6 +263,12 @@ public class MainWindow extends FxWindow
 	public void initialize()
 	{
 		// check music dir preference.  if not found -> welcome dialog
+		File musicDir = Dirs.getMusicDirectory();
+		if((musicDir == null) || (!musicDir.exists()) || (!musicDir.isDirectory()))
+		{
+			new WelcomeDialog(this).open();
+			return;
+		}
 		
 		// load db.  if error -> scan dialog, scan, save db
 		

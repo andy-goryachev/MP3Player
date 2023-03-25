@@ -31,4 +31,10 @@ public class MP3PlayerApp extends Application
 		w.open();
 		w.initialize();
 	}
+
+
+	public void stop() throws Exception
+	{
+		Log.getRoot().info();
+	}
 }
