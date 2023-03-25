@@ -2,6 +2,7 @@
 package goryachev.mp3player.util;
 import java.io.File;
 import java.util.Locale;
+import javafx.util.Duration;
 
 
 /**
@@ -31,5 +32,19 @@ public class Utils
 			return name.substring(0, ix);
 		}
 		return name;
+	}
+
+
+	public static String formatTime(Duration d)
+	{
+		int s = (int)Math.round(d.toSeconds() % 60);
+		int m = (int)Math.round(d.toMinutes());
+		if(m > 60)
+		{
+			int h = m / 60;
+			m %= 60;
+			return String.format("%d:%02d:%02d", h, m, s);
+		}
+		return String.format("%02d:%02d", m, s);
 	}
 }

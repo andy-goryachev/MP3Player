@@ -319,6 +319,8 @@ public class MusicRepo
 
 	public TrackInfo nextTrack(TrackInfo t)
 	{
+//		int aix = t.getAlbum().getAlbumIndex();
+		int tix = t.getIndex();
 		// FIX
 		return randomJump();
 	}

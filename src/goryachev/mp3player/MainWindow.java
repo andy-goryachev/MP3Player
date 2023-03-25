@@ -5,10 +5,14 @@ import goryachev.fx.CPane;
 import goryachev.fx.FxButton;
 import goryachev.fx.FxWindow;
 import goryachev.mp3player.cm.MusicRepo;
+import goryachev.mp3player.util.Utils;
 import java.io.File;
+import javafx.geometry.Pos;
+import javafx.scene.control.Label;
 import javafx.scene.control.Slider;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
+import javafx.util.Duration;
 
 
 /**
@@ -18,9 +22,13 @@ public class MainWindow extends FxWindow
 {
 	protected static final Log log = Log.get("MainWindow");
 	protected final MusicRepo repo;
+	protected final Label trackField;
+	protected final Label timeField;
+	protected final Label durationField;
 	protected final Slider timeSlider;
 	private MediaPlayer player;
 	private TrackInfo currentTrack;
+	
 
 	
 	public MainWindow(MusicRepo r)
@@ -29,15 +37,24 @@ public class MainWindow extends FxWindow
 		this.repo = r;
 		setTitle("Player");
 		
+		trackField = new Label("1/1");
+		trackField.setId("trackField");
+		
+		timeField = new Label("00:00");
+		timeField.setId("timeField");
+		
+		durationField = new Label("00:00");
+		durationField.setAlignment(Pos.CENTER_RIGHT);
+		durationField.setId("durationField");
+
 		timeSlider = new Slider();
 		timeSlider.valueProperty().addListener((x) ->
 		{
 			handleSliderMoved();
-			if(timeSlider.isPressed())
-			{
-				//player.seek(player.getMedia().getDuration().multiply(timeSlider.getValue() / 100));
-			}
 		});
+		
+		int w0 = 70;
+		int w1 = 35;
 		
 		CPane p = new CPane();
 		p.setPadding(5);
@@ -46,26 +63,32 @@ public class MainWindow extends FxWindow
 		(
 			CPane.FILL,
 			CPane.PREF,
-			CPane.PREF
+			CPane.PREF,
+			w1
 		);
 		p.addColumns
 		(
-			CPane.PREF,
-			CPane.PREF,
-			CPane.PREF,
-			CPane.PREF,
+			w0,
+			w0,
+			w1,
+			w1,
 			CPane.FILL,
-			CPane.PREF
+			CPane.PREF,
+			w1,
+			w1
 		);
-		p.add(0, 2, new FxButton("Play", this::togglePlay));
-		p.add(1, 2, new FxButton("Jump", this::jump));
-		p.add(2, 2, new FxButton("|<<", this::prevAlbum));
-		p.add(3, 2, new FxButton("|<", this::prevTrack));
-		p.add(4, 2, timeSlider);
-		p.add(5, 2, new FxButton(">|", this::nextTrack));
-		p.add(6, 2, new FxButton(">>|", this::nextAlbum));
+		p.add(4, 1, trackField);
+		p.add(0, 1, 1, 3, new FxButton("Play", this::togglePlay));
+		p.add(1, 1, 1, 3, new FxButton("Jump", this::jump));
+		p.add(4, 2, timeField);
+		p.add(5, 2, durationField);
+		p.add(2, 3, new FxButton("|<<", this::prevAlbum));
+		p.add(3, 3, new FxButton("|<", this::prevTrack));
+		p.add(4, 3, 2, 1, timeSlider);
+		p.add(6, 3, new FxButton(">|", this::nextTrack));
+		p.add(7, 3, new FxButton(">>|", this::nextAlbum));
 		setCenter(p);
-		setSize(500, 250);
+		setSize(550, 200);
 	}
 	
 	
@@ -138,8 +161,12 @@ public class MainWindow extends FxWindow
 		File f = t.getFile();
 		log.info(f);
 		
+		AlbumInfo a = t.getAlbum();
+		int trackNum = t.getIndex() + 1;
+		trackField.setText(trackNum + "/" + a.getTrackCount());
+		
 		Media media = new Media(f.toURI().toString());
-				
+
 		if(player != null)
 		{
 			player.dispose();
@@ -148,7 +175,13 @@ public class MainWindow extends FxWindow
 		MediaPlayer p = new MediaPlayer(media);
 		p.currentTimeProperty().addListener((s,pr,c) ->
 		{
-			timeSlider.setValue(player.getCurrentTime().toMillis() / player.getTotalDuration().toMillis() * 100);
+			Duration time = player.getCurrentTime();
+			timeField.setText(Utils.formatTime(time));
+			
+			Duration duration = player.getTotalDuration();
+			durationField.setText(Utils.formatTime(duration));
+					
+			timeSlider.setValue(time.toMillis() / duration.toMillis() * 100);
 		});
 		p.setOnEndOfMedia(() ->
 		{

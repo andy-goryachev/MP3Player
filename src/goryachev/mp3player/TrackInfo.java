@@ -29,4 +29,16 @@ public class TrackInfo
 	{
 		return file;
 	}
+	
+	
+	public int getIndex()
+	{
+		return trackIndex;
+	}
+	
+	
+	public AlbumInfo getAlbum()
+	{
+		return album;
+	}
 }

@@ -21,4 +21,10 @@ public class AlbumInfo
 		this.name = name;
 		this.dir = dir;
 	}
+	
+	
+	public int getTrackCount()
+	{
+		return trackCount;
+	}
 }
