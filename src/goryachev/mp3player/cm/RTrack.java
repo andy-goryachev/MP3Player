@@ -37,6 +37,12 @@ public class RTrack
 	}
 	
 	
+	public File getFile()
+	{
+		return file;
+	}
+	
+	
 	public String toString()
 	{
 		SB sb = new SB();

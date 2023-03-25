@@ -208,10 +208,23 @@ public class MusicRepo
 
 	public Track nextTrack(Track t)
 	{
-//		int aix = t.getAlbum().getAlbumIndex();
+		Album a = t.getAlbum();
 		int tix = t.getIndex();
-		// FIX
-		return randomJump();
+		++tix;
+		if(tix < a.getTrackCount())
+		{
+			return a.getTrack(tix);
+		}
+		else
+		{
+			int ix = a.getIndex() + 1;
+			if(ix >= albums.size())
+			{
+				ix = 0;
+			}
+			a = new Album(ix, albums.get(ix));
+			return a.getTrack(0);
+		}
 	}
 
 

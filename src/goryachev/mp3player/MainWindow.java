@@ -49,7 +49,7 @@ public class MainWindow extends FxWindow
 
 		trackNameField = new Label("Track Name");
 		trackNameField.setId("trackNameField");
-		trackNameField.setStyle("-fx-font-weight:bold; -fx-font-size:150%;");
+		trackNameField.setStyle("-fx-font-weight:bold; -fx-font-size:125%;");
 		
 		albumField = new Label("Album");
 		albumField.setId("albumField");
@@ -282,6 +282,7 @@ public class MainWindow extends FxWindow
 			MusicRepo repo = MusicRepo.loadData(db);
 			if(repo == null)
 			{
+				// FIX scanning should not happen in the FX thread!
 				repo = MusicRepo.scan(musicDir);
 				repo.store(db);
 			}
