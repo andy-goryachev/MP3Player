@@ -5,7 +5,7 @@ import goryachev.fx.CPane;
 import goryachev.fx.FX;
 import goryachev.fx.FxButton;
 import goryachev.fx.FxWindow;
-import goryachev.mp3player.cm.MusicRepo;
+import goryachev.mp3player.cm.MusicDB;
 import goryachev.mp3player.util.Utils;
 import java.io.File;
 import javafx.geometry.Pos;
@@ -23,7 +23,7 @@ import javafx.util.Duration;
 public class MainWindow extends FxWindow
 {
 	protected static final Log log = Log.get("MainWindow");
-	protected MusicRepo database;
+	protected MusicDB database;
 	protected final Label artField;
 	protected final Label trackNameField;
 	protected final Label albumField;
@@ -260,7 +260,7 @@ public class MainWindow extends FxWindow
 	}
 	
 	
-	protected void setDB(MusicRepo d)
+	protected void setDB(MusicDB d)
 	{
 		database = d;
 	}
@@ -279,11 +279,11 @@ public class MainWindow extends FxWindow
 			}
 			
 			File db = Dirs.getDataFile();
-			MusicRepo repo = MusicRepo.loadData(db);
+			MusicDB repo = MusicDB.loadData(db);
 			if(repo == null)
 			{
 				// FIX scanning should not happen in the FX thread!
-				repo = MusicRepo.scan(musicDir);
+				repo = MusicDB.scan(musicDir);
 				repo.store(db);
 			}
 			

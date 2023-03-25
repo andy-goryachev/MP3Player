@@ -13,45 +13,27 @@ import java.security.SecureRandom;
 
 
 /**
- * Music Repository.
+ * Music Database.
  */
-public class MusicRepo
+public class MusicDB
 {
-	private static final Log log = Log.get("MusicRepo");
+	private static final Log log = Log.get("MusicDB");
 	private final File root;
 	private final CList<RAlbum> albums = new CList<>();
 	private final SecureRandom random;
 	private int trackCount;
 	
 	
-	public MusicRepo(File root)
+	public MusicDB(File root)
 	{
 		this.root = root;
 		this.random = new SecureRandom();
 	}
 	
 	
-	public static MusicRepo load(File musicDir, File repoDir)
+	public static MusicDB scan(File dir)
 	{
-		// TODO load db
-		MusicRepo r = new MusicRepo(musicDir);
-		r.load();
-		return r;
-	}
-	
-	
-	protected void load()
-	{
-		long start = System.nanoTime();
-		scanDir(root);
-		double sec = (System.nanoTime() - start) / 1_000_000_000.0; 
-		log.info("%d track(s) loaded in %.1f sec.", trackCount, sec);
-	}
-	
-	
-	public static MusicRepo scan(File dir)
-	{
-		MusicRepo d = new MusicRepo(dir);
+		MusicDB d = new MusicDB(dir);
 		long start = System.nanoTime();
 		d.scanDir(dir);
 		double sec = (System.nanoTime() - start) / 1_000_000_000.0; 
@@ -228,7 +210,7 @@ public class MusicRepo
 	}
 
 
-	public static MusicRepo loadData(File db)
+	public static MusicDB loadData(File db)
 	{
 		// TODO
 		return null;
