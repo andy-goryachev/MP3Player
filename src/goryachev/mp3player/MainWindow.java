@@ -205,14 +205,13 @@ public class MainWindow extends FxWindow
 		File f = t.getFile();
 		log.info(f);
 		
-		Album a = t.getAlbum();
 		int trackNum = t.getIndex() + 1;
-		trackField.setText(trackNum + "/" + a.getTrackCount());
+		trackField.setText(trackNum + "/" + t.getAlbumTrackCount());
 		
 		titleField.setText(t.getTitle());
-		albumField.setText(a.getName());
-		artistField.setText(a.getArtist());
-		yearField.setText(a.getYear());
+		albumField.setText(t.getAlbumName());
+		artistField.setText(t.getArtist());
+		yearField.setText(t.getYear());
 		
 		Media media = new Media(f.toURI().toString());
 
@@ -278,6 +277,7 @@ public class MainWindow extends FxWindow
 				continue;
 			}
 			
+			// load db
 			File db = Dirs.getDataFile();
 			MusicDB repo = MusicDB.loadData(db);
 			if(repo == null)
@@ -288,25 +288,12 @@ public class MainWindow extends FxWindow
 			}
 			
 			setDB(repo);
+			
+			// TODO if current track  exists, play it
+
+			// otherwise, jump
 			jump();
 			return;
-			
-			
-			// load db.  if error -> scan dialog, scan, save db
-			
-			// load db.  if error -> err dialog, exit
-			
-			// if current track  exists, play it
-			
-			// otherwise, jump
-			
-			
-			// try and catch, show swing dialog if failed to launch
-			// check database, show set up dialog if not found
-			// setup: source directory, db directory
-	//		File repoDir = new File(CPlatform.getSettingsFolder(), "MP3Player");		
-	//		File musicDir = new File("D:/Music/Western");
-	//		repo = MusicRepo.load(musicDir, repoDir);
 		}
 	}
 }

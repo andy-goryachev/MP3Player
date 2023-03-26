@@ -1,6 +1,14 @@
 // Copyright © 2023 Andy Goryachev <andy@goryachev.com>
 package goryachev.mp3player.util;
+import goryachev.common.log.Log;
+import goryachev.common.util.CDigest;
+import goryachev.common.util.CKit;
+import goryachev.common.util.FileTools;
+import goryachev.common.util.Hex;
+import java.io.BufferedInputStream;
 import java.io.File;
+import java.io.FileInputStream;
+import java.util.List;
 import java.util.Locale;
 import javafx.util.Duration;
 
@@ -11,6 +19,7 @@ import javafx.util.Duration;
 public class Utils
 {
 	private static final String HEX = "0123456789abcdef";
+	private static final Log log = Log.get("Utils");
 	
 	
 	public static boolean isMP3(File f)
@@ -160,5 +169,47 @@ public class Utils
 			throw new RuntimeException();
 		}
 		return ix;
+	}
+
+
+	public static String computeHash(File f)
+	{
+		try
+		{
+			BufferedInputStream in = new BufferedInputStream(new FileInputStream(f));
+			try
+			{
+				byte[] hash = CDigest.sha256().compute(in);
+				return Hex.toHexString(hash);
+			}
+			finally
+			{
+				CKit.close(in);
+			}
+		}
+		catch(Exception e)
+		{
+			log.error(e);
+			return null;
+		}
+	}
+	
+	
+	public static String computeHash(List<String> names)
+	{
+		CDigest d = CDigest.sha256();
+		for(String s: names)
+		{
+			d.updateChar(',');
+			d.updateString(s);
+		}
+		byte[] hash = d.digest();
+		return Hex.toHexString(hash);
+	}
+
+
+	public static String pathToRoot(File root, File dir)
+	{
+		return FileTools.getPathToRootWithName(root, dir);
 	}
 }

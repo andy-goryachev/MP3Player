@@ -67,31 +67,20 @@ public class ID3_Info
 
 	public static ID3_Info parseID3(File file)
 	{
-		RandomAccessFile in = null;
-		
-		try
+		try (RandomAccessFile in = new RandomAccessFile(file, "r"))
 		{
-			in = new RandomAccessFile(file,"r");
+			ID3_Info info = ID3v2Info.readInfo(in);
+			if(info == null)
+			{
+				info = ID3v1Info.readInfo(in);
+			}
+			return info;
 		}
 		catch(Throwable t)
 		{
-			return null;
+			// ignore
 		}
 
-		ID3_Info info = ID3v2Info.readInfo(in);
-		if(info == null)
-		{
-			info = ID3v1Info.readInfo(in);
-		}
-
-		try
-		{
-			in.close();
-		}
-		catch(Exception e)
-		{ 
-		}
-	
-		return info;
+		return null;
 	}
 }

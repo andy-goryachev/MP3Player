@@ -1,8 +1,6 @@
 // Copyright © 2023 Andy Goryachev <andy@goryachev.com>
 package goryachev.mp3player;
 import goryachev.mp3player.cm.RAlbum;
-import goryachev.mp3player.cm.RTrack;
-import java.io.File;
 
 
 /**
@@ -29,19 +27,7 @@ public class Album
 	
 	public int getTrackCount()
 	{
-		return album.trackCount();
-	}
-
-
-	public File getDir()
-	{
-		return album.getDir();
-	}
-
-
-	public String getName()
-	{
-		return album.getName();
+		return album.getTrackCount();
 	}
 
 
@@ -54,12 +40,5 @@ public class Album
 	public String getYear()
 	{
 		return album.getYear();
-	}
-
-
-	public Track getTrack(int ix)
-	{
-		RTrack t = album.getTrack(ix);
-		return new Track(this, t, ix, t.getName());
 	}
 }

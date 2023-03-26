@@ -1,7 +1,6 @@
 // Copyright © 2023 Andy Goryachev <andy@goryachev.com>
 package goryachev.mp3player.cm;
 import goryachev.mp3player.util.Utils;
-import java.io.File;
 import java.io.StringWriter;
 
 
@@ -10,60 +9,47 @@ import java.io.StringWriter;
  */
 public class RAlbum
 {
-	@Deprecated
-	private final File dir; // TODO remove
-	private final int firstTrackIndex; // transient, does not have to be stored
+	/** path to root */
+	private final String path;
+	/** album title from metadata, or directory name */
+	private final String title;
+	private final String artist;
+	private final String year;
+	private final String hash;
 	private final RTrack[] tracks;
-	private String path; // TODO to root
-	private String name; // dir name? needed?
-	private String artist; // needed? this might come from tracks?
-	private String year; // needed?
-	// TODO hash: sorted track filenames
 	
 	
-	public RAlbum(File dir, int firstTrackIndex, RTrack[] tracks)
+	public RAlbum(String path, String title, String artist, String year, String hash, RTrack[] tracks)
 	{
-		this.dir = dir;
-		this.firstTrackIndex = firstTrackIndex;
+		this.path = path;
+		this.title = title;
+		this.artist = artist;
+		this.year = year;
+		this.hash = hash;
 		this.tracks = tracks;
 	}
 	
-	
-	public static RAlbum create(File root, File dir, int firstTrackIndex, RTrack[] tracks)
-	{
-		return new RAlbum(dir, firstTrackIndex, tracks);
-	}
-	
 
-	// "A|trackCount|name|artist|year|path"
+	// "A|title|artist|year|trackCount|hash|path"
 	public void store(StringWriter wr)
 	{
 		wr.write("A|");
-		wr.write(String.valueOf(trackCount()));
-		wr.write("|");
-		wr.write(Utils.encode(name));
+		wr.write(Utils.encode(title));
 		wr.write("|");
 		wr.write(Utils.encode(artist));
 		wr.write("|");
 		wr.write(Utils.encode(year));
 		wr.write("|");
+		wr.write(String.valueOf(getTrackCount()));
+		wr.write("|");
+		wr.write(Utils.encode(hash));
+		wr.write("|");
 		wr.write(Utils.encode(path));
 		wr.write("\n");
-		
-		for(RTrack t: tracks)
-		{
-			t.store(wr);
-		}
 	}
 	
 	
-	public int getFirstTrackIndex()
-	{
-		return firstTrackIndex;
-	}
-	
-	
-	public int trackCount()
+	public int getTrackCount()
 	{
 		return tracks.length;
 	}
@@ -75,16 +61,9 @@ public class RAlbum
 	}
 	
 	
-	public String getName()
+	public String getTitle()
 	{
-		// TODO
-		return dir.getName();
-	}
-	
-	
-	public File getDir()
-	{
-		return dir;
+		return title;
 	}
 	
 	
@@ -97,5 +76,11 @@ public class RAlbum
 	public String getYear()
 	{
 		return year;
+	}
+
+
+	public String getPath()
+	{
+		return path;
 	}
 }

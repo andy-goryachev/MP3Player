@@ -1,15 +1,18 @@
 // Copyright © 2023 Andy Goryachev <andy@goryachev.com>
 package goryachev.mp3player.cm;
 import goryachev.common.log.Log;
+import goryachev.common.util.CComparator;
 import goryachev.common.util.CKit;
 import goryachev.common.util.CList;
-import goryachev.mp3player.Album;
+import goryachev.common.util.CSorter;
 import goryachev.mp3player.Track;
 import goryachev.mp3player.util.ID3_Info;
 import goryachev.mp3player.util.Utils;
 import java.io.File;
 import java.io.StringWriter;
 import java.security.SecureRandom;
+import java.util.Arrays;
+import java.util.function.Function;
 
 
 /**
@@ -19,9 +22,9 @@ public class MusicDB
 {
 	private static final Log log = Log.get("MusicDB");
 	private final File root;
-	private final CList<RAlbum> albums = new CList<>();
+	private final CList<RTrack> tracks = new CList<>();
+	// TODO user-entered track info db
 	private final SecureRandom random;
-	private int trackCount;
 	
 	
 	public MusicDB(File root)
@@ -37,7 +40,7 @@ public class MusicDB
 		long start = System.nanoTime();
 		d.scanDir(dir, dir);
 		double sec = (System.nanoTime() - start) / 1_000_000_000.0; 
-		log.info("%d track(s) loaded in %.1f sec.", d.trackCount, sec);
+		log.info("%d track(s) loaded in %.1f sec.", d.trackCount(), sec);
 		return d;
 	}
 	
@@ -67,7 +70,7 @@ public class MusicDB
 							ts = new CList<>();
 						}
 
-						RTrack t = extractTrackInfo(f);
+						RTrack t = createTrack(f);
 						if(t == null)
 						{
 							log.warn("NO TAG " + f);
@@ -82,17 +85,91 @@ public class MusicDB
 				
 				if(ts != null)
 				{
-					RTrack[] tracks = CKit.toArray(RTrack.class, ts);
-					albums.add(RAlbum.create(root, dir, trackCount, tracks));
-					trackCount += tracks.length;
-					log.info("%s: %d", dir, tracks.length);
+					RTrack[] trs = CKit.toArray(RTrack.class, ts);
+					sort(trs);
+					
+					String hash = hash(trs);
+					String path = Utils.pathToRoot(root, dir);
+					String title = getIfSame(trs, (t) -> t.getTitle());
+					String artist = getIfSame(trs, (t) -> t.getArtist());
+					String year = getIfSame(trs, (t) -> t.getYear());
+					RAlbum a = new RAlbum(path, title, artist, year, hash, trs);
+					
+					for(RTrack t: trs)
+					{
+						t.setAlbum(a);
+					}
+					
+					tracks.addAll(trs);
+					
+					log.info("%s: %d", dir, trs.length);
 				}
 			}
 		}
 	}
+
+
+	/** sorts tracks by filename */
+	protected void sort(RTrack[] trs)
+	{
+		new CComparator<RTrack>()
+		{
+			public int compare(RTrack a, RTrack b)
+			{
+				return compareAsStrings(a.getFileName(), b.getFileName());
+			}
+		}.sort(trs);
+	}
+
+
+	/** returns a value which is the same across the tracks, given the getter, or null */
+	protected String getIfSame(RTrack[] ts, Function<RTrack,String> getter)
+	{
+		String rv = null;
+		for(RTrack t: ts)
+		{
+			String s = getter.apply(t);
+			if(CKit.isBlank(s))
+			{
+				if(rv != null)
+				{
+					return null;
+				}
+			}
+			else
+			{
+				s = s.trim();
+				if(rv == null)
+				{
+					rv = s;
+				}
+				else
+				{
+					if(!CKit.equals(s, rv))
+					{
+						return null;
+					}
+				}
+			}
+		}
+		return rv;
+	}
 	
 	
-	protected RTrack extractTrackInfo(File f)
+	/** album hash: sorted track filenames */
+	protected String hash(RTrack[] ts)
+	{
+		CList<String> filenames = new CList<>(ts.length);
+		for(RTrack t: ts)
+		{
+			filenames.add(t.getFileName());
+		}
+		CSorter.sort(filenames);
+		return Utils.computeHash(filenames);
+	}
+
+	
+	protected RTrack createTrack(File f)
 	{
 		ID3_Info t = ID3_Info.parseID3(f);
 		
@@ -116,13 +193,27 @@ public class MusicDB
 			year = t.getYear();
 		}
 		
-		return new RTrack(f, title, artist, album, year);
+		String filename = f.getName();
+		if(CKit.isBlank(title))
+		{
+			title = Utils.trimExtension(filename);
+		}
+		
+		String hash = Utils.computeHash(f);
+		
+		return new RTrack(title, artist, album, year, filename, hash);
+	}
+	
+	
+	public int trackCount()
+	{
+		return tracks.size();
 	}
 	
 	
 	public Track randomJump()
 	{
-		int ix = random.nextInt(trackCount);
+		int ix = random.nextInt(trackCount());
 		Track t = getTrackAt(ix);
 		return t;
 	}
@@ -130,83 +221,20 @@ public class MusicDB
 	
 	protected Track getTrackAt(int index)
 	{
-		int ix = binarySearch(index);
-		RAlbum a = albums.get(ix);
-		int tix = index - a.getFirstTrackIndex();
-		RTrack t = a.getTrack(tix);
-		return trackInfo(a, t, ix, tix);
+		RTrack t = tracks.get(index);
+		return new Track(this, t, index);
 	}
 
 
-	protected Track trackInfo(RAlbum a, RTrack t, int ix, int tix)
+	public Track nextTrack(Track track)
 	{
-		Album album = new Album(ix, a);
-		String name = t.getName();
-		return new Track(album, t, tix, name);
-	}
-
-
-	protected int binarySearch(int index)
-	{
-		int low = 0;
-		int high = albums.size() - 1;
-
-		while(low <= high)
+		int ix = track.getIndex() + 1;
+		if(ix >= trackCount())
 		{
-			int mid = (low + high) >>> 1;
-			RAlbum a = albums.get(mid);
-			int cmp = compare(a, index);
-			if(cmp < 0)
-			{
-				low = mid + 1;
-			}
-			else if(cmp > 0)
-			{
-				high = mid - 1;
-			}
-			else
-			{
-				return mid;
-			}
+			ix = 0;
 		}
-		return -(low + 1);
-	}
-
-
-	protected static int compare(RAlbum a, int trackIndex)
-	{
-		int ix = trackIndex - a.getFirstTrackIndex(); 
-		if(ix >= a.trackCount())
-		{
-			return -1;
-		}
-		else if(ix < 0)
-		{
-			return 1;
-		}
-		return 0;
-	}
-
-
-	public Track nextTrack(Track t)
-	{
-		Album a = t.getAlbum();
-		int tix = t.getIndex();
-		++tix;
-		if(tix < a.getTrackCount())
-		{
-			return a.getTrack(tix);
-		}
-		else
-		{
-			int ix = a.getIndex() + 1;
-			if(ix >= albums.size())
-			{
-				ix = 0;
-			}
-			a = new Album(ix, albums.get(ix));
-			return a.getTrack(0);
-		}
+		RTrack t = tracks.get(ix);
+		return new Track(this, t, ix);
 	}
 
 
@@ -221,10 +249,18 @@ public class MusicDB
 	{
 		try
 		{
+			RAlbum album = null;
 			StringWriter wr = new StringWriter(65536);
-			for(RAlbum a: albums)
+			for(RTrack t: tracks)
 			{
-				a.store(wr);
+				RAlbum a = t.getAlbum();
+				if(a != album)
+				{
+					a.store(wr);
+					album = a;
+				}
+				
+				t.store(wr);
 			}
 			
 			String s = wr.toString();
@@ -234,5 +270,39 @@ public class MusicDB
 		{
 			log.error(e);
 		}
+	}
+
+
+	public String getTitle(RTrack t)
+	{
+		// TODO check user-defined title
+		return t.getTitle();
+	}
+
+
+	public String getAlbumName(RTrack t)
+	{
+		// TODO check user-defined album name
+		return t.getAlbum().getTitle();
+	}
+	
+	
+	public String getArtist(RTrack t)
+	{
+		// TODO check user-defined artist
+		return t.getAlbum().getArtist();
+	}
+	
+	
+	public String getYear(RTrack t)
+	{
+		// TODO check user-defined year
+		return t.getAlbum().getYear();
+	}
+
+
+	public File getFile(String path, String filename)
+	{
+		return new File(root, path + "/" + filename);
 	}
 }

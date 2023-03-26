@@ -2,7 +2,6 @@
 package goryachev.mp3player.cm;
 import goryachev.common.util.SB;
 import goryachev.mp3player.util.Utils;
-import java.io.File;
 import java.io.StringWriter;
 
 
@@ -11,28 +10,27 @@ import java.io.StringWriter;
  */
 public class RTrack
 {
-	@Deprecated // TODO remove
-	private final File file;
-	private final String filename;
-	private final String title; // title extracted from metadata
+	private transient RAlbum parent;
+	private final String title;
 	private final String artist;
 	private final String album;
 	private final String year;
-	private String hash; // TODO hash
+	private final String filename;
+	private final String hash;
 	
 	
-	public RTrack(File f, String name, String artist, String album, String year)
+	public RTrack(String title, String artist, String album, String year, String filename, String hash)
 	{
-		this.file = f;
-		this.filename = f.getName();
-		this.title = name;
+		this.title = title;
 		this.artist = artist;
 		this.album = album;
 		this.year = year;
+		this.filename = filename;
+		this.hash = hash;
 	}
 	
 	
-	// "T|name|artist|year|filename"
+	// "T|title|artist|album|year|hash|filename"
 	public void store(StringWriter wr)
 	{
 		wr.write("T|");
@@ -40,10 +38,26 @@ public class RTrack
 		wr.write("|");
 		wr.write(Utils.encode(artist));
 		wr.write("|");
+		wr.write(Utils.encode(album));
+		wr.write("|");
 		wr.write(Utils.encode(year));
+		wr.write("|");
+		wr.write(Utils.encode(hash));
 		wr.write("|");
 		wr.write(Utils.encode(filename));
 		wr.write("\n");
+	}
+	
+	
+	void setAlbum(RAlbum a)
+	{
+		parent = a;
+	}
+	
+	
+	public RAlbum getAlbum()
+	{
+		return parent;
 	}
 	
 	
@@ -53,19 +67,21 @@ public class RTrack
 	}
 	
 	
-	public String getName()
+	public String getTitle()
 	{
-		if(title == null)
-		{
-			return Utils.trimExtension(file.getName());
-		}
 		return title;
 	}
 	
 	
-	public File getFile()
+	public String getArtist()
 	{
-		return file;
+		return artist;
+	}
+	
+	
+	public String getYear()
+	{
+		return year;
 	}
 	
 	
@@ -115,7 +131,7 @@ public class RTrack
 		{
 			sb.append(", ");
 		}
-		sb.append("file=").append(file);
+		sb.append("filename=").append(filename);
 		
 		return sb.toString();
 	}
