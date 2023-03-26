@@ -188,14 +188,15 @@ public class MainWindow extends FxWindow
 	
 	public void prevTrack()
 	{
-		// TODO
+		// TODO may be int delta, to be able to go to next album? 
+		Track t = database.nextTrack(currentTrack, false);
+		play(t);
 	}
 	
 	
 	public void nextTrack()
 	{
-		// TODO
-		Track t = database.nextTrack(currentTrack);
+		Track t = database.nextTrack(currentTrack, true);
 		play(t);
 	}
 	
@@ -279,12 +280,12 @@ public class MainWindow extends FxWindow
 			
 			// load db
 			File db = Dirs.getDataFile();
-			MusicDB repo = MusicDB.loadData(db);
+			MusicDB repo = MusicDB.load(musicDir, db);
 			if(repo == null)
 			{
 				// FIX scanning should not happen in the FX thread!
 				repo = MusicDB.scan(musicDir);
-				repo.store(db);
+				repo.save(db);
 			}
 			
 			setDB(repo);

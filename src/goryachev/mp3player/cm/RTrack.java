@@ -1,8 +1,9 @@
 // Copyright © 2023 Andy Goryachev <andy@goryachev.com>
 package goryachev.mp3player.cm;
+import goryachev.common.util.CKit;
 import goryachev.common.util.SB;
 import goryachev.mp3player.util.Utils;
-import java.io.StringWriter;
+import java.io.Writer;
 
 
 /**
@@ -31,7 +32,7 @@ public class RTrack
 	
 	
 	// "T|title|artist|album|year|hash|filename"
-	public void store(StringWriter wr)
+	public void write(Writer wr) throws Exception
 	{
 		wr.write("T|");
 		wr.write(Utils.encode(title));
@@ -46,6 +47,27 @@ public class RTrack
 		wr.write("|");
 		wr.write(Utils.encode(filename));
 		wr.write("\n");
+	}
+	
+	
+	public static RTrack parse(String text) throws Exception
+	{
+		String[] ss = CKit.split(text, '|');
+		if(ss.length == 7)
+		{
+			if("T".equals(ss[0]))
+			{
+				String title = Utils.decode(ss[1]);
+				String artist = Utils.decode(ss[2]);
+				String album = Utils.decode(ss[3]);
+				String year = Utils.decode(ss[4]);
+				String hash = Utils.decode(ss[5]);
+				String filename = Utils.decode(ss[6]);
+
+				return new RTrack(title, artist, album, year, filename, hash);
+			}
+		}
+		return null;
 	}
 	
 	

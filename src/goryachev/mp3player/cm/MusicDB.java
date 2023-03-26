@@ -8,10 +8,13 @@ import goryachev.common.util.CSorter;
 import goryachev.mp3player.Track;
 import goryachev.mp3player.util.ID3_Info;
 import goryachev.mp3player.util.Utils;
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.File;
-import java.io.StringWriter;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.FileWriter;
 import java.security.SecureRandom;
-import java.util.Arrays;
 import java.util.function.Function;
 
 
@@ -20,7 +23,9 @@ import java.util.function.Function;
  */
 public class MusicDB
 {
+	// TODO timestamps for tracks/albums
 	private static final Log log = Log.get("MusicDB");
+	private static final String IDv1 = "F|2023.0326.1140";
 	private final File root;
 	private final CList<RTrack> tracks = new CList<>();
 	// TODO user-entered track info db
@@ -93,11 +98,11 @@ public class MusicDB
 					String title = getIfSame(trs, (t) -> t.getTitle());
 					String artist = getIfSame(trs, (t) -> t.getArtist());
 					String year = getIfSame(trs, (t) -> t.getYear());
-					RAlbum a = new RAlbum(path, title, artist, year, hash, trs);
+					RAlbum a = new RAlbum(path, title, artist, year, hash, trs.length);
 					
 					for(RTrack t: trs)
 					{
-						t.setAlbum(a);
+						a.addTrack(t);
 					}
 					
 					tracks.addAll(trs);
@@ -211,6 +216,12 @@ public class MusicDB
 	}
 	
 	
+	void addTrack(RTrack t)
+	{
+		tracks.add(t);
+	}
+	
+	
 	public Track randomJump()
 	{
 		int ix = random.nextInt(trackCount());
@@ -226,50 +237,117 @@ public class MusicDB
 	}
 
 
-	public Track nextTrack(Track track)
+	public Track nextTrack(Track track, boolean forward)
 	{
-		int ix = track.getIndex() + 1;
-		if(ix >= trackCount())
+		int ix = track.getIndex();
+		if(forward)
 		{
-			ix = 0;
+			ix++;
+			if(ix >= trackCount())
+			{
+				ix = 0;
+			}
 		}
+		else
+		{
+			ix--;
+			if(ix < 0)
+			{
+				ix = trackCount() - 1;
+			}
+		}
+
 		RTrack t = tracks.get(ix);
 		return new Track(this, t, ix);
 	}
 
 
-	public static MusicDB loadData(File db)
-	{
-		// TODO
-		return null;
-	}
-
-
-	public void store(File f)
+	public void save(File f)
 	{
 		try
 		{
 			RAlbum album = null;
-			StringWriter wr = new StringWriter(65536);
-			for(RTrack t: tracks)
+			try(BufferedWriter wr = new BufferedWriter(new FileWriter(f, CKit.CHARSET_UTF8)))
 			{
-				RAlbum a = t.getAlbum();
-				if(a != album)
-				{
-					a.store(wr);
-					album = a;
-				}
+				wr.write(IDv1);
+				wr.write("\n");
 				
-				t.store(wr);
+				for(RTrack t: tracks)
+				{
+					RAlbum a = t.getAlbum();
+					if(a != album)
+					{
+						a.write(wr);
+						album = a;
+					}
+					
+					t.write(wr);
+				}
 			}
-			
-			String s = wr.toString();
-			CKit.write(f, s);
+			catch(Exception e)
+			{
+				log.error(e);
+			}
 		}
 		catch(Exception e)
 		{
 			log.error(e);
 		}
+	}
+
+
+	public static MusicDB load(File root, File f)
+	{
+		try(BufferedReader rd = new BufferedReader(new FileReader(f, CKit.CHARSET_UTF8)))
+		{
+			String s = rd.readLine();
+			if(CKit.notEquals(IDv1, s))
+			{
+				throw new Exception("Unknown file format"); 
+			}
+			
+			MusicDB db = new MusicDB(root);
+			int line = 2;
+			RAlbum album = null;
+			while((s = rd.readLine()) != null)
+			{
+				RAlbum a = RAlbum.parse(s);
+				if(a == null)
+				{
+					RTrack t = RTrack.parse(s);
+					if(t == null)
+					{
+						// this is an error, but let's ignore
+					}
+					else
+					{
+						if(album == null)
+						{
+							throw new Exception("No album before track on line " + line);
+						}
+						album.addTrack(t);
+						db.addTrack(t);
+					}
+				}
+				else
+				{
+					album = a;
+				}
+				
+				line++;
+			}
+			
+			// TODO validate track numbers?
+			return db;
+		}
+		catch(FileNotFoundException ignore)
+		{
+		}
+		catch(Exception e)
+		{
+			log.error(e);
+		}
+		return null;
 	}
 
 

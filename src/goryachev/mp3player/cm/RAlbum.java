@@ -1,7 +1,9 @@
 // Copyright © 2023 Andy Goryachev <andy@goryachev.com>
 package goryachev.mp3player.cm;
+import goryachev.common.util.CKit;
+import goryachev.common.util.CList;
 import goryachev.mp3player.util.Utils;
-import java.io.StringWriter;
+import java.io.Writer;
 
 
 /**
@@ -16,22 +18,24 @@ public class RAlbum
 	private final String artist;
 	private final String year;
 	private final String hash;
-	private final RTrack[] tracks;
+	private final int trackCount;
+	private CList<RTrack> tracks;
 	
 	
-	public RAlbum(String path, String title, String artist, String year, String hash, RTrack[] tracks)
+	public RAlbum(String path, String title, String artist, String year, String hash, int trackCount)
 	{
 		this.path = path;
 		this.title = title;
 		this.artist = artist;
 		this.year = year;
 		this.hash = hash;
-		this.tracks = tracks;
+		this.trackCount = trackCount;
+		this.tracks = new CList<>(trackCount);
 	}
 	
 
 	// "A|title|artist|year|trackCount|hash|path"
-	public void store(StringWriter wr)
+	public void write(Writer wr) throws Exception
 	{
 		wr.write("A|");
 		wr.write(Utils.encode(title));
@@ -49,15 +53,43 @@ public class RAlbum
 	}
 	
 	
+	public static RAlbum parse(String text) throws Exception
+	{
+		String[] ss = CKit.split(text, '|');
+		if(ss.length == 7)
+		{
+			if("A".equals(ss[0]))
+			{
+				String title = Utils.decode(ss[1]);
+				String artist = Utils.decode(ss[2]);
+				String year = Utils.decode(ss[3]);
+				int trackCount = Integer.parseInt(Utils.decode(ss[4]));
+				String hash = Utils.decode(ss[5]);
+				String path = Utils.decode(ss[6]);
+
+				return new RAlbum(path, title, artist, year, hash, trackCount);
+			}
+		}
+		return null;
+	}
+	
+	
+	public void addTrack(RTrack t)
+	{
+		t.setAlbum(this);
+		tracks.add(t);
+	}
+	
+	
 	public int getTrackCount()
 	{
-		return tracks.length;
+		return tracks.size();
 	}
 	
 	
 	public RTrack getTrack(int ix)
 	{
-		return tracks[ix];
+		return tracks.get(ix);
 	}
 	
 	
