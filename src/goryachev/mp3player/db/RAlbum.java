@@ -1,5 +1,5 @@
 // Copyright © 2023 Andy Goryachev <andy@goryachev.com>
-package goryachev.mp3player.cm;
+package goryachev.mp3player.db;
 import goryachev.common.util.CKit;
 import goryachev.common.util.CList;
 import goryachev.mp3player.util.Utils;

@@ -1,5 +1,5 @@
 // Copyright © 2006-2023 Andy Goryachev <andy@goryachev.com>
-package goryachev.mp3player.util;
+package goryachev.mp3player.db;
 import goryachev.common.log.Log;
 import java.io.File;
 import java.io.RandomAccessFile;

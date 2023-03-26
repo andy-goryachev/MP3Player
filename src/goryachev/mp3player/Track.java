@@ -1,7 +1,7 @@
 // Copyright © 2023 Andy Goryachev <andy@goryachev.com>
 package goryachev.mp3player;
-import goryachev.mp3player.cm.MusicDB;
-import goryachev.mp3player.cm.RTrack;
+import goryachev.mp3player.db.MusicDB;
+import goryachev.mp3player.db.RTrack;
 import java.io.File;
 
 

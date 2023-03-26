@@ -97,6 +97,11 @@ public class Utils
 	
 	public static String decode(String text)
 	{
+		if(CKit.isBlank(text))
+		{
+			return null;
+		}
+
 		int ix = text.indexOf('\\');
 		if(ix < 0)
 		{

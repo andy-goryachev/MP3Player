@@ -6,7 +6,7 @@ import goryachev.fx.CPane;
 import goryachev.fx.FX;
 import goryachev.fx.FxButton;
 import goryachev.fx.FxWindow;
-import goryachev.mp3player.cm.MusicDB;
+import goryachev.mp3player.db.MusicDB;
 import goryachev.mp3player.util.Utils;
 import java.io.File;
 import javafx.geometry.Pos;
