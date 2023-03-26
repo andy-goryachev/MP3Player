@@ -8,7 +8,6 @@ import java.io.RandomAccessFile;
 
 public class ID3_Info
 {
-	public static final String DEFAULT_ENCODING = "ISO-8859-1";
 	private static final Log log = Log.get("ID3_Info");
 	protected String title;
 	protected String artist;

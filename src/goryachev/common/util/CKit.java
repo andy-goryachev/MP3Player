@@ -209,10 +209,19 @@ public final class CKit
 	}
 	
 	
-	/** returns true if the character is a whitespace or a space character (0x00a0 for example) */
+	/** 
+	 * returns true if the character is either:
+	 * - a whitespace
+	 * - a space character (e.g. 0x00a0)
+	 * - is ASCII control character or space (< 0x20)
+	 */
 	public static boolean isBlank(int c)
 	{
-		if(Character.isWhitespace(c))
+		if(c <= 0x20)
+		{
+			return true;
+		}
+		else if(Character.isWhitespace(c))
 		{
 			return true;
 		}

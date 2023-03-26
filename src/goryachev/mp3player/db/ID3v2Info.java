@@ -246,9 +246,9 @@ public class ID3v2Info
 			break;
 		}
 		
-		byte[] buf = new byte[frameSize-1];
+		byte[] buf = new byte[frameSize - 1];
 		in.read(buf);
-		return new String(buf,enc).trim();
+		return new String(buf, enc).trim();
 	}
 
 

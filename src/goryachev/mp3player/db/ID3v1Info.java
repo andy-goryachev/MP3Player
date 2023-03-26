@@ -1,6 +1,8 @@
 // Copyright © 2006-2023 Andy Goryachev <andy@goryachev.com>
 package goryachev.mp3player.db;
+import goryachev.common.util.CKit;
 import java.io.RandomAccessFile;
+import org.mozilla.universalchardet.UniversalDetector;
 
 
 // Class parses ID3 v1 tag data
@@ -29,15 +31,20 @@ public class ID3v1Info
 	}
 
 
-	protected String parse(byte[] tag, int offset, int length)
+	protected String parse(byte[] bytes, int offset, int length)
 	{
+		UniversalDetector d = new UniversalDetector();
+		d.handleData(bytes, offset, length);
+		d.dataEnd();
+		String enc = d.getDetectedCharset();
+		
 		try
 		{
-			return new String(tag, offset, length, DEFAULT_ENCODING).trim();
+			return new String(bytes, offset, length, enc).trim();
 		}
 		catch(Exception e)
 		{
-			return null;
+			return new String(bytes, offset, length, CKit.CHARSET_ASCII);
 		}
 	}
 

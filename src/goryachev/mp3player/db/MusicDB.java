@@ -353,7 +353,12 @@ public class MusicDB
 	public String getTitle(RTrack t)
 	{
 		// TODO check user-defined title
-		return t.getTitle();
+		String s = t.getTitle();
+		if(CKit.isBlank(s))
+		{
+			s = Utils.trimExtension(t.getFileName());
+		}
+		return s;
 	}
 
 
