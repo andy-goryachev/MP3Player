@@ -10,20 +10,28 @@ import java.io.StringWriter;
  */
 public class RAlbum
 {
+	@Deprecated
 	private final File dir; // TODO remove
-	public final int index; // TODO remove
-	public final RTrack[] tracks;
-	private String path;
-	private String name;
-	private String artist;
-	private String year;
+	private final int firstTrackIndex; // transient, does not have to be stored
+	private final RTrack[] tracks;
+	private String path; // TODO to root
+	private String name; // dir name? needed?
+	private String artist; // needed? this might come from tracks?
+	private String year; // needed?
+	// TODO hash: sorted track filenames
 	
 	
-	public RAlbum(File dir, int index, RTrack[] tracks)
+	public RAlbum(File dir, int firstTrackIndex, RTrack[] tracks)
 	{
 		this.dir = dir;
-		this.index = index;
+		this.firstTrackIndex = firstTrackIndex;
 		this.tracks = tracks;
+	}
+	
+	
+	public static RAlbum create(File root, File dir, int firstTrackIndex, RTrack[] tracks)
+	{
+		return new RAlbum(dir, firstTrackIndex, tracks);
 	}
 	
 
@@ -49,9 +57,21 @@ public class RAlbum
 	}
 	
 	
+	public int getFirstTrackIndex()
+	{
+		return firstTrackIndex;
+	}
+	
+	
 	public int trackCount()
 	{
 		return tracks.length;
+	}
+	
+	
+	public RTrack getTrack(int ix)
+	{
+		return tracks[ix];
 	}
 	
 	
@@ -70,12 +90,12 @@ public class RAlbum
 	
 	public String getArtist()
 	{
-		return null; // TODO
+		return artist;
 	}
 
 
 	public String getYear()
 	{
-		return null; // TODO
+		return year;
 	}
 }

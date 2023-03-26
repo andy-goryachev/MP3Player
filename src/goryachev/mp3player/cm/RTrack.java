@@ -11,18 +11,21 @@ import java.io.StringWriter;
  */
 public class RTrack
 {
-	public final File file;
-	public final String name;
-	public final String artist;
-	public final String album;
-	public final String year;
-	private String filename;
+	@Deprecated // TODO remove
+	private final File file;
+	private final String filename;
+	private final String title; // title extracted from metadata
+	private final String artist;
+	private final String album;
+	private final String year;
+	private String hash; // TODO hash
 	
 	
 	public RTrack(File f, String name, String artist, String album, String year)
 	{
 		this.file = f;
-		this.name = name;
+		this.filename = f.getName();
+		this.title = name;
 		this.artist = artist;
 		this.album = album;
 		this.year = year;
@@ -33,7 +36,7 @@ public class RTrack
 	public void store(StringWriter wr)
 	{
 		wr.write("T|");
-		wr.write(Utils.encode(name));
+		wr.write(Utils.encode(title));
 		wr.write("|");
 		wr.write(Utils.encode(artist));
 		wr.write("|");
@@ -44,13 +47,19 @@ public class RTrack
 	}
 	
 	
+	public String getFileName()
+	{
+		return filename;
+	}
+	
+	
 	public String getName()
 	{
-		if(name == null)
+		if(title == null)
 		{
 			return Utils.trimExtension(file.getName());
 		}
-		return name;
+		return title;
 	}
 	
 	
@@ -66,9 +75,9 @@ public class RTrack
 		sb.append("{");
 		boolean sep = false;
 		
-		if(name != null)
+		if(title != null)
 		{
-			sb.append("title=").append(name);
+			sb.append("title=").append(title);
 			sep = true;
 		}
 		

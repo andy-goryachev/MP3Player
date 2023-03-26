@@ -25,7 +25,7 @@ public class MainWindow extends FxWindow
 	protected static final Log log = Log.get("MainWindow");
 	protected MusicDB database;
 	protected final Label artField;
-	protected final Label trackNameField;
+	protected final Label titleField;
 	protected final Label albumField;
 	protected final Label artistField;
 	protected final Label yearField;
@@ -47,9 +47,9 @@ public class MainWindow extends FxWindow
 		artField.setId("artField");
 		artField.setBackground(FX.background(Color.GRAY));
 
-		trackNameField = new Label("Track Name");
-		trackNameField.setId("trackNameField");
-		trackNameField.setStyle("-fx-font-weight:bold; -fx-font-size:125%;");
+		titleField = new Label("Track Name");
+		titleField.setId("titleField");
+		titleField.setStyle("-fx-font-weight:bold; -fx-font-size:125%;");
 		
 		albumField = new Label("Album");
 		albumField.setId("albumField");
@@ -88,7 +88,7 @@ public class MainWindow extends FxWindow
 			CPane.PREF
 		);
 		fp.addColumns(CPane.FILL);
-		fp.add(0, 0, trackNameField);
+		fp.add(0, 0, titleField);
 		fp.add(0, 1, albumField);
 		fp.add(0, 2, artistField);
 		fp.add(0, 3, yearField);
@@ -209,7 +209,7 @@ public class MainWindow extends FxWindow
 		int trackNum = t.getIndex() + 1;
 		trackField.setText(trackNum + "/" + a.getTrackCount());
 		
-		trackNameField.setText(t.getName());
+		titleField.setText(t.getTitle());
 		albumField.setText(a.getName());
 		artistField.setText(a.getArtist());
 		yearField.setText(a.getYear());

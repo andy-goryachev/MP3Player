@@ -59,7 +59,7 @@ public class Album
 
 	public Track getTrack(int ix)
 	{
-		RTrack t = album.tracks[ix];
-		return new Track(this, ix, t.getName(), t.getFile().getName());
+		RTrack t = album.getTrack(ix);
+		return new Track(this, t, ix, t.getName());
 	}
 }

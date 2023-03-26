@@ -35,14 +35,14 @@ public class MusicDB
 	{
 		MusicDB d = new MusicDB(dir);
 		long start = System.nanoTime();
-		d.scanDir(dir);
+		d.scanDir(dir, dir);
 		double sec = (System.nanoTime() - start) / 1_000_000_000.0; 
 		log.info("%d track(s) loaded in %.1f sec.", d.trackCount, sec);
 		return d;
 	}
 	
 	
-	protected void scanDir(File dir)
+	protected void scanDir(File root, File dir)
 	{
 		if(dir.isDirectory())
 		{
@@ -53,7 +53,7 @@ public class MusicDB
 				{
 					if(f.isDirectory())
 					{
-						scanDir(f);
+						scanDir(root, f);
 					}
 				}
 				
@@ -83,7 +83,7 @@ public class MusicDB
 				if(ts != null)
 				{
 					RTrack[] tracks = CKit.toArray(RTrack.class, ts);
-					albums.add(new RAlbum(dir, trackCount, tracks));
+					albums.add(RAlbum.create(root, dir, trackCount, tracks));
 					trackCount += tracks.length;
 					log.info("%s: %d", dir, tracks.length);
 				}
@@ -132,8 +132,8 @@ public class MusicDB
 	{
 		int ix = binarySearch(index);
 		RAlbum a = albums.get(ix);
-		int tix = index - a.index;
-		RTrack t = a.tracks[tix];
+		int tix = index - a.getFirstTrackIndex();
+		RTrack t = a.getTrack(tix);
 		return trackInfo(a, t, ix, tix);
 	}
 
@@ -142,7 +142,7 @@ public class MusicDB
 	{
 		Album album = new Album(ix, a);
 		String name = t.getName();
-		return new Track(album, tix, name, t.file.getName());
+		return new Track(album, t, tix, name);
 	}
 
 
@@ -173,10 +173,10 @@ public class MusicDB
 	}
 
 
-	protected static int compare(RAlbum a, int index)
+	protected static int compare(RAlbum a, int trackIndex)
 	{
-		int ix = index - a.index; 
-		if(ix >= a.tracks.length)
+		int ix = trackIndex - a.getFirstTrackIndex(); 
+		if(ix >= a.trackCount())
 		{
 			return -1;
 		}
