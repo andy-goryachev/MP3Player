@@ -83,6 +83,12 @@ public class RTrack
 	}
 	
 	
+	public int getTrackNumber()
+	{
+		return parent.trackNumber(this);
+	}
+	
+	
 	public String getFileName()
 	{
 		return filename;

@@ -361,7 +361,20 @@ public class MusicDB
 	public String getAlbumName(RTrack t)
 	{
 		// TODO check user-defined album name
-		return t.getAlbum().getTitle();
+		String s = t.getAlbum().getTitle();
+		if(CKit.isBlank(s))
+		{
+			s = t.getAlbum().getPath();
+			if(s != null)
+			{
+				int ix = s.lastIndexOf('/');
+				if(ix >= 0)
+				{
+					s = s.substring(ix + 1);
+				}
+			}
+		}
+		return s;
 	}
 	
 	

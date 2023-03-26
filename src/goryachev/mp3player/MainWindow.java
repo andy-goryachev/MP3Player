@@ -209,8 +209,10 @@ public class MainWindow extends FxWindow
 		log.info(f);
 		
 		int ix = t.getIndex();
-		trackField.setText((ix + 1) + "/" + t.getAlbumTrackCount());
 		GlobalSettings.setInt(CURRENT_TRACK, ix);
+		
+		int num = t.getTrackNumber();
+		trackField.setText((num + 1) + "/" + t.getAlbumTrackCount());
 		
 		titleField.setText(t.getTitle());
 		albumField.setText(t.getAlbumName());

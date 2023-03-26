@@ -71,4 +71,10 @@ public class Track
 	{
 		return db.getYear(track);
 	}
+
+
+	public int getTrackNumber()
+	{
+		return track.getTrackNumber();
+	}
 }

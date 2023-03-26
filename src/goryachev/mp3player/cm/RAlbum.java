@@ -115,4 +115,15 @@ public class RAlbum
 	{
 		return path;
 	}
+
+
+	public int trackNumber(RTrack t)
+	{
+		int ix = tracks.indexOf(t);
+		if(ix < 0)
+		{
+			return -1;
+		}
+		return ix + 1;
+	}
 }
