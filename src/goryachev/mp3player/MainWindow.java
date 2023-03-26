@@ -1,6 +1,7 @@
 // Copyright © 2023 Andy Goryachev <andy@goryachev.com>
 package goryachev.mp3player;
 import goryachev.common.log.Log;
+import goryachev.common.util.GlobalSettings;
 import goryachev.fx.CPane;
 import goryachev.fx.FX;
 import goryachev.fx.FxButton;
@@ -22,6 +23,7 @@ import javafx.util.Duration;
  */
 public class MainWindow extends FxWindow
 {
+	protected static final String CURRENT_TRACK = "CURRENT_TRACK";
 	protected static final Log log = Log.get("MainWindow");
 	protected MusicDB database;
 	protected final Label artField;
@@ -201,13 +203,14 @@ public class MainWindow extends FxWindow
 	}
 	
 	
-	public void play(Track t)
+	protected void play(Track t)
 	{
 		File f = t.getFile();
 		log.info(f);
 		
-		int trackNum = t.getIndex() + 1;
-		trackField.setText(trackNum + "/" + t.getAlbumTrackCount());
+		int ix = t.getIndex();
+		trackField.setText((ix + 1) + "/" + t.getAlbumTrackCount());
+		GlobalSettings.setInt(CURRENT_TRACK, ix);
 		
 		titleField.setText(t.getTitle());
 		albumField.setText(t.getAlbumName());
@@ -279,21 +282,32 @@ public class MainWindow extends FxWindow
 			}
 			
 			// load db
-			File db = Dirs.getDataFile();
-			MusicDB repo = MusicDB.load(musicDir, db);
-			if(repo == null)
+			File f = Dirs.getDataFile();
+			MusicDB db = MusicDB.load(musicDir, f);
+			if(db == null)
 			{
 				// FIX scanning should not happen in the FX thread!
-				repo = MusicDB.scan(musicDir);
-				repo.save(db);
+				db = MusicDB.scan(musicDir);
+				db.save(f);
 			}
 			
-			setDB(repo);
+			setDB(db);
 			
 			// TODO if current track  exists, play it
-
+			int ix = GlobalSettings.getInt(CURRENT_TRACK, -1);
+			if(ix >= 0)
+			{
+				Track t = db.getTrack(ix);
+				if(t != null)
+				{
+					// TODO from specific position?
+					play(t);
+					return;
+				}
+			}
+			
 			// otherwise, jump
-			jump();
+			jump();				
 			return;
 		}
 	}

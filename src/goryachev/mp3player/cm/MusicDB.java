@@ -225,12 +225,12 @@ public class MusicDB
 	public Track randomJump()
 	{
 		int ix = random.nextInt(trackCount());
-		Track t = getTrackAt(ix);
+		Track t = getTrack(ix);
 		return t;
 	}
 	
 	
-	protected Track getTrackAt(int index)
+	public Track getTrack(int index)
 	{
 		RTrack t = tracks.get(index);
 		return new Track(this, t, index);

@@ -18,6 +18,7 @@ import javafx.scene.control.TextField;
 /**
  * Welcome Dialog.
  */
+// TODO tabbed interface, second tab is scanning...
 public class WelcomeDialog extends FxDialog
 {
 	protected final TextField musicDir;
