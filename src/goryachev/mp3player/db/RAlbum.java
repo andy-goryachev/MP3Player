@@ -18,23 +18,25 @@ public class RAlbum
 	private final String artist;
 	private final String year;
 	private final String hash;
+	private final long timestamp;
 	private final int trackCount;
 	private CList<RTrack> tracks;
 	
 	
-	public RAlbum(String path, String title, String artist, String year, String hash, int trackCount)
+	public RAlbum(String path, String title, String artist, String year, String hash, long timestamp, int trackCount)
 	{
 		this.path = path;
 		this.title = title;
 		this.artist = artist;
 		this.year = year;
 		this.hash = hash;
+		this.timestamp = timestamp;
 		this.trackCount = trackCount;
 		this.tracks = new CList<>(trackCount);
 	}
 	
 
-	// "A|title|artist|year|trackCount|hash|path"
+	// "A|title|artist|year|trackCount|hash|timestamp|path"
 	public void write(Writer wr) throws Exception
 	{
 		wr.write("A|");
@@ -48,6 +50,8 @@ public class RAlbum
 		wr.write("|");
 		wr.write(Utils.encode(hash));
 		wr.write("|");
+		wr.write(String.valueOf(timestamp));
+		wr.write("|");
 		wr.write(Utils.encode(path));
 		wr.write("\n");
 	}
@@ -56,7 +60,7 @@ public class RAlbum
 	public static RAlbum parse(String text) throws Exception
 	{
 		String[] ss = CKit.split(text, '|');
-		if(ss.length == 7)
+		if(ss.length == 8)
 		{
 			if("A".equals(ss[0]))
 			{
@@ -65,9 +69,10 @@ public class RAlbum
 				String year = Utils.decode(ss[3]);
 				int trackCount = Integer.parseInt(Utils.decode(ss[4]));
 				String hash = Utils.decode(ss[5]);
-				String path = Utils.decode(ss[6]);
+				long time = Long.parseLong(ss[6]);
+				String path = Utils.decode(ss[7]);
 
-				return new RAlbum(path, title, artist, year, hash, trackCount);
+				return new RAlbum(path, title, artist, year, hash, time, trackCount);
 			}
 		}
 		return null;
@@ -115,15 +120,16 @@ public class RAlbum
 	{
 		return path;
 	}
-
-
-	public int trackNumber(RTrack t)
+	
+	
+	public String getHash()
 	{
-		int ix = tracks.indexOf(t);
-		if(ix < 0)
-		{
-			return -1;
-		}
-		return ix + 1;
+		return hash;
+	}
+
+
+	public int trackIndex(RTrack t)
+	{
+		return tracks.indexOf(t);
 	}
 }

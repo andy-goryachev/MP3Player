@@ -24,7 +24,7 @@ public class MusicDB
 {
 	// TODO timestamps for tracks/albums
 	private static final Log log = Log.get("MusicDB");
-	private static final String IDv1 = "F|2023.0326.1140";
+	private static final String IDv1 = "F|2023.0326.2206";
 	private final File root;
 	private final CList<RTrack> tracks = new CList<>();
 	// TODO user-entered track info db
@@ -92,12 +92,13 @@ public class MusicDB
 					RTrack[] trs = CKit.toArray(RTrack.class, ts);
 					sort(trs);
 					
-					String hash = hash(trs);
+					String hash = hashTracks(trs);
 					String path = Utils.pathToRoot(root, dir);
 					String title = getIfSame(trs, (t) -> t.getTitle());
 					String artist = getIfSame(trs, (t) -> t.getArtist());
 					String year = getIfSame(trs, (t) -> t.getYear());
-					RAlbum a = new RAlbum(path, title, artist, year, hash, trs.length);
+					long time = dir.lastModified();
+					RAlbum a = new RAlbum(path, title, artist, year, hash, time, trs.length);
 					
 					for(RTrack t: trs)
 					{
@@ -160,16 +161,16 @@ public class MusicDB
 	}
 	
 	
-	/** album hash: sorted track filenames */
-	protected String hash(RTrack[] ts)
+	/** album hash: sorted track hashes */
+	protected String hashTracks(RTrack[] ts)
 	{
-		CList<String> filenames = new CList<>(ts.length);
+		CList<String> hashes = new CList<>(ts.length);
 		for(RTrack t: ts)
 		{
-			filenames.add(t.getFileName());
+			hashes.add(t.getHash());
 		}
-		CSorter.sort(filenames);
-		return Utils.computeHash(filenames);
+		CSorter.sort(hashes);
+		return Utils.computeHash(hashes);
 	}
 
 	
@@ -198,9 +199,10 @@ public class MusicDB
 		}
 		
 		String filename = f.getName();
+		long time = f.lastModified();
 		String hash = Utils.computeHash(f);
 		
-		return new RTrack(title, artist, album, year, filename, hash);
+		return new RTrack(title, artist, album, year, filename, time, hash);
 	}
 	
 	
@@ -226,17 +228,39 @@ public class MusicDB
 	
 	public Track getTrack(int index)
 	{
+		if((index < 0) || (index >= tracks.size()))
+		{
+			return null;
+		}
 		RTrack t = tracks.get(index);
 		return new Track(this, t, index);
 	}
-
-
-	public Track nextTrack(Track track, boolean forward)
+	
+	
+	public Track prevTrack(Track t)
 	{
-		int ix = track.getIndex();
-		if(forward)
+		return changeTrack(t, -1);
+	}
+	
+	
+	public Track nextTrack(Track t)
+	{
+		return changeTrack(t, 1);
+	}
+	
+	
+	public Track nextAlbum(Track t)
+	{
+		int delta = t.getAlbumTrackCount() - t.getTrackIndex();
+		return changeTrack(t, delta);
+	}
+
+
+	protected Track changeTrack(Track track, int delta)
+	{
+		int ix = track.getIndex() + delta;
+		if(delta > 0)
 		{
-			ix++;
 			if(ix >= trackCount())
 			{
 				ix = 0;
@@ -244,7 +268,6 @@ public class MusicDB
 		}
 		else
 		{
-			ix--;
 			if(ix < 0)
 			{
 				ix = trackCount() - 1;
@@ -268,7 +291,7 @@ public class MusicDB
 				
 				for(RTrack t: tracks)
 				{
-					RAlbum a = t.getAlbum();
+					RAlbum a = t.getRAlbum();
 					if(a != album)
 					{
 						a.write(wr);
@@ -360,10 +383,10 @@ public class MusicDB
 	public String getAlbumName(RTrack t)
 	{
 		// TODO check user-defined album name
-		String s = t.getAlbum().getTitle();
+		String s = t.getRAlbum().getTitle();
 		if(CKit.isBlank(s))
 		{
-			s = t.getAlbum().getPath();
+			s = t.getRAlbum().getPath();
 			if(s != null)
 			{
 				int ix = s.lastIndexOf('/');
@@ -380,14 +403,14 @@ public class MusicDB
 	public String getArtist(RTrack t)
 	{
 		// TODO check user-defined artist
-		return t.getAlbum().getArtist();
+		return t.getRAlbum().getArtist();
 	}
 	
 	
 	public String getYear(RTrack t)
 	{
 		// TODO check user-defined year
-		return t.getAlbum().getYear();
+		return t.getRAlbum().getYear();
 	}
 
 

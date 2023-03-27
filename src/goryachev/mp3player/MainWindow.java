@@ -184,41 +184,41 @@ public class MainWindow extends FxWindow
 	
 	public void nextAlbum()
 	{
-		// TODO
+		Track t = database.nextAlbum(currentTrack);
+		play(t);
 	}
 	
 	
 	public void prevTrack()
 	{
-		// TODO may be int delta, to be able to go to next album? 
-		Track t = database.nextTrack(currentTrack, false);
+		Track t = database.prevTrack(currentTrack);
 		play(t);
 	}
 	
 	
 	public void nextTrack()
 	{
-		Track t = database.nextTrack(currentTrack, true);
+		Track t = database.nextTrack(currentTrack);
 		play(t);
 	}
 	
 	
 	protected void play(Track t)
 	{
-		File f = t.getFile();
-		log.info(f);
+		log.info(t);
 		
 		int ix = t.getIndex();
 		GlobalSettings.setInt(CURRENT_TRACK, ix);
 		
-		int num = t.getTrackNumber();
-		trackField.setText((num + 1) + "/" + t.getAlbumTrackCount());
+		int num = t.getTrackIndex() + 1;
+		trackField.setText(num + "/" + t.getAlbumTrackCount());
 		
 		titleField.setText(t.getTitle());
 		albumField.setText(t.getAlbumName());
 		artistField.setText(t.getArtist());
 		yearField.setText(t.getYear());
 		
+		File f = t.getFile();
 		Media media = new Media(f.toURI().toString());
 
 		if(player != null)

@@ -67,7 +67,8 @@ public class TestScan
 					String title = MusicDB.getIfSame(trs, (t) -> t.getTitle());
 					String artist = MusicDB.getIfSame(trs, (t) -> t.getArtist());
 					String year = MusicDB.getIfSame(trs, (t) -> t.getYear());
-					RAlbum a = new RAlbum(path, title, artist, year, hash, trs.length);
+					long time = dir.lastModified();
+					RAlbum a = new RAlbum(path, title, artist, year, hash, time, trs.length);
 					
 					for(RTrack t: trs)
 					{
@@ -108,9 +109,10 @@ public class TestScan
 		}
 		
 		String filename = f.getName();
-		String hash = null;
+		long time = f.lastModified();
+		String hash = Utils.computeHash(f);
 		
-		return new RTrack(title, artist, album, year, filename, hash);
+		return new RTrack(title, artist, album, year, filename, time, hash);
 	}
 	
 	
@@ -121,7 +123,7 @@ public class TestScan
 			RAlbum album = null;
 			for(RTrack t: tracks)
 			{
-				RAlbum a = t.getAlbum();
+				RAlbum a = t.getRAlbum();
 				if(a != album)
 				{
 					a.write(wr);

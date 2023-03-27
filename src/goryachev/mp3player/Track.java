@@ -25,7 +25,7 @@ public class Track
 	
 	public File getFile()
 	{
-		String path = track.getAlbum().getPath();
+		String path = track.getRAlbum().getPath();
 		String filename = track.getFileName();
 		return db.getFile(path, filename);
 	}
@@ -45,7 +45,7 @@ public class Track
 
 	public int getAlbumTrackCount()
 	{
-		return track.getAlbum().getTrackCount();
+		return track.getRAlbum().getTrackCount();
 	}
 
 
@@ -73,8 +73,14 @@ public class Track
 	}
 
 
-	public int getTrackNumber()
+	public int getTrackIndex()
 	{
-		return track.getTrackNumber();
+		return track.getTrackIndex();
+	}
+	
+	
+	public String toString()
+	{
+		return track.toString();
 	}
 }

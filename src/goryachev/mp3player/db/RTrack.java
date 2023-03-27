@@ -17,21 +17,23 @@ public class RTrack
 	private final String album;
 	private final String year;
 	private final String filename;
+	private final long timestamp;
 	private final String hash;
 	
 	
-	public RTrack(String title, String artist, String album, String year, String filename, String hash)
+	public RTrack(String title, String artist, String album, String year, String filename, long timestamp, String hash)
 	{
 		this.title = title;
 		this.artist = artist;
 		this.album = album;
 		this.year = year;
 		this.filename = filename;
+		this.timestamp = timestamp;
 		this.hash = hash;
 	}
 	
 	
-	// "T|title|artist|album|year|hash|filename"
+	// "T|title|artist|album|year|hash|timestamp|filename"
 	public void write(Writer wr) throws Exception
 	{
 		wr.write("T|");
@@ -45,6 +47,8 @@ public class RTrack
 		wr.write("|");
 		wr.write(Utils.encode(hash));
 		wr.write("|");
+		wr.write(String.valueOf(timestamp));
+		wr.write("|");
 		wr.write(Utils.encode(filename));
 		wr.write("\n");
 	}
@@ -53,7 +57,7 @@ public class RTrack
 	public static RTrack parse(String text) throws Exception
 	{
 		String[] ss = CKit.split(text, '|');
-		if(ss.length == 7)
+		if(ss.length == 8)
 		{
 			if("T".equals(ss[0]))
 			{
@@ -62,9 +66,10 @@ public class RTrack
 				String album = Utils.decode(ss[3]);
 				String year = Utils.decode(ss[4]);
 				String hash = Utils.decode(ss[5]);
-				String filename = Utils.decode(ss[6]);
+				long timestamp = Long.parseLong(ss[6]);
+				String filename = Utils.decode(ss[7]);
 
-				return new RTrack(title, artist, album, year, filename, hash);
+				return new RTrack(title, artist, album, year, filename, timestamp, hash);
 			}
 		}
 		return null;
@@ -77,15 +82,15 @@ public class RTrack
 	}
 	
 	
-	public RAlbum getAlbum()
+	public RAlbum getRAlbum()
 	{
 		return parent;
 	}
 	
 	
-	public int getTrackNumber()
+	public int getTrackIndex()
 	{
-		return parent.trackNumber(this);
+		return parent.trackIndex(this);
 	}
 	
 	
@@ -110,6 +115,12 @@ public class RTrack
 	public String getYear()
 	{
 		return year;
+	}
+	
+	
+	public String getHash()
+	{
+		return hash;
 	}
 	
 	
@@ -160,7 +171,7 @@ public class RTrack
 			sb.append(", ");
 		}
 		sb.append("filename=").append(filename);
-		
+		sb.append("}");
 		return sb.toString();
 	}
 }
