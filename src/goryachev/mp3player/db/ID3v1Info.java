@@ -22,29 +22,63 @@ public class ID3v1Info
 	{
 		if(tag.length == 128)
 		{
-			title = parse(tag, 3, 30);
-			artist = parse(tag, 33, 30);
-			album = parse(tag, 63, 30);
-			year = parse(tag, 93, 4);
-			//comment = parse(tag,97,30);
+			UniversalDetector d = new UniversalDetector();
+			handleData(d, tag, 3, 30);
+			handleData(d, tag, 33, 30);
+			handleData(d, tag, 63, 30);
+			handleData(d, tag, 93, 4);
+			handleData(d, tag, 97, 30);
+			d.dataEnd();
+			String enc = d.getDetectedCharset();
+			if(enc == null)
+			{
+				enc = "UTF-8";
+			}
+
+			title = parse(tag, 3, 30, enc);
+			artist = parse(tag, 33, 30, enc);
+			album = parse(tag, 63, 30, enc);
+			year = parse(tag, 93, 4, enc);
+			//comment = parse(tag, 97, 30, enc);
 		}
+	}
+	
+	
+	private static void handleData(UniversalDetector d, byte[] bytes, int off, int len)
+	{
+		len = findZero(bytes, off, len);
+		if(len > 0)
+		{
+			d.handleData(bytes, off, len);
+		}
+	}
+	
+	
+	private static int findZero(byte[] bytes, int off, int len)
+	{
+		for(int i=0; i<len; i++)
+		{
+			if(bytes[i] == 0)
+			{
+				return i;
+			}
+		}
+		return len;
 	}
 
 
-	protected String parse(byte[] bytes, int offset, int length)
+	protected String parse(byte[] bytes, int off, int len, String enc)
 	{
-		UniversalDetector d = new UniversalDetector();
-		d.handleData(bytes, offset, length);
-		d.dataEnd();
-		String enc = d.getDetectedCharset();
+		len = findZero(bytes, off, len);
 		
 		try
 		{
-			return new String(bytes, offset, length, enc).trim();
+			return new String(bytes, off, len, enc).trim();
 		}
 		catch(Exception e)
 		{
-			return new String(bytes, offset, length, CKit.CHARSET_ASCII);
+			e.printStackTrace();
+			return new String(bytes, off, len, CKit.CHARSET_ASCII).trim();
 		}
 	}
 
