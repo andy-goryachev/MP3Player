@@ -127,7 +127,7 @@ public class MusicDB
 
 
 	/** returns a value which is the same across the tracks, given the getter, or null */
-	protected String getIfSame(RTrack[] ts, Function<RTrack,String> getter)
+	protected static String getIfSame(RTrack[] ts, Function<RTrack,String> getter)
 	{
 		String rv = null;
 		for(RTrack t: ts)
@@ -198,11 +198,6 @@ public class MusicDB
 		}
 		
 		String filename = f.getName();
-		if(CKit.isBlank(title))
-		{
-			title = Utils.trimExtension(filename);
-		}
-		
 		String hash = Utils.computeHash(f);
 		
 		return new RTrack(title, artist, album, year, filename, hash);

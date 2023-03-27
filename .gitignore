@@ -8,3 +8,4 @@
 /*.log
 /*.conf
 hs_err_pid*
+/test.out/
