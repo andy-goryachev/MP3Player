@@ -178,7 +178,7 @@ public class MainWindow extends FxWindow
 	
 	public void prevAlbum()
 	{
-		// TODO
+		// TODO track from history
 	}
 	
 	
@@ -288,14 +288,18 @@ public class MainWindow extends FxWindow
 			MusicDB db = MusicDB.load(musicDir, f);
 			if(db == null)
 			{
+				// old track info is invalid
+				GlobalSettings.setInt(CURRENT_TRACK, -1);
+				
 				// FIX scanning should not happen in the FX thread!
+				// TODO scan dialog
 				db = MusicDB.scan(musicDir);
 				db.save(f);
 			}
 			
 			setDB(db);
 			
-			// TODO if current track  exists, play it
+			// if current track  exists, play it
 			int ix = GlobalSettings.getInt(CURRENT_TRACK, -1);
 			if(ix >= 0)
 			{
@@ -308,7 +312,7 @@ public class MainWindow extends FxWindow
 				}
 			}
 			
-			// otherwise, jump
+			// otherwise, random track
 			jump();				
 			return;
 		}
