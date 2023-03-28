@@ -15,6 +15,9 @@ import javafx.scene.control.Slider;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 import javafx.scene.paint.Color;
+import javafx.scene.paint.CycleMethod;
+import javafx.scene.paint.LinearGradient;
+import javafx.scene.paint.Stop;
 import javafx.util.Duration;
 
 
@@ -78,38 +81,51 @@ public class MainWindow extends FxWindow
 			handleSliderMoved();
 		});
 		
-		CPane fp = new CPane();
-		fp.setPadding(0, 5);
-		fp.setHGap(2);
-		fp.setVGap(2);
-		fp.addRows
-		(
-			CPane.PREF,
-			CPane.PREF,
-			CPane.PREF,
-			CPane.PREF
-		);
-		fp.addColumns(CPane.FILL);
-		fp.add(0, 0, titleField);
-		fp.add(0, 1, albumField);
-		fp.add(0, 2, artistField);
-		fp.add(0, 3, yearField);
-		
 		int w0 = 60;
 		int w1 = 30;
+		int gp = 2;
 		
-		CPane p = new CPane();
-		p.setPadding(2);
-		p.setHGap(2);
-		p.setVGap(2);
-		p.addRows
+		CPane tp = new CPane();
+		Stop[] stops =
+		{
+			new Stop(0, Color.gray(0.85)),
+			new Stop(1, Color.gray(0.95))
+		};
+		tp.setBackground(FX.background(new LinearGradient(0, 0, 0, 1, true, CycleMethod.NO_CYCLE, stops))); // FIX
+		tp.setPadding(gp);
+		tp.setHGap(10);
+		tp.setVGap(gp);
+		tp.addRows
+		(
+			CPane.PREF,
+			CPane.PREF,
+			CPane.PREF,
+			CPane.PREF,
+			CPane.FILL,
+			gp
+		);
+		tp.addColumns
 		(
 			w0 + w0,
-			CPane.PREF,
+			CPane.FILL
+		);
+		tp.add(0, 0, 1, 5, artField);
+		tp.add(1, 0, titleField);
+		tp.add(1, 1, albumField);
+		tp.add(1, 2, artistField);
+		tp.add(1, 3, yearField);
+				
+		CPane bp = new CPane();
+		bp.setPadding(gp);
+		bp.setHGap(gp);
+		bp.setVGap(gp);
+		bp.addRows
+		(
+			CPane.FILL,
 			CPane.PREF,
 			w1
 		);
-		p.addColumns
+		bp.addColumns
 		(
 			w0,
 			w0,
@@ -120,19 +136,33 @@ public class MainWindow extends FxWindow
 			w1,
 			w1
 		);
-		p.add(0, 0, 2, 1, artField);
-		p.add(2, 0, 5, 1, fp);
-		p.add(4, 1, trackField);
-		p.add(0, 1, 1, 3, new FxButton("Play", this::togglePlay));
-		p.add(1, 1, 1, 3, new FxButton("Jump", this::jump));
-		p.add(4, 2, timeField);
-		p.add(5, 2, durationField);
-		p.add(2, 3, new FxButton("|<<", this::prevAlbum));
-		p.add(3, 3, new FxButton("|<", this::prevTrack));
-		p.add(4, 3, 2, 1, timeSlider);
-		p.add(6, 3, new FxButton(">|", this::nextTrack));
-		p.add(7, 3, new FxButton(">>|", this::nextAlbum));
-		setCenter(p);
+		bp.add(0, 0, 1, 3, new FxButton("Play", this::togglePlay));
+		bp.add(1, 0, 1, 3, new FxButton("Jump", this::jump));
+		bp.add(4, 0, trackField);
+		bp.add(4, 1, timeField);
+		bp.add(5, 1, durationField);
+		bp.add(2, 2, new FxButton("|<<", this::prevAlbum));
+		bp.add(3, 2, new FxButton("|<", this::prevTrack));
+		bp.add(4, 2, 2, 1, timeSlider);
+		bp.add(6, 2, new FxButton(">|", this::nextTrack));
+		bp.add(7, 2, new FxButton(">>|", this::nextAlbum));
+		bp.setBackground(FX.background(Color.gray(0.8)));
+		
+		CPane mp = new CPane();
+		mp.addRows
+		(
+			w0 + w0 + gp + gp,
+			w0 + gp + gp,
+			gp + gp
+		);
+		mp.addColumns
+		(
+			CPane.FILL
+		);
+		mp.add(0, 0, tp);
+		mp.add(0, 1, bp);
+		
+		setCenter(mp);
 		setWidth(550);
 		setResizable(false);
 	}
