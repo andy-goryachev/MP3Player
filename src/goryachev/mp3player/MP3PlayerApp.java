@@ -3,6 +3,7 @@ package goryachev.mp3player;
 import goryachev.common.log.Log;
 import goryachev.common.util.CPlatform;
 import goryachev.common.util.GlobalSettings;
+import goryachev.fx.CssLoader;
 import java.io.File;
 import javafx.application.Application;
 import javafx.stage.Stage;
@@ -27,6 +28,8 @@ public class MP3PlayerApp extends Application
 	
 	public void start(Stage s) throws Exception
 	{
+		CssLoader.setStyles(Styles::new);
+		
 		MainWindow w = new MainWindow();
 		w.open();
 		w.initialize();

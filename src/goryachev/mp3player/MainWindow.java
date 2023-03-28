@@ -3,8 +3,10 @@ package goryachev.mp3player;
 import goryachev.common.log.Log;
 import goryachev.common.util.GlobalSettings;
 import goryachev.fx.CPane;
+import goryachev.fx.CssStyle;
 import goryachev.fx.FX;
 import goryachev.fx.FxButton;
+import goryachev.fx.FxDump;
 import goryachev.fx.FxWindow;
 import goryachev.mp3player.db.MusicDB;
 import goryachev.mp3player.util.Utils;
@@ -26,8 +28,11 @@ import javafx.util.Duration;
  */
 public class MainWindow extends FxWindow
 {
-	protected static final String CURRENT_TRACK = "CURRENT_TRACK";
 	protected static final Log log = Log.get("MainWindow");
+	protected static final String CURRENT_TRACK = "CURRENT_TRACK";
+	public static final CssStyle BUTTON_PANE = new CssStyle("MainWindow_BUTTON_PANE");
+	public static final CssStyle MAIN_PANE = new CssStyle("MainWindow_MAIN_PANE");
+	public static final CssStyle INFO_PANE = new CssStyle("MainWindow_INFO_PANE");
 	protected MusicDB database;
 	protected final Label artField;
 	protected final Label titleField;
@@ -46,7 +51,8 @@ public class MainWindow extends FxWindow
 	public MainWindow()
 	{
 		super("MainWindow");
-		setTitle("Player");
+		setTitle("MP3 Player");
+		FxDump.attach(this); // FIX
 
 		artField = new Label();
 		artField.setId("artField");
@@ -74,6 +80,13 @@ public class MainWindow extends FxWindow
 		durationField = new Label("00:00");
 		durationField.setAlignment(Pos.CENTER_RIGHT);
 		durationField.setId("durationField");
+		
+		FxButton playButton = new FxButton("", this::togglePlay);
+		FxButton jumpButton = new FxButton("", this::jump);
+		FxButton prevAlbumButton = new FxButton("", this::prevAlbum);
+		FxButton prevTrackButton = new FxButton("", this::prevTrack);
+		FxButton nextTrackButton = new FxButton("", this::nextTrack);
+		FxButton nextAlbumButton = new FxButton("", this::nextAlbum);
 
 		timeSlider = new Slider();
 		timeSlider.valueProperty().addListener((x) ->
@@ -83,9 +96,10 @@ public class MainWindow extends FxWindow
 		
 		int w0 = 60;
 		int w1 = 30;
-		int gp = 2;
+		int gp = 4;
 		
 		CPane tp = new CPane();
+		INFO_PANE.set(tp);
 		Stop[] stops =
 		{
 			new Stop(0, Color.gray(0.85)),
@@ -101,12 +115,11 @@ public class MainWindow extends FxWindow
 			CPane.PREF,
 			CPane.PREF,
 			CPane.PREF,
-			CPane.FILL,
-			gp
+			CPane.FILL
 		);
 		tp.addColumns
 		(
-			w0 + w0,
+			w0 + w0 + gp,
 			CPane.FILL
 		);
 		tp.add(0, 0, 1, 5, artField);
@@ -116,6 +129,7 @@ public class MainWindow extends FxWindow
 		tp.add(1, 3, yearField);
 				
 		CPane bp = new CPane();
+		BUTTON_PANE.set(bp);
 		bp.setPadding(gp);
 		bp.setHGap(gp);
 		bp.setVGap(gp);
@@ -136,24 +150,25 @@ public class MainWindow extends FxWindow
 			w1,
 			w1
 		);
-		bp.add(0, 0, 1, 3, new FxButton("Play", this::togglePlay));
-		bp.add(1, 0, 1, 3, new FxButton("Jump", this::jump));
-		bp.add(4, 0, trackField);
+		bp.add(0, 0, 1, 3, playButton);
+		bp.add(1, 0, 1, 3, jumpButton);
+		//bp.add(4, 0, trackField);
+		bp.add(6, 1, 2, 1, trackField);
 		bp.add(4, 1, timeField);
 		bp.add(5, 1, durationField);
-		bp.add(2, 2, new FxButton("|<<", this::prevAlbum));
-		bp.add(3, 2, new FxButton("|<", this::prevTrack));
+		bp.add(2, 2, prevAlbumButton);
+		bp.add(3, 2, prevTrackButton);
 		bp.add(4, 2, 2, 1, timeSlider);
-		bp.add(6, 2, new FxButton(">|", this::nextTrack));
-		bp.add(7, 2, new FxButton(">>|", this::nextAlbum));
+		bp.add(6, 2, nextTrackButton);
+		bp.add(7, 2, nextAlbumButton);
 		bp.setBackground(FX.background(Color.gray(0.8)));
 		
 		CPane mp = new CPane();
+		MAIN_PANE.set(mp);
 		mp.addRows
 		(
-			w0 + w0 + gp + gp,
-			w0 + gp + gp,
-			gp + gp
+			w0 + w0 + gp + gp + gp,
+			w0 + gp + gp
 		);
 		mp.addColumns
 		(

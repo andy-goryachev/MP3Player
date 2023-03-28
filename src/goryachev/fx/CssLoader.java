@@ -23,7 +23,7 @@ import javafx.application.Platform;
 public class CssLoader
 {
 	protected static final Log log = Log.get("CssLoader");
-	public static final String PREFIX = "javafxcss";
+	//public static final String PREFIX = "javafxcss";
 	private static String url;
 	private static Supplier<FxStyleSheet> generator;
 	private static CSet<String> styles;
@@ -33,6 +33,7 @@ public class CssLoader
 	{
 		try
 		{
+			/*
 			UrlStreamFactory.registerHandler(PREFIX, new URLStreamHandler()
 			{
 				protected URLConnection openConnection(URL url) throws IOException
@@ -58,6 +59,7 @@ public class CssLoader
 					};
 				}
 			});
+			*/
 			
 			if(FxConfig.cssRefreshEnabled())
 			{
@@ -97,16 +99,22 @@ public class CssLoader
 	}
 	
 	
+//	protected static String encodeUrl(String css)
+//	{
+//		return PREFIX + ":" + Base64.encode(CKit.getBytes(css));
+//	}
+	
+	
+//	protected static byte[] decode(String css) throws Exception
+//	{
+//		css = css.substring(PREFIX.length() + 1);
+//		return Base64.decode(CKit.getBytes(css));
+//	}
+	
+	
 	protected static String encode(String css)
 	{
-		return PREFIX + ":" + Base64.encode(CKit.getBytes(css));
-	}
-	
-	
-	protected static byte[] decode(String css) throws Exception
-	{
-		css = css.substring(PREFIX.length() + 1);
-		return Base64.decode(CKit.getBytes(css));
+		return "data:text/css;base64," + Base64.encode(CKit.getBytes(css));
 	}
 	
 

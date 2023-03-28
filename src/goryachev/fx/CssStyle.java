@@ -1,6 +1,7 @@
 // Copyright © 2016-2023 Andy Goryachev <andy@goryachev.com>
 package goryachev.fx;
 import goryachev.common.util.FH;
+import javafx.scene.Node;
 
 
 /**
@@ -52,5 +53,11 @@ public class CssStyle
 	public String toString()
 	{
 		return getName();
+	}
+	
+	
+	public void set(Node n)
+	{
+		n.getStyleClass().add(getName());
 	}
 }

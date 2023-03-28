@@ -7,6 +7,9 @@ package goryachev.fx;
  */
 public class FxConfig
 {
-	/** -Dcss.refresh=true enables polling of css style sheet for changes */
+	/**
+	 * To enable polling of css style sheet for changes:
+	 * -Dcss.refresh=true 
+	 */
 	public static boolean cssRefreshEnabled() { return Boolean.getBoolean("css.refresh"); };
 }
