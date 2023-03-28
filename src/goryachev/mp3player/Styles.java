@@ -18,6 +18,8 @@ public class Styles
 		Theme theme = Theme.current();
 		Color buttonPanel = Color.gray(0.8);
 		Color bottomInfo = Color.gray(1.0);
+		Color lightBorder = Color.gray(0.9);
+		Color darkBorder = Color.gray(0.5);
 		
 		add
 		(
@@ -34,8 +36,8 @@ public class Styles
 			selector(MainWindow.MAIN_PANE, ".button").defines
 			(
 				// "-fx-shadow-highlight-color, -fx-outer-border, -fx-inner-border, -fx-body-color"),
-			    //prop("-fx-background-color", "-fx-outer-border, -fx-inner-border, transparent"),
-				prop("-fx-background-color", "blue, yellow, transparent"),
+			    prop("-fx-background-color", CssTools.toColor(darkBorder) + ", " + CssTools.toColor(lightBorder) + ", " + CssTools.toColor(buttonPanel)),
+				//prop("-fx-background-color", "blue, yellow, transparent"),
 			    prop("-fx-background-insets", "0, 1, 2"),
 			    prop("-fx-background-radius", "3px, 2px, 0px"),
 			    prop("-fx-padding", 0),
@@ -44,7 +46,7 @@ public class Styles
 			selector(MainWindow.MAIN_PANE, ".button:hover").defines
 			(
 //				prop("-fx-color", "red")
-				prop("-fx-background-color", "-fx-outer-border, -fx-inner-border, red")
+				prop("-fx-background-color", "-fx-outer-border, -fx-inner-border, white")
 			)
 			
 			/*

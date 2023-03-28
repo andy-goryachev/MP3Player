@@ -58,26 +58,27 @@ public class MainWindow extends FxWindow
 		artField.setId("artField");
 		artField.setBackground(FX.background(Color.GRAY));
 
-		titleField = new Label("Track Name");
+		titleField = new Label();
 		titleField.setId("titleField");
 		titleField.setStyle("-fx-font-weight:bold; -fx-font-size:125%;");
 		
-		albumField = new Label("Album");
+		albumField = new Label();
 		albumField.setId("albumField");
 		
-		artistField = new Label("Artist");
+		artistField = new Label();
 		artistField.setId("artistField");
 		
-		yearField = new Label("2023");
+		yearField = new Label();
 		yearField.setId("yearField");
 		
 		trackField = new Label();
 		trackField.setId("trackField");
+		trackField.setAlignment(Pos.CENTER_RIGHT);
 		
-		timeField = new Label("00:00");
+		timeField = new Label();
 		timeField.setId("timeField");
 		
-		durationField = new Label("00:00");
+		durationField = new Label();
 		durationField.setAlignment(Pos.CENTER_RIGHT);
 		durationField.setId("durationField");
 		
@@ -105,7 +106,6 @@ public class MainWindow extends FxWindow
 			new Stop(0, Color.gray(0.85)),
 			new Stop(1, Color.gray(0.95))
 		};
-		tp.setBackground(FX.background(new LinearGradient(0, 0, 0, 1, true, CycleMethod.NO_CYCLE, stops))); // FIX
 		tp.setPadding(gp);
 		tp.setHGap(10);
 		tp.setVGap(gp);
