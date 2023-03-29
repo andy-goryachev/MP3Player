@@ -7,6 +7,9 @@ import java.io.File;
 import java.io.StringWriter;
 import java.io.Writer;
 import java.util.List;
+import com.mpatric.mp3agic.ID3v1;
+import com.mpatric.mp3agic.ID3v2;
+import com.mpatric.mp3agic.Mp3File;
 
 
 /**
@@ -28,7 +31,7 @@ public class TestScan
 	}
 	
 	
-	protected static void scanDir(CList<RTrack> tracks, File root, File dir)
+	protected static void scanDir(CList<RTrack> tracks, File root, File dir) throws Exception
 	{
 		if(dir.isDirectory())
 		{
@@ -112,6 +115,82 @@ public class TestScan
 		long time = f.lastModified();
 		String hash = Utils.computeHash(f);
 		
+		return new RTrack(title, artist, album, year, filename, time, hash);
+	}
+
+
+	protected static RTrack createTrack2(File f)
+	{
+		String title;
+		String artist;
+		String album;
+		String year;
+
+		try
+		{
+			Mp3File mf = new Mp3File(f);
+			if(mf.hasId3v2Tag())
+			{
+				ID3v2 t = mf.getId3v2Tag();
+	//			System.out.println("Track: " + t.getTrack());
+	//			System.out.println("Artist: " + t.getArtist());
+	//			System.out.println("Title: " + t.getTitle());
+	//			System.out.println("Album: " + t.getAlbum());
+	//			System.out.println("Year: " + t.getYear());
+	//			System.out.println("Genre: " + t.getGenre() + " (" + t.getGenreDescription() + ")");
+	//			System.out.println("Comment: " + t.getComment());
+	//			System.out.println("Lyrics: " + t.getLyrics());
+	//			System.out.println("Composer: " + t.getComposer());
+	//			System.out.println("Publisher: " + t.getPublisher());
+	//			System.out.println("Original artist: " + t.getOriginalArtist());
+	//			System.out.println("Album artist: " + t.getAlbumArtist());
+	//			System.out.println("Copyright: " + t.getCopyright());
+	//			System.out.println("URL: " + t.getUrl());
+	//			System.out.println("Encoder: " + t.getEncoder());
+				
+				title = t.getTitle();
+				artist = t.getArtist();
+				album = t.getAlbum();
+				year = t.getYear();
+			}
+			else if(mf.hasId3v1Tag())
+			{
+				ID3v1 t = mf.getId3v1Tag();
+	//			System.out.println("Track: " + t.getTrack());
+	//			System.out.println("Artist: " + t.getArtist());
+	//			System.out.println("Title: " + t.getTitle());
+	//			System.out.println("Album: " + t.getAlbum());
+	//			System.out.println("Year: " + t.getYear());
+	//			System.out.println("Genre: " + t.getGenre() + " (" + t.getGenreDescription() + ")");
+	//			System.out.println("Comment: " + t.getComment());
+				
+				title = t.getTitle();
+				artist = t.getArtist();
+				album = t.getAlbum();
+				year = t.getYear();
+			}
+			else
+			{
+				title = null;
+				artist = null;
+				album = null;
+				year = null;
+			}
+		}
+		catch(Exception e)
+		{
+			System.err.println("ERROR in file=" + f);
+			e.printStackTrace();
+			title = null;
+			artist = null;
+			album = null;
+			year = null;
+		}
+
+		String filename = f.getName();
+		long time = f.lastModified();
+		String hash = Utils.computeHash(f);
+
 		return new RTrack(title, artist, album, year, filename, time, hash);
 	}
 	

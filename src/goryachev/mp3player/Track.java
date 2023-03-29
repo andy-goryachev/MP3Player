@@ -3,6 +3,7 @@ package goryachev.mp3player;
 import goryachev.mp3player.db.MusicDB;
 import goryachev.mp3player.db.RTrack;
 import java.io.File;
+import javafx.scene.image.Image;
 
 
 /**
@@ -82,5 +83,12 @@ public class Track
 	public String toString()
 	{
 		return track.toString();
+	}
+
+
+	public Image getCoverArt()
+	{
+		// TODO
+		return null;
 	}
 }

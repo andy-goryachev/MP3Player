@@ -35,36 +35,21 @@ public class Styles
 			),
 			selector(MainWindow.MAIN_PANE, ".button").defines
 			(
-				// "-fx-shadow-highlight-color, -fx-outer-border, -fx-inner-border, -fx-body-color"),
 			    prop("-fx-background-color", CssTools.toColor(darkBorder) + ", " + CssTools.toColor(lightBorder) + ", " + CssTools.toColor(buttonPanel)),
-				//prop("-fx-background-color", "blue, yellow, transparent"),
 			    prop("-fx-background-insets", "0, 1, 2"),
 			    prop("-fx-background-radius", "3px, 2px, 0px"),
-			    prop("-fx-padding", 0),
-			    prop("-fx-color", "white")
+			    prop("-fx-padding", 0)
 			),
 			selector(MainWindow.MAIN_PANE, ".button:hover").defines
 			(
-//				prop("-fx-color", "red")
-				prop("-fx-background-color", "-fx-outer-border, -fx-inner-border, white")
-			)
-			
-			/*
-			selector(".table-view .cell").defines
-			(
-				padding(0)
+				prop("-fx-background-color", CssTools.toColor(darkBorder) + ", " + CssTools.toColor(lightBorder) + ", white")
 			),
-			selector(".cell").defines
+			selector(MainWindow.MAIN_PANE, ".button:armed").defines
 			(
-				padding(0)
-			),
-
-			selector(".list-cell:odd").defines
-			(
-				// disable alternative background in list view
-			    prop("-fx-background", "-fx-control-inner-background")
+				//prop("-fx-background-color", CssTools.toColor(darkBorder) + ", " + CssTools.toColor(lightBorder) + ", yellow"),
+				prop("-fx-translate-x", "1px"),
+			    prop("-fx-translate-y", "1px")
 			)
-			*/
 		);
 	}
 }

@@ -14,11 +14,10 @@ import java.io.File;
 import javafx.geometry.Pos;
 import javafx.scene.control.Label;
 import javafx.scene.control.Slider;
+import javafx.scene.image.Image;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 import javafx.scene.paint.Color;
-import javafx.scene.paint.CycleMethod;
-import javafx.scene.paint.LinearGradient;
 import javafx.scene.paint.Stop;
 import javafx.util.Duration;
 
@@ -34,7 +33,7 @@ public class MainWindow extends FxWindow
 	public static final CssStyle MAIN_PANE = new CssStyle("MainWindow_MAIN_PANE");
 	public static final CssStyle INFO_PANE = new CssStyle("MainWindow_INFO_PANE");
 	protected MusicDB database;
-	protected final Label artField;
+	protected final CoverArtLabel artField;
 	protected final Label titleField;
 	protected final Label albumField;
 	protected final Label artistField;
@@ -54,9 +53,8 @@ public class MainWindow extends FxWindow
 		setTitle("MP3 Player");
 		FxDump.attach(this); // FIX
 
-		artField = new Label();
+		artField = new CoverArtLabel();
 		artField.setId("artField");
-		artField.setBackground(FX.background(Color.GRAY));
 
 		titleField = new Label();
 		titleField.setId("titleField");
@@ -248,50 +246,6 @@ public class MainWindow extends FxWindow
 	}
 	
 	
-	protected void play(Track t)
-	{
-		log.info(t);
-		
-		int ix = t.getIndex();
-		GlobalSettings.setInt(CURRENT_TRACK, ix);
-		
-		int num = t.getTrackIndex() + 1;
-		trackField.setText(num + "/" + t.getAlbumTrackCount());
-		
-		titleField.setText(t.getTitle());
-		albumField.setText(t.getAlbumName());
-		artistField.setText(t.getArtist());
-		yearField.setText(t.getYear());
-		
-		File f = t.getFile();
-		Media media = new Media(f.toURI().toString());
-
-		if(player != null)
-		{
-			player.dispose();
-		}
-		
-		MediaPlayer p = new MediaPlayer(media);
-		p.currentTimeProperty().addListener((s,pr,c) ->
-		{
-			Duration time = player.getCurrentTime();
-			timeField.setText(Utils.formatTime(time));
-			
-			Duration duration = player.getTotalDuration();
-			durationField.setText(Utils.formatTime(duration));
-					
-			timeSlider.setValue(time.toMillis() / duration.toMillis() * 100);
-		});
-		p.setOnEndOfMedia(() ->
-		{
-			nextTrack();
-		});
-		currentTrack = t;
-		p.play();
-		player = p;
-	}
-	
-	
 	public void stop()
 	{
 		if(player != null)
@@ -361,5 +315,53 @@ public class MainWindow extends FxWindow
 			jump();				
 			return;
 		}
+	}
+	
+	
+	protected void play(Track t)
+	{
+		log.info(t);
+		
+		int ix = t.getIndex();
+		GlobalSettings.setInt(CURRENT_TRACK, ix);
+		
+		int num = t.getTrackIndex() + 1;
+		trackField.setText(num + "/" + t.getAlbumTrackCount());
+		
+		titleField.setText(t.getTitle());
+		albumField.setText(t.getAlbumName());
+		artistField.setText(t.getArtist());
+		yearField.setText(t.getYear());
+		
+		File f = t.getFile();
+		
+		Image im = t.getCoverArt();
+		artField.setArt(im);
+		
+		Media media = new Media(f.toURI().toString());
+
+		if(player != null)
+		{
+			player.dispose();
+		}
+		
+		MediaPlayer p = new MediaPlayer(media);
+		p.currentTimeProperty().addListener((s,pr,c) ->
+		{
+			Duration time = player.getCurrentTime();
+			timeField.setText(Utils.formatTime(time));
+			
+			Duration duration = player.getTotalDuration();
+			durationField.setText(Utils.formatTime(duration));
+					
+			timeSlider.setValue(time.toMillis() / duration.toMillis() * 100);
+		});
+		p.setOnEndOfMedia(() ->
+		{
+			nextTrack();
+		});
+		currentTrack = t;
+		p.play();
+		player = p;
 	}
 }
