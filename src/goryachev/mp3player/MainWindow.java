@@ -15,6 +15,8 @@ import javafx.geometry.Pos;
 import javafx.scene.control.Label;
 import javafx.scene.control.Slider;
 import javafx.scene.image.Image;
+import javafx.scene.input.MouseButton;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 import javafx.scene.paint.Color;
@@ -127,6 +129,13 @@ public class MainWindow extends FxWindow
 		tp.add(1, 2, artistField);
 		tp.add(1, 3, yearField);
 		tp.add(1, 4, trackField); // still, not a good place for this label
+		tp.addEventHandler(MouseEvent.MOUSE_CLICKED, (ev) ->
+		{
+			if((ev.getClickCount() == 1) && (ev.getButton() == MouseButton.PRIMARY))
+			{
+				ContentManagerWindow.openAlbum(currentTrack);
+			}
+		});
 				
 		CPane bp = new CPane();
 		BUTTON_PANE.set(bp);
