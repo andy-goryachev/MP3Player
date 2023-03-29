@@ -49,6 +49,10 @@ public class Styles
 				//prop("-fx-background-color", CssTools.toColor(darkBorder) + ", " + CssTools.toColor(lightBorder) + ", yellow"),
 				prop("-fx-translate-x", "1px"),
 			    prop("-fx-translate-y", "1px")
+			),
+			selector("#artField").defines
+			(
+				effect("dropshadow(gaussian, gray, 10, 0, 2, 2)")
 			)
 		);
 	}

@@ -88,7 +88,7 @@ public class Track
 
 	public Image getCoverArt()
 	{
-		// TODO
-		return null;
+		File dir = getFile().getParentFile();
+		return db.getCoverArt(dir);
 	}
 }

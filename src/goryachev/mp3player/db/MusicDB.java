@@ -7,14 +7,18 @@ import goryachev.common.util.CList;
 import goryachev.common.util.CSorter;
 import goryachev.mp3player.Track;
 import goryachev.mp3player.util.Utils;
+import java.io.BufferedInputStream;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
+import java.io.FilenameFilter;
 import java.security.SecureRandom;
 import java.util.function.Function;
+import javafx.scene.image.Image;
 
 
 /**
@@ -27,6 +31,7 @@ public class MusicDB
 	private static final String IDv1 = "F|2023.0326.2206";
 	private final File root;
 	private final CList<RTrack> tracks = new CList<>();
+	private final SmallImageCache imageCache = new SmallImageCache(8);
 	// TODO user-entered track info db
 	private final SecureRandom random;
 	
@@ -417,5 +422,69 @@ public class MusicDB
 	public File getFile(String path, String filename)
 	{
 		return new File(root, path + "/" + filename);
+	}
+	
+	
+	public Image getCoverArt(File dir)
+	{
+		Image im = imageCache.get(dir);
+		if(im == null)
+		{
+			im = loadCoverArt(dir);
+			if(im != null)
+			{
+				imageCache.add(dir, im);
+			}
+		}
+		return im;
+	}
+
+
+	protected Image loadCoverArt(File dir)
+	{
+		FilenameFilter ff = new FilenameFilter()
+		{
+			public boolean accept(File dir, String name)
+			{
+				int ix = name.lastIndexOf('.');
+				if(ix > 0)
+				{
+					String ext = name.substring(ix + 1).toLowerCase();
+					switch(ext)
+					{
+					case "jpg":
+					case "jpeg":
+					case "gif":
+					case "png":
+						return true;
+					}
+				}
+				return false;
+			}
+		};
+
+		File[] fs = dir.listFiles(ff);
+		if(fs != null)
+		{
+			for(File f: fs)
+			{
+				try
+				{
+					BufferedInputStream in = new BufferedInputStream(new FileInputStream(f));
+					try
+					{
+						return new Image(in);
+					}
+					finally
+					{
+						CKit.close(in);
+					}
+				}
+				catch(Exception ignore)
+				{
+				}
+			}
+		}
+		return null;
 	}
 }

@@ -336,7 +336,7 @@ public class MainWindow extends FxWindow
 		File f = t.getFile();
 		
 		Image im = t.getCoverArt();
-		artField.setArt(im);
+		artField.setImage(im);
 		
 		Media media = new Media(f.toURI().toString());
 
