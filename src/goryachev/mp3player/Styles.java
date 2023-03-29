@@ -16,11 +16,11 @@ public class Styles
 	public Styles()
 	{
 		Theme theme = Theme.current();
-		Color buttonPanel = Color.gray(0.8);
+		Color buttonPanel = Color.gray(0.82);
 		Color bottomInfo = Color.gray(1.0);
 		Color lightBorder = Color.gray(0.9);
 		Color darkBorder = Color.gray(0.5);
-		
+
 		add
 		(
 			new CommonStyles(),

@@ -18,7 +18,6 @@ import javafx.scene.image.Image;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 import javafx.scene.paint.Color;
-import javafx.scene.paint.Stop;
 import javafx.util.Duration;
 
 
@@ -42,6 +41,12 @@ public class MainWindow extends FxWindow
 	protected final Label timeField;
 	protected final Label durationField;
 	protected final Slider timeSlider;
+	protected final FxButton playButton;
+	protected final FxButton jumpButton;
+	protected final FxButton prevAlbumButton;
+	protected final FxButton prevTrackButton;
+	protected final FxButton nextTrackButton;
+	protected final FxButton nextAlbumButton;
 	private MediaPlayer player;
 	private Track currentTrack;
 	
@@ -80,33 +85,28 @@ public class MainWindow extends FxWindow
 		durationField.setAlignment(Pos.CENTER_RIGHT);
 		durationField.setId("durationField");
 		
-		FxButton playButton = new FxButton(Icons.pauseIcon(24), this::togglePlay);
-		FxButton jumpButton = new FxButton("", this::jump);
-		FxButton prevAlbumButton = new FxButton("", this::prevAlbum);
-		FxButton prevTrackButton = new FxButton("", this::prevTrack);
-		FxButton nextTrackButton = new FxButton("", this::nextTrack);
-		FxButton nextAlbumButton = new FxButton("", this::nextAlbum);
+		int w0 = 60;
+		int w1 = 30;
+		int gp = 4;
+		
+		playButton = new FxButton(Icons.play(), this::togglePlay);
+		jumpButton = new FxButton(Icons.jump(), this::jump);
+		prevAlbumButton = new FxButton(Icons.prevAlbum(), this::prevAlbum);
+		prevTrackButton = new FxButton(Icons.prevTrack(), this::prevTrack);
+		nextTrackButton = new FxButton(Icons.nextTrack(), this::nextTrack);
+		nextAlbumButton = new FxButton(Icons.nextAlbum(), this::nextAlbum);
 
 		timeSlider = new Slider();
 		timeSlider.valueProperty().addListener((x) ->
 		{
 			handleSliderMoved();
 		});
-		
-		int w0 = 60;
-		int w1 = 30;
-		int gp = 4;
-		
+				
 		CPane tp = new CPane();
 		INFO_PANE.set(tp);
-		Stop[] stops =
-		{
-			new Stop(0, Color.gray(0.85)),
-			new Stop(1, Color.gray(0.95))
-		};
 		tp.setPadding(gp);
 		tp.setHGap(10);
-		tp.setVGap(gp);
+		//tp.setVGap(gp);
 		tp.addRows
 		(
 			CPane.PREF,
@@ -121,7 +121,7 @@ public class MainWindow extends FxWindow
 			w0 + w0 + gp,
 			CPane.FILL
 		);
-		tp.add(0, 0, 1, 5, artField);
+		tp.add(0, 0, 1, 6, artField);
 		tp.add(1, 0, titleField);
 		tp.add(1, 1, albumField);
 		tp.add(1, 2, artistField);
@@ -323,6 +323,16 @@ public class MainWindow extends FxWindow
 	protected void play(Track t)
 	{
 		log.info(t);
+		
+		// FIX remove
+		{
+			playButton.setGraphic(Icons.play());
+			jumpButton.setGraphic(Icons.jump());
+			prevAlbumButton.setGraphic(Icons.prevAlbum());
+			prevTrackButton.setGraphic(Icons.prevTrack());
+			nextTrackButton.setGraphic(Icons.nextTrack());
+			nextAlbumButton.setGraphic(Icons.nextAlbum());
+		}
 		
 		int ix = t.getIndex();
 		GlobalSettings.setInt(CURRENT_TRACK, ix);

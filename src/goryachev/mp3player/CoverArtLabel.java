@@ -18,6 +18,7 @@ public class CoverArtLabel extends Pane
 		view = new ImageView();
 		view.setSmooth(true);
 		view.setPreserveRatio(true);
+		// TODO adjust computationally to clip so it uses 100% of the area
 		view.fitWidthProperty().bind(widthProperty());
 		view.fitHeightProperty().bind(heightProperty());
 		
