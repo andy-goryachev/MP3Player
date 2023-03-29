@@ -19,6 +19,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 import javafx.scene.shape.ArcTo;
 import javafx.scene.shape.Circle;
+import javafx.scene.shape.ClosePath;
 import javafx.scene.shape.CubicCurveTo;
 import javafx.scene.shape.FillRule;
 import javafx.scene.shape.LineTo;
@@ -421,6 +422,13 @@ public class FxIconBuilder
 	{
 		Point2D p = currentPos();
 		add(new LineTo(dx + p.getX(), dy + p.getY()));
+	}
+	
+	
+	/** close current path */
+	public void closePath()
+	{
+		add(new ClosePath());
 	}
 	
 	

@@ -71,7 +71,7 @@ public class MainWindow extends FxWindow
 		
 		trackField = new Label();
 		trackField.setId("trackField");
-		trackField.setAlignment(Pos.CENTER_RIGHT);
+//		trackField.setAlignment(Pos.CENTER_RIGHT);
 		
 		timeField = new Label();
 		timeField.setId("timeField");
@@ -80,7 +80,7 @@ public class MainWindow extends FxWindow
 		durationField.setAlignment(Pos.CENTER_RIGHT);
 		durationField.setId("durationField");
 		
-		FxButton playButton = new FxButton("", this::togglePlay);
+		FxButton playButton = new FxButton(Icons.pauseIcon(24), this::togglePlay);
 		FxButton jumpButton = new FxButton("", this::jump);
 		FxButton prevAlbumButton = new FxButton("", this::prevAlbum);
 		FxButton prevTrackButton = new FxButton("", this::prevTrack);
@@ -113,6 +113,7 @@ public class MainWindow extends FxWindow
 			CPane.PREF,
 			CPane.PREF,
 			CPane.PREF,
+			CPane.PREF,
 			CPane.FILL
 		);
 		tp.addColumns
@@ -125,6 +126,7 @@ public class MainWindow extends FxWindow
 		tp.add(1, 1, albumField);
 		tp.add(1, 2, artistField);
 		tp.add(1, 3, yearField);
+		tp.add(1, 4, trackField); // still, not a good place for this label
 				
 		CPane bp = new CPane();
 		BUTTON_PANE.set(bp);
@@ -151,7 +153,7 @@ public class MainWindow extends FxWindow
 		bp.add(0, 0, 1, 3, playButton);
 		bp.add(1, 0, 1, 3, jumpButton);
 		//bp.add(4, 0, trackField);
-		bp.add(6, 1, 2, 1, trackField);
+		//bp.add(6, 1, 2, 1, trackField);
 		bp.add(4, 1, timeField);
 		bp.add(5, 1, durationField);
 		bp.add(2, 2, prevAlbumButton);
