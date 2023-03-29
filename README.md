@@ -8,7 +8,7 @@ Work in progress.
 
 ## Old Version
 
-![screenshot](screenshots/2005-0215-160429.png)
+![screenshot](screenshots/2006-0829-162321.png)
 
 
 
