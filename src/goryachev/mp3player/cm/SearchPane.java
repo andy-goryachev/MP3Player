@@ -1,5 +1,5 @@
 // Copyright © 2023 Andy Goryachev <andy@goryachev.com>
-package goryachev.mp3player;
+package goryachev.mp3player.cm;
 import goryachev.fx.CPane;
 import goryachev.fx.FX;
 import javafx.geometry.Pos;

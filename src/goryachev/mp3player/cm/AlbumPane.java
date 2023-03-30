@@ -1,7 +1,9 @@
 // Copyright © 2023 Andy Goryachev <andy@goryachev.com>
-package goryachev.mp3player;
+package goryachev.mp3player.cm;
 import goryachev.fx.CPane;
 import goryachev.fx.FX;
+import goryachev.mp3player.CoverArtLabel;
+import goryachev.mp3player.Track;
 import javafx.geometry.Pos;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;

@@ -1,8 +1,9 @@
 // Copyright © 2023 Andy Goryachev <andy@goryachev.com>
-package goryachev.mp3player;
+package goryachev.mp3player.cm;
 import goryachev.common.util.CComparator;
 import goryachev.common.util.CList;
 import goryachev.fx.CPane;
+import goryachev.mp3player.Dirs;
 import java.io.File;
 import java.io.FileFilter;
 import javafx.scene.control.Label;

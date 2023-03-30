@@ -1,5 +1,5 @@
 // Copyright © 2023 Andy Goryachev <andy@goryachev.com>
-package goryachev.mp3player;
+package goryachev.mp3player.cm;
 
 
 /**

@@ -1,7 +1,8 @@
 // Copyright © 2023 Andy Goryachev <andy@goryachev.com>
-package goryachev.mp3player;
+package goryachev.mp3player.cm;
 import goryachev.fx.FxTabPane;
 import goryachev.fx.FxWindow;
+import goryachev.mp3player.Track;
 import javafx.geometry.Side;
 
 

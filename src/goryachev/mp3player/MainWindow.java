@@ -8,6 +8,7 @@ import goryachev.fx.FX;
 import goryachev.fx.FxButton;
 import goryachev.fx.FxDump;
 import goryachev.fx.FxWindow;
+import goryachev.mp3player.cm.ContentManagerWindow;
 import goryachev.mp3player.db.MusicDB;
 import goryachev.mp3player.util.Utils;
 import java.io.File;
