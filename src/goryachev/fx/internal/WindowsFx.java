@@ -303,8 +303,7 @@ public class WindowsFx
 	{
 		if(w.isShowing())
 		{
-			// design error: you should use open() instead of show()
-			log.warn("use open() instead of show(): " + w.getClass());
+			return;
 		}
 		
 		w.setOnCloseRequest((ev) -> handleClose(w, ev));

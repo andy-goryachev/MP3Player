@@ -15,6 +15,7 @@ public class ContentManagerWindow extends FxWindow
 	protected final AlbumPane albumPane;
 	protected final FileSystemPane fileSystemPane;
 	protected final FxTabPane tabPane;
+	static ContentManagerWindow instance;
 	
 	
 	public ContentManagerWindow()
@@ -44,12 +45,16 @@ public class ContentManagerWindow extends FxWindow
 		});
 		
 		setCenter(tabPane);
+		setOnHidden((ev) ->
+		{
+			instance = null;
+		});
 	}
 	
 
 	public static void openAlbum(Track t)
 	{
-		ContentManagerWindow w = new ContentManagerWindow();
+		ContentManagerWindow w = instance();
 		w.tabPane.selectTab(1);
 		w.albumPane.setTrack(t);
 		w.open();
@@ -59,5 +64,15 @@ public class ContentManagerWindow extends FxWindow
 	public boolean isEssentialWindow()
 	{
 		return false;
+	}
+	
+	
+	protected static ContentManagerWindow instance()
+	{
+		if(instance == null)
+		{
+			instance = new ContentManagerWindow();
+		}
+		return instance;
 	}
 }
