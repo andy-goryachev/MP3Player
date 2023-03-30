@@ -4,6 +4,7 @@ import goryachev.fx.CommonStyles;
 import goryachev.fx.FxStyleSheet;
 import goryachev.fx.Theme;
 import goryachev.fx.internal.CssTools;
+import goryachev.mp3player.cm.SearchPane;
 import javafx.scene.paint.Color;
 
 
@@ -49,6 +50,11 @@ public class Styles
 				//prop("-fx-background-color", CssTools.toColor(darkBorder) + ", " + CssTools.toColor(lightBorder) + ", yellow"),
 				prop("-fx-translate-x", "1px"),
 			    prop("-fx-translate-y", "1px")
+			),
+			selector(SearchPane.PANE).defines
+			(
+				prop("-fx-background-color", CssTools.toColor(darkBorder) + ", " + CssTools.toColor(buttonPanel)),
+				prop("-fx-background-insets", "0 1 0 0, 0")
 			),
 			selector("#artField").defines
 			(

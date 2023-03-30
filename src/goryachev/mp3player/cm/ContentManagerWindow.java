@@ -1,9 +1,11 @@
 // Copyright © 2023 Andy Goryachev <andy@goryachev.com>
 package goryachev.mp3player.cm;
+import goryachev.fx.CPane;
 import goryachev.fx.FxTabPane;
 import goryachev.fx.FxWindow;
 import goryachev.mp3player.Track;
 import javafx.geometry.Side;
+import javafx.scene.control.TextField;
 
 
 /**
@@ -12,6 +14,7 @@ import javafx.geometry.Side;
 public class ContentManagerWindow extends FxWindow
 {
 	protected final SearchPane searchPane;
+	protected final ResultPane resultPane;
 	protected final AlbumPane albumPane;
 	protected final FileSystemPane fileSystemPane;
 	protected final FxTabPane tabPane;
@@ -27,12 +30,14 @@ public class ContentManagerWindow extends FxWindow
 		
 		searchPane = new SearchPane();
 		
+		resultPane = new ResultPane();
+		
 		albumPane = new AlbumPane();
 		
 		fileSystemPane = new FileSystemPane();
 		
 		tabPane = new FxTabPane();
-		tabPane.addTab("Search", searchPane);
+		tabPane.addTab("Search", resultPane);
 		tabPane.addTab("Album", albumPane);
 		tabPane.addTab("Files", fileSystemPane);
 		tabPane.setSide(Side.LEFT);
@@ -44,7 +49,20 @@ public class ContentManagerWindow extends FxWindow
 			}
 		});
 		
-		setCenter(tabPane);
+		CPane p = new CPane();
+		p.addColumns
+		(
+			CPane.FILL
+		);
+		p.addRows
+		(
+			CPane.PREF,
+			CPane.FILL
+		);
+		p.add(0, 0, searchPane);
+		p.add(0, 1, tabPane);
+		
+		setCenter(p);
 		setOnHidden((ev) ->
 		{
 			instance = null;
