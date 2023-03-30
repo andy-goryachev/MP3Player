@@ -1,13 +1,17 @@
 // Copyright © 2023 Andy Goryachev <andy@goryachev.com>
 package goryachev.mp3player.cm;
+import goryachev.common.util.CList;
 import goryachev.fx.CPane;
 import goryachev.fx.FX;
+import goryachev.fx.FxObject;
+import goryachev.fx.FxString;
 import goryachev.mp3player.CoverArtLabel;
 import goryachev.mp3player.Track;
 import javafx.geometry.Pos;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
+import javafx.util.Duration;
 
 
 /**
@@ -31,6 +35,7 @@ public class AlbumPane extends CPane
 		
 		artField = new CoverArtLabel();
 		
+		// TODO remove track title?
 		titleField = new TextField();
 		
 		albumField = new TextField();
@@ -41,15 +46,61 @@ public class AlbumPane extends CPane
 		
 		table = new TableView<>();
 		table.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY_FLEX_LAST_COLUMN);
-		table.getColumns().addAll
-		(
-			new TableColumn<Track,String>("No"),
-			new TableColumn<Track,String>("Title"),
-			new TableColumn<Track,String>("Album"),
-			new TableColumn<Track,String>("Artist"),
-			new TableColumn<Track,String>("Year"),
-			new TableColumn<Track,String>("Duration")
-		);
+		{
+			TableColumn<Track,Integer> c = new TableColumn<>("No");
+			table.getColumns().add(c);
+			c.setPrefWidth(30);
+			c.setMaxWidth(30);
+			c.setCellValueFactory((d) ->
+			{
+				return new FxObject<Integer>(d.getValue().getIndex() + 1);
+			});
+		}
+		{
+			TableColumn<Track,String> c = new TableColumn<>("Title");
+			table.getColumns().add(c);
+			c.setPrefWidth(300);
+			c.setCellValueFactory((d) ->
+			{
+				return new FxString(d.getValue().getTitle());
+			});
+		}
+		{
+			TableColumn<Track,String> c = new TableColumn<>("Album");
+			table.getColumns().add(c);
+			c.setPrefWidth(200);
+			c.setCellValueFactory((d) ->
+			{
+				return new FxString(d.getValue().getAlbumName());
+			});
+		}
+		{
+			TableColumn<Track,String> c = new TableColumn<>("Artist");
+			table.getColumns().add(c);
+			c.setPrefWidth(200);
+			c.setCellValueFactory((d) ->
+			{
+				return new FxString(d.getValue().getArtist());
+			});
+		}
+		{
+			TableColumn<Track,String> c = new TableColumn<>("Year");
+			table.getColumns().add(c);
+			c.setPrefWidth(70);
+			c.setCellValueFactory((d) ->
+			{
+				return new FxString(d.getValue().getYear());
+			});
+		}
+		{
+			TableColumn<Track,Duration> c = new TableColumn<>("Duration");
+			table.getColumns().add(c);
+			c.setPrefWidth(70);
+			c.setCellValueFactory((d) ->
+			{
+				return new FxObject<Duration>(null); // TODO
+			});
+		}
 		
 		addColumns
 		(
@@ -59,6 +110,7 @@ public class AlbumPane extends CPane
 		);
 		addRows
 		(
+			CPane.PREF,
 			CPane.PREF,
 			CPane.PREF,
 			CPane.PREF,
@@ -79,6 +131,7 @@ public class AlbumPane extends CPane
 		add(1, r, FX.label("Year:", Pos.CENTER_RIGHT));
 		add(2, r, yearField);
 		r++;
+		r++;
 		add(0, r, 3, 1, table);
 	}
 
@@ -87,5 +140,17 @@ public class AlbumPane extends CPane
 	{
 		artField.setImage(t.getCoverArt());
 		titleField.setText(t.getTitle());
+		albumField.setText(t.getAlbumName());
+		artistField.setText(t.getArtist());
+		yearField.setText(t.getYear());
+		
+		// TODO move to Track?
+		int sz = t.getAlbumTrackCount();
+		CList<Track> ts = new CList<>(sz);
+		for(int i=0; i<sz; i++)
+		{
+			ts.add(t.getTrackAt(i));
+		}
+		table.getItems().setAll(ts);
 	}
 }

@@ -91,4 +91,11 @@ public class Track
 		File dir = getFile().getParentFile();
 		return db.getCoverArt(dir);
 	}
+
+
+	public Track getTrackAt(int ix)
+	{
+		RTrack t = track.getRAlbum().getTrack(ix);
+		return new Track(db, t, ix);
+	}
 }
