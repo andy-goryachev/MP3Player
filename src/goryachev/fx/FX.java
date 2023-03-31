@@ -25,6 +25,7 @@ import java.util.function.Function;
 import java.util.function.IntConsumer;
 import java.util.function.Supplier;
 import javafx.application.Platform;
+import javafx.beans.InvalidationListener;
 import javafx.beans.Observable;
 import javafx.beans.WeakListener;
 import javafx.beans.property.Property;
@@ -1582,6 +1583,24 @@ public final class FX
 	public static  ReadOnlyObjectProperty<Window> parentWindowProperty(Node n)
 	{
 		return new ParentWindow(n).windowProperty();
+	}
+	
+	
+	/** avoid ambiguous signature warning when using addListener */
+	public static void addInvalidationListener(Observable p, boolean fireImmediately, Runnable r)
+	{
+		p.addListener(new InvalidationListener()
+		{
+			public void invalidated(Observable observable)
+			{
+				r.run();
+			}
+		});
+		
+		if(fireImmediately)
+		{
+			r.run();
+		}
 	}
 	
 	
