@@ -1,5 +1,6 @@
 // Copyright © 2023 Andy Goryachev <andy@goryachev.com>
 package goryachev.mp3player;
+import goryachev.common.util.FH;
 import goryachev.mp3player.db.MusicDB;
 import goryachev.mp3player.db.RTrack;
 import java.io.File;
@@ -96,6 +97,29 @@ public class Track
 	public Track getTrackAt(int ix)
 	{
 		RTrack t = track.getRAlbum().getTrack(ix);
+		// FIX track index is incorrect!
 		return new Track(db, t, ix);
+	}
+	
+	
+	public boolean equals(Object x)
+	{
+		if(x == this)
+		{
+			return true;
+		}
+		else if(x instanceof Track t)
+		{
+			return track == t.track;
+		}
+		return false;
+	}
+	
+	
+	public int hashCode()
+	{
+		int h = FH.hash(Track.class);
+		h = FH.hash(h, index);
+		return h;
 	}
 }

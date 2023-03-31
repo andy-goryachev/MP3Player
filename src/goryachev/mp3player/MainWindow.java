@@ -356,6 +356,7 @@ public class MainWindow extends FxWindow
 		yearField.setText(t.getYear());
 		
 		File f = t.getFile();
+		// TODO if file not found, tell musicDB that a re-scan is required
 		
 		Image im = t.getCoverArt();
 		artField.setImage(im);

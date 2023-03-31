@@ -12,7 +12,6 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TreeView;
 import javafx.scene.control.cell.TextFieldTreeCell;
-import javafx.util.Duration;
 
 
 /**
@@ -79,16 +78,6 @@ public class FileSystemPane extends CPane
 			c.setCellValueFactory((f) ->
 			{
 				return f.getValue().length();
-			});
-		}
-		{
-			TableColumn<FileEntry,Duration> c = new TableColumn<>("Duration");
-			c.setPrefWidth(50);
-			// TODO right alignment
-			table.getColumns().add(c);
-			c.setCellValueFactory((f) ->
-			{
-				return f.getValue().duration();
 			});
 		}
 		

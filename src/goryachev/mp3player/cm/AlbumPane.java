@@ -15,7 +15,6 @@ import javafx.scene.control.SelectionMode;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
-import javafx.util.Duration;
 
 
 /**
@@ -96,15 +95,6 @@ public class AlbumPane extends CPane
 			c.setCellValueFactory((d) ->
 			{
 				return new FxString(d.getValue().getYear());
-			});
-		}
-		{
-			TableColumn<Track,Duration> c = new TableColumn<>("Duration");
-			table.getColumns().add(c);
-			c.setPrefWidth(70);
-			c.setCellValueFactory((d) ->
-			{
-				return new FxObject<Duration>(null); // TODO
 			});
 		}
 		
@@ -191,7 +181,10 @@ public class AlbumPane extends CPane
 		{
 			ts.add(t.getTrackAt(i));
 		}
+
 		table.getItems().setAll(ts);
+		table.getSelectionModel().clearSelection();
+		table.getSelectionModel().select(t);
 	}
 	
 	
