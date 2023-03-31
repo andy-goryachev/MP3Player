@@ -99,6 +99,8 @@ public class InfoDB
 		String[] ss = CKit.split(text, '|');
 		if(ss.length == 5)
 		{
+			// TODO track number
+			// TODO consistent order
 			String key = Utils.decode(ss[1]);
 			String title = Utils.decode(ss[2]);
 			String album = Utils.decode(ss[3]);

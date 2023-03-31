@@ -6,6 +6,7 @@ import goryachev.fx.FX;
 import goryachev.fx.FxAction;
 import goryachev.fx.FxButton;
 import goryachev.fx.FxObject;
+import goryachev.fx.FxSplitMenuButton;
 import goryachev.fx.FxString;
 import goryachev.mp3player.CoverArtLabel;
 import goryachev.mp3player.Track;
@@ -47,6 +48,9 @@ public class AlbumPane extends CPane
 		artistField = new TextField();
 		
 		yearField = new TextField();
+		
+		FxSplitMenuButton moreButton = new FxSplitMenuButton("More...");
+		moreButton.item("Reset");
 		
 		table = new TableView<>();
 		table.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
@@ -104,6 +108,7 @@ public class AlbumPane extends CPane
 			CPane.PREF,
 			CPane.FILL,
 			CPane.PREF,
+			CPane.PREF,
 			CPane.PREF
 		);
 		addRows
@@ -118,21 +123,22 @@ public class AlbumPane extends CPane
 		int r = 0;
 		add(0, r, 1, 5, artField);
 		add(1, r, FX.label("Title:", Pos.CENTER_RIGHT));
-		add(2, r, 3, 1, titleField);
+		add(2, r, 4, 1, titleField);
 		r++;
 		add(1, r, FX.label("Album:", Pos.CENTER_RIGHT));
-		add(2, r, 3, 1, albumField);
+		add(2, r, 4, 1, albumField);
 		r++;
 		add(1, r, FX.label("Artist:", Pos.CENTER_RIGHT));
-		add(2, r, 3, 1, artistField);
+		add(2, r, 4, 1, artistField);
 		r++;
 		add(1, r, FX.label("Year:", Pos.CENTER_RIGHT));
 		add(2, r, yearField);
-		add(3, r, new FxButton("Update Album", updateAlbumAction));
-		add(4, r, new FxButton("Update", updateAction, FxButton.AFFIRM));
+		add(3, r, moreButton);
+		add(4, r, new FxButton("Update Album", updateAlbumAction));
+		add(5, r, new FxButton("Update", updateAction, FxButton.AFFIRM));
 		r++;
 		r++;
-		add(0, r, 5, 1, table);
+		add(0, r, 6, 1, table);
 
 		FX.addInvalidationListener(table.getSelectionModel().getSelectedItems(), true, this::handleSelection);
 	}
