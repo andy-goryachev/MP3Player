@@ -3,6 +3,7 @@ package goryachev.mp3player.cm;
 import goryachev.fx.FxTabPane;
 import goryachev.fx.FxWindow;
 import goryachev.mp3player.Track;
+import goryachev.mp3player.db.MusicDB;
 import javafx.geometry.Side;
 
 
@@ -11,23 +12,26 @@ import javafx.geometry.Side;
  */
 public class ContentManagerWindow extends FxWindow
 {
+	protected final MusicDB db;
 	protected final SearchPane searchPane;
 	protected final AlbumPane albumPane;
 	protected final FileSystemPane fileSystemPane;
 	protected final FxTabPane tabPane;
-	static ContentManagerWindow instance;
+	private static ContentManagerWindow instance;
 	
 	
-	public ContentManagerWindow()
+	public ContentManagerWindow(MusicDB db)
 	{
 		super("ContentManagerWindow");
+		this.db = db;
+		
 		setTitle("MP3 Player - Content Manager");
 		setMinSize(500, 500);
 		setSize(1000, 600);
 		
 		searchPane = new SearchPane();
 		
-		albumPane = new AlbumPane();
+		albumPane = new AlbumPane(db);
 		
 		fileSystemPane = new FileSystemPane();
 		
@@ -51,28 +55,21 @@ public class ContentManagerWindow extends FxWindow
 		});
 	}
 	
-
-	public static void openAlbum(Track t)
-	{
-		ContentManagerWindow w = instance();
-		w.tabPane.selectTab(1);
-		w.albumPane.setTrack(t);
-		w.open();
-	}
-
-
+	
 	public boolean isEssentialWindow()
 	{
 		return false;
 	}
 	
-	
-	protected static ContentManagerWindow instance()
+
+	public static void openAlbum(Track t)
 	{
 		if(instance == null)
 		{
-			instance = new ContentManagerWindow();
+			instance = new ContentManagerWindow(t.getDB());
 		}
-		return instance;
+		instance.tabPane.selectTab(1);
+		instance.albumPane.setTrack(t);
+		instance.open();
 	}
 }

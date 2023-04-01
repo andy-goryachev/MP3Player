@@ -25,6 +25,12 @@ public class Track
 	}
 	
 	
+	public MusicDB getDB()
+	{
+		return db;
+	}
+	
+	
 	public File getFile()
 	{
 		String path = track.getRAlbum().getPath();

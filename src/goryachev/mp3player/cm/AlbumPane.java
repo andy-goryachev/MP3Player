@@ -5,11 +5,13 @@ import goryachev.fx.CPane;
 import goryachev.fx.FX;
 import goryachev.fx.FxAction;
 import goryachev.fx.FxButton;
+import goryachev.fx.FxMenu;
 import goryachev.fx.FxObject;
 import goryachev.fx.FxSplitMenuButton;
 import goryachev.fx.FxString;
 import goryachev.mp3player.CoverArtLabel;
 import goryachev.mp3player.Track;
+import goryachev.mp3player.db.MusicDB;
 import java.util.List;
 import javafx.geometry.Pos;
 import javafx.scene.control.SelectionMode;
@@ -23,6 +25,7 @@ import javafx.scene.control.TextField;
  */
 public class AlbumPane extends CPane
 {
+	protected final MusicDB db;
 	protected final CoverArtLabel artField;
 	protected final TextField titleField;
 	protected final TextField albumField;
@@ -33,8 +36,10 @@ public class AlbumPane extends CPane
 	protected final FxAction updateAlbumAction = new FxAction(this::updateAlbum);
 	
 	
-	public AlbumPane()
+	public AlbumPane(MusicDB db)
 	{
+		this.db = db;
+		
 		setHGap(5);
 		setVGap(3);
 		setPadding(10);
@@ -51,6 +56,11 @@ public class AlbumPane extends CPane
 		
 		FxSplitMenuButton moreButton = new FxSplitMenuButton("More...");
 		moreButton.item("Reset");
+		FxMenu m = moreButton.menu("Encoding");
+		m.item("KOI-8");
+		// cyrillic windows
+		// jp
+		// cn
 		
 		table = new TableView<>();
 		table.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
@@ -196,6 +206,7 @@ public class AlbumPane extends CPane
 	
 	protected void update()
 	{
+		table.getSelectionModel().getSelectedItems();
 		// TODO
 	}
 	
