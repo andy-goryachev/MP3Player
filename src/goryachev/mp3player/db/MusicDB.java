@@ -275,7 +275,7 @@ public class MusicDB
 	
 	public Track nextAlbum(Track t)
 	{
-		int delta = t.getAlbumTrackCount() - t.getTrackIndex();
+		int delta = t.getAlbumTrackCount() - t.getNumber0();
 		return changeTrack(t, delta);
 	}
 

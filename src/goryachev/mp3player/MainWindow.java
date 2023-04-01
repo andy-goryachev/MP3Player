@@ -350,9 +350,7 @@ public class MainWindow extends FxWindow
 		int ix = t.getIndex();
 		GlobalSettings.setInt(CURRENT_TRACK, ix);
 		
-		int num = t.getTrackIndex() + 1;
-		trackField.setText(num + "/" + t.getAlbumTrackCount());
-		
+		trackField.setText(t.getNumber() + "/" + t.getAlbumTrackCount());
 		titleField.setText(t.getTitle());
 		albumField.setText(t.getAlbumName());
 		artistField.setText(t.getArtist());

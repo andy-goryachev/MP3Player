@@ -57,10 +57,22 @@ public class AlbumPane extends CPane
 		FxSplitMenuButton moreButton = new FxSplitMenuButton("More...");
 		moreButton.item("Reset");
 		FxMenu m = moreButton.menu("Encoding");
-		m.item("KOI-8");
 		// cyrillic windows
+		m.item("KOI-8 (Cyrillic)");
+		m.item("KOI-7 (Cyrillic)");
+		m.item("Cp1251 (Cyrillic)");
+		m.separator();
 		// jp
+		m.item("EUC-JP (Japanese)");
+		m.item("Shift_JIS (Japanese)");
+		m.separator();
 		// cn
+		m.item("Big5 (Trad. Chinese)");
+		m.item("GB2312 (Simp. Chinese)");
+		m.separator();
+		// other
+		m.item("Other...");
+
 		
 		table = new TableView<>();
 		table.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
@@ -72,7 +84,7 @@ public class AlbumPane extends CPane
 			c.setMaxWidth(30);
 			c.setCellValueFactory((d) ->
 			{
-				return new FxObject<Integer>(d.getValue().getIndex() + 1);
+				return new FxObject<Integer>(d.getValue().getNumber0() + 1);
 			});
 		}
 		{

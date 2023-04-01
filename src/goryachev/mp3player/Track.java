@@ -79,9 +79,18 @@ public class Track
 	}
 
 
-	public int getTrackIndex()
+	/** track number in the album, as scanned, starting with 0 */
+	public int getNumber0()
 	{
-		return track.getTrackIndex();
+		// TODO property
+		return track.getNumber0();
+	}
+	
+	
+	/** track number in the album, starting with 1 */
+	public int getNumber()
+	{
+		return getNumber0() + 1;
 	}
 	
 	
