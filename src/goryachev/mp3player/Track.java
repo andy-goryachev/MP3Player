@@ -82,7 +82,7 @@ public class Track
 			title.set(v);
 			title.addListener((s,p,c) ->
 			{
-				db.update(this);
+				db.updateTrack(this);
 			});
 		}
 		return title;
@@ -111,7 +111,7 @@ public class Track
 			album.set(v);
 			album.addListener((s,p,c) ->
 			{
-				db.update(this);
+				db.updateTrack(this);
 			});
 		}
 		return album;
@@ -140,7 +140,7 @@ public class Track
 			artist.set(v);
 			artist.addListener((s,p,c) ->
 			{
-				db.update(this);
+				db.updateTrack(this);
 			});
 		}
 		return artist;
@@ -169,7 +169,7 @@ public class Track
 			year.set(v);
 			year.addListener((s,p,c) ->
 			{
-				db.update(this);
+				db.updateTrack(this);
 			});
 		}
 		return year;

@@ -38,7 +38,8 @@ public class ContentManagerWindow extends FxWindow
 		tabPane = new FxTabPane();
 		tabPane.addTab("Search", searchPane);
 		tabPane.addTab("Album", albumPane);
-		tabPane.addTab("Files", fileSystemPane);
+		// TODO later
+		//tabPane.addTab("Files", fileSystemPane);
 		tabPane.setSide(Side.LEFT);
 		tabPane.getSelectionModel().selectedIndexProperty().addListener((s,p,c) ->
 		{
@@ -67,9 +68,13 @@ public class ContentManagerWindow extends FxWindow
 		if(instance == null)
 		{
 			instance = new ContentManagerWindow(t.getDB());
+			instance.tabPane.selectTab(1);
+			instance.albumPane.setTrack(t);
+			instance.open();
 		}
-		instance.tabPane.selectTab(1);
-		instance.albumPane.setTrack(t);
-		instance.open();
+		else
+		{
+			instance.requestFocus();
+		}
 	}
 }

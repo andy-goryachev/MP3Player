@@ -29,11 +29,11 @@ public class SearchPane extends CPane
 		table.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY_FLEX_LAST_COLUMN);
 		table.getColumns().addAll
 		(
-			new TableColumn<SearchEntry,String>("No"),
 			new TableColumn<SearchEntry,String>("Title"),
 			new TableColumn<SearchEntry,String>("Album"),
 			new TableColumn<SearchEntry,String>("Artist"),
-			new TableColumn<SearchEntry,String>("Year")
+			new TableColumn<SearchEntry,String>("Year"),
+			new TableColumn<SearchEntry,String>("File")
 		);
 		
 		addColumns

@@ -261,9 +261,11 @@ public class MusicDB
 	}
 	
 	
-	public void update(Track t)
+	public void updateTrack(Track t)
 	{
 		System.out.println("update " + t); // FIX
+//		Entry en = new Entry();
+//		infoDB.put(en);
 	}
 	
 	

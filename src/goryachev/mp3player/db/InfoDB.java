@@ -49,7 +49,7 @@ public class InfoDB
 				Entry en = parseEntry(s);
 				if(en != null)
 				{
-					db.add(en);
+					db.put(en);
 				}
 			}
 		}
@@ -133,7 +133,7 @@ public class InfoDB
 	}
 
 
-	public void add(Entry en)
+	public void put(Entry en)
 	{
 		entries.put(en.getKey(), en);
 		modified = true;
