@@ -13,14 +13,12 @@ import javafx.scene.image.Image;
 public class Track
 {
 	private final MusicDB db;
-	private final int index;
 	private final RTrack track;
 	
 	
-	public Track(MusicDB db, RTrack track, int index)
+	public Track(MusicDB db, RTrack track)
 	{
 		this.db = db;
-		this.index = index;
 		this.track = track;
 	}
 	
@@ -47,7 +45,7 @@ public class Track
 	
 	public int getIndex()
 	{
-		return index;
+		return track.getIndex();
 	}
 
 
@@ -103,8 +101,7 @@ public class Track
 	public Track getTrackAt(int ix)
 	{
 		RTrack t = track.getRAlbum().getTrack(ix);
-		// FIX track index is incorrect!
-		return new Track(db, t, ix);
+		return db.getTrack(t.getIndex());
 	}
 	
 	
@@ -125,7 +122,7 @@ public class Track
 	public int hashCode()
 	{
 		int h = FH.hash(Track.class);
-		h = FH.hash(h, index);
+		h = FH.hash(h, getIndex());
 		return h;
 	}
 }

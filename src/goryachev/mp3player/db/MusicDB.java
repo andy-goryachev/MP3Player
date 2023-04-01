@@ -4,6 +4,7 @@ import goryachev.common.log.Log;
 import goryachev.common.util.CComparator;
 import goryachev.common.util.CKit;
 import goryachev.common.util.CList;
+import goryachev.common.util.CMap;
 import goryachev.common.util.CSorter;
 import goryachev.mp3player.Track;
 import goryachev.mp3player.util.Utils;
@@ -16,6 +17,7 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.FilenameFilter;
+import java.lang.ref.WeakReference;
 import java.security.SecureRandom;
 import java.util.function.Function;
 import javafx.scene.image.Image;
@@ -26,13 +28,15 @@ import javafx.scene.image.Image;
  */
 public class MusicDB
 {
-	// TODO timestamps for tracks/albums
+	// TODO search index
+	// TODO history buffer, for prevAlbum
 	private static final Log log = Log.get("MusicDB");
 	private static final String IDv1 = "F|2023.0326.2206";
 	private final File root;
 	private final CList<RTrack> tracks = new CList<>();
 	private final SmallImageCache imageCache = new SmallImageCache(8);
 	private final SecureRandom random;
+	private final CMap<Integer,WeakReference<Track>> cache = new CMap<>();
 	private InfoDB infoDB;
 	
 	
@@ -108,9 +112,8 @@ public class MusicDB
 					for(RTrack t: trs)
 					{
 						a.addTrack(t);
+						addTrack(t);
 					}
-					
-					tracks.addAll(trs);
 					
 					log.info("%s: %d", dir, trs.length);
 				}
@@ -219,6 +222,8 @@ public class MusicDB
 	
 	void addTrack(RTrack t)
 	{
+		int ix = tracks.size();
+		t.setIndex(ix);
 		tracks.add(t);
 	}
 	
@@ -237,8 +242,22 @@ public class MusicDB
 		{
 			return null;
 		}
+		
+		Integer k = Integer.valueOf(index);
+		WeakReference<Track> ref = cache.get(k);
+		if(ref != null)
+		{
+			Track tr = ref.get();
+			if(tr != null)
+			{
+				return tr;
+			}
+		}
+		
 		RTrack t = tracks.get(index);
-		return new Track(this, t, index);
+		Track tr = new Track(this, t);
+		cache.put(k, new WeakReference<>(tr));
+		return tr;
 	}
 	
 	
@@ -279,8 +298,7 @@ public class MusicDB
 			}
 		}
 
-		RTrack t = tracks.get(ix);
-		return new Track(this, t, ix);
+		return getTrack(ix);
 	}
 
 

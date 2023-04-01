@@ -19,6 +19,7 @@ public class RTrack
 	private final String filename;
 	private final long timestamp;
 	private final String hash;
+	private transient int index;
 	
 	
 	public RTrack(String title, String artist, String album, String year, String filename, long timestamp, String hash)
@@ -88,6 +89,19 @@ public class RTrack
 	}
 	
 	
+	public int getIndex()
+	{
+		return index;
+	}
+	
+	
+	public void setIndex(int n)
+	{
+		index = n;
+	}
+	
+
+	/** track index in the album, as scanned */
 	public int getTrackIndex()
 	{
 		return parent.trackIndex(this);
