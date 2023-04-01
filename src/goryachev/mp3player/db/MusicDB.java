@@ -261,6 +261,12 @@ public class MusicDB
 	}
 	
 	
+	public void update(Track t)
+	{
+		System.out.println("update " + t); // FIX
+	}
+	
+	
 	public Track prevTrack(Track t)
 	{
 		return changeTrack(t, -1);

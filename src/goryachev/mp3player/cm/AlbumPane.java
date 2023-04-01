@@ -34,6 +34,7 @@ public class AlbumPane extends CPane
 	protected final TableView<Track> table;
 	protected final FxAction updateAction = new FxAction(this::update);
 	protected final FxAction updateAlbumAction = new FxAction(this::updateAlbum);
+	private Track currentTrack;
 	
 	
 	public AlbumPane(MusicDB db)
@@ -82,6 +83,7 @@ public class AlbumPane extends CPane
 			table.getColumns().add(c);
 			c.setMinWidth(30);
 			c.setMaxWidth(30);
+			c.setSortable(false);
 			c.setCellValueFactory((d) ->
 			{
 				return new FxObject<Integer>(d.getValue().getNumber0() + 1);
@@ -91,36 +93,40 @@ public class AlbumPane extends CPane
 			TableColumn<Track,String> c = new TableColumn<>("Title");
 			table.getColumns().add(c);
 			c.setPrefWidth(300);
+			c.setSortable(false);
 			c.setCellValueFactory((d) ->
 			{
-				return new FxString(d.getValue().getTitle());
+				return d.getValue().titleProperty();
 			});
 		}
 		{
 			TableColumn<Track,String> c = new TableColumn<>("Album");
 			table.getColumns().add(c);
 			c.setPrefWidth(200);
+			c.setSortable(false);
 			c.setCellValueFactory((d) ->
 			{
-				return new FxString(d.getValue().getAlbumName());
+				return d.getValue().albumProperty();
 			});
 		}
 		{
 			TableColumn<Track,String> c = new TableColumn<>("Artist");
 			table.getColumns().add(c);
 			c.setPrefWidth(200);
+			c.setSortable(false);
 			c.setCellValueFactory((d) ->
 			{
-				return new FxString(d.getValue().getArtist());
+				return d.getValue().artistProperty();
 			});
 		}
 		{
 			TableColumn<Track,String> c = new TableColumn<>("Year");
 			table.getColumns().add(c);
 			c.setPrefWidth(70);
+			c.setSortable(false);
 			c.setCellValueFactory((d) ->
 			{
-				return new FxString(d.getValue().getYear());
+				return d.getValue().yearProperty();
 			});
 		}
 		
@@ -192,7 +198,7 @@ public class AlbumPane extends CPane
 	{
 		artField.setImage(t.getCoverArt());
 		titleField.setText(t.getTitle());
-		albumField.setText(t.getAlbumName());
+		albumField.setText(t.getAlbum());
 		artistField.setText(t.getArtist());
 		yearField.setText(t.getYear());
 	}
@@ -200,6 +206,8 @@ public class AlbumPane extends CPane
 
 	public void setTrack(Track t)
 	{
+		currentTrack = t;
+		
 		updateTrackInfo(t);
 		
 		// TODO move to Track?
@@ -214,17 +222,39 @@ public class AlbumPane extends CPane
 		table.getSelectionModel().clearSelection();
 		table.getSelectionModel().select(t);
 	}
-	
-	
+
+
 	protected void update()
 	{
-		table.getSelectionModel().getSelectedItems();
-		// TODO
+		String title = titleField.getText();
+		String album = albumField.getText();
+		String artist = artistField.getText();
+		String year = yearField.getText();
+
+		currentTrack.setTitle(title);
+
+		List<Track> ts = table.getSelectionModel().getSelectedItems();
+		for(Track t: ts)
+		{
+			t.setAlbum(album);
+			t.setArtist(artist);
+			t.setYear(year);
+		}
 	}
-	
-	
+
+
 	protected void updateAlbum()
 	{
-		// TODO
+		String album = albumField.getText();
+		String artist = artistField.getText();
+		String year = yearField.getText();
+
+		List<Track> ts = table.getItems();
+		for(Track t: ts)
+		{
+			t.setAlbum(album);
+			t.setArtist(artist);
+			t.setYear(year);
+		}
 	}
 }

@@ -16,8 +16,6 @@ import javafx.geometry.Pos;
 import javafx.scene.control.Label;
 import javafx.scene.control.Slider;
 import javafx.scene.image.Image;
-import javafx.scene.input.MouseButton;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 import javafx.scene.paint.Color;
@@ -351,10 +349,10 @@ public class MainWindow extends FxWindow
 		GlobalSettings.setInt(CURRENT_TRACK, ix);
 		
 		trackField.setText(t.getNumber() + "/" + t.getAlbumTrackCount());
-		titleField.setText(t.getTitle());
-		albumField.setText(t.getAlbumName());
-		artistField.setText(t.getArtist());
-		yearField.setText(t.getYear());
+		titleField.textProperty().bind(t.titleProperty());
+		albumField.textProperty().bind(t.albumProperty());
+		artistField.textProperty().bind(t.artistProperty());
+		yearField.textProperty().bind(t.yearProperty());
 		
 		File f = t.getFile();
 		// TODO if file not found, tell musicDB that a re-scan is required
