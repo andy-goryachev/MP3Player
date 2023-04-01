@@ -50,9 +50,9 @@ public class MainWindow extends FxWindow
 	protected final FxButton prevTrackButton;
 	protected final FxButton nextTrackButton;
 	protected final FxButton nextAlbumButton;
+	protected final FxButton cmButton;
 	private MediaPlayer player;
 	private Track currentTrack;
-	
 
 	
 	public MainWindow()
@@ -98,6 +98,7 @@ public class MainWindow extends FxWindow
 		prevTrackButton = new FxButton(Icons.prevTrack(), this::prevTrack);
 		nextTrackButton = new FxButton(Icons.nextTrack(), this::nextTrack);
 		nextAlbumButton = new FxButton(Icons.nextAlbum(), this::nextAlbum);
+		cmButton = new FxButton(Icons.contentManager(), this::openContentManager);
 
 		timeSlider = new Slider();
 		timeSlider.valueProperty().addListener((x) ->
@@ -130,13 +131,6 @@ public class MainWindow extends FxWindow
 		tp.add(1, 2, artistField);
 		tp.add(1, 3, yearField);
 		tp.add(1, 4, trackField); // still, not a good place for this label
-		tp.addEventHandler(MouseEvent.MOUSE_CLICKED, (ev) ->
-		{
-			if((ev.getClickCount() == 1) && (ev.getButton() == MouseButton.PRIMARY))
-			{
-				ContentManagerWindow.openAlbum(currentTrack);
-			}
-		});
 				
 		CPane bp = new CPane();
 		BUTTON_PANE.set(bp);
@@ -158,6 +152,7 @@ public class MainWindow extends FxWindow
 			CPane.FILL,
 			CPane.PREF,
 			w1,
+			w1,
 			w1
 		);
 		bp.add(0, 0, 1, 3, playButton);
@@ -171,6 +166,7 @@ public class MainWindow extends FxWindow
 		bp.add(4, 2, 2, 1, timeSlider);
 		bp.add(6, 2, nextTrackButton);
 		bp.add(7, 2, nextAlbumButton);
+		bp.add(8, 2, cmButton);
 		bp.setBackground(FX.background(Color.gray(0.8)));
 		
 		CPane mp = new CPane();
@@ -295,8 +291,9 @@ public class MainWindow extends FxWindow
 			}
 			
 			// load db
-			File f = Dirs.getDataFile();
-			MusicDB db = MusicDB.load(musicDir, f);
+			File dbFile = Dirs.getDataFile();
+			File infoFile = Dirs.getInfoFile();
+			MusicDB db = MusicDB.load(musicDir, dbFile, infoFile);
 			if(db == null)
 			{
 				// old track info is invalid
@@ -305,7 +302,7 @@ public class MainWindow extends FxWindow
 				// FIX scanning should not happen in the FX thread!
 				// TODO scan dialog
 				db = MusicDB.scan(musicDir);
-				db.save(f);
+				db.save(dbFile);
 			}
 			
 			setDB(db);
@@ -327,6 +324,12 @@ public class MainWindow extends FxWindow
 			jump();				
 			return;
 		}
+	}
+	
+	
+	protected void openContentManager()
+	{
+		ContentManagerWindow.openAlbum(currentTrack);
 	}
 	
 	

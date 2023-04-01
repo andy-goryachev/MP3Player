@@ -22,6 +22,7 @@ public class InfoDB
 	private static final Log log = Log.get("InfoDB");
 	private static final String IDv1 = "InfoDB|2023.0330.2037";
 	private final CMap<String,Entry> entries = new CMap<>();
+	private boolean modified;
 	
 	
 	public InfoDB()
@@ -59,6 +60,8 @@ public class InfoDB
 		{
 			log.error(e);
 		}
+
+		db.modified = false;
 		return db;
 	}
 
@@ -81,6 +84,8 @@ public class InfoDB
 					Entry en = entries.get(k);
 					writeEntry(en, wr);
 				}
+				
+				modified = false;
 			}
 			catch(Exception e)
 			{
@@ -131,6 +136,13 @@ public class InfoDB
 	public void add(Entry en)
 	{
 		entries.put(en.getKey(), en);
+		modified = true;
+	}
+	
+	
+	public boolean isModified()
+	{
+		return modified;
 	}
 	
 	

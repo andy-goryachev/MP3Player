@@ -106,6 +106,13 @@ public class Icons
 	}
 	
 	
+	public static IconBase contentManager()
+	{
+		// TODO
+		return new IconBase(16);
+	}
+	
+	
 	private static IconBase track(double angle)
 	{
 		double sz2 = size / 2;

@@ -13,6 +13,7 @@ public class Dirs
 	protected static final String MUSIC_DIR = "MUSIC_DIR";
 	protected static final String DATA_DIR = "MP3Player";
 	protected static final String DATA_FILE = "tracks.dat";
+	protected static final String INFO_FILE = "info.dat";
 
 	
 	public static File getMusicDirectory()
@@ -32,6 +33,15 @@ public class Dirs
 		File d1 = CPlatform.getSettingsFolder();
 		File d2 = new File(d1, DATA_DIR);
 		File f = new File(d2, DATA_FILE);
+		return f;
+	}
+	
+	
+	public static File getInfoFile()
+	{
+		File d1 = CPlatform.getSettingsFolder();
+		File d2 = new File(d1, DATA_DIR);
+		File f = new File(d2, INFO_FILE);
 		return f;
 	}
 }

@@ -32,8 +32,8 @@ public class MusicDB
 	private final File root;
 	private final CList<RTrack> tracks = new CList<>();
 	private final SmallImageCache imageCache = new SmallImageCache(8);
-	// TODO user-entered track info db
 	private final SecureRandom random;
+	private InfoDB infoDB;
 	
 	
 	public MusicDB(File root)
@@ -318,9 +318,9 @@ public class MusicDB
 	}
 
 
-	public static MusicDB load(File root, File f)
+	public static MusicDB load(File root, File dbFile, File infoFile)
 	{
-		try(BufferedReader rd = new BufferedReader(new FileReader(f, CKit.CHARSET_UTF8)))
+		try(BufferedReader rd = new BufferedReader(new FileReader(dbFile, CKit.CHARSET_UTF8)))
 		{
 			String s = rd.readLine();
 			if(CKit.notEquals(IDv1, s))
@@ -359,7 +359,8 @@ public class MusicDB
 				line++;
 			}
 			
-			// TODO validate track numbers?
+			db.infoDB = InfoDB.load(infoFile);
+			
 			return db;
 		}
 		catch(FileNotFoundException ignore)
