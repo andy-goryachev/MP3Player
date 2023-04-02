@@ -143,6 +143,13 @@ public class InfoDB
 	}
 	
 	
+	public Entry get(RTrack t)
+	{
+		String k = t.getHash();
+		return entries.get(k);
+	}
+	
+	
 	public void updateTrack(Track t)
 	{
 		RTrack r = t.getRTrack();

@@ -401,7 +401,12 @@ public class MusicDB
 
 	public String getTitle(RTrack t)
 	{
-		// TODO check user-defined title
+		InfoDB.Entry en = infoDB.get(t);
+		if(en != null)
+		{
+			return en.getTitle();
+		}
+		
 		String s = t.getTitle();
 		if(CKit.isBlank(s))
 		{
@@ -413,7 +418,12 @@ public class MusicDB
 
 	public String getAlbumName(RTrack t)
 	{
-		// TODO check user-defined album name
+		InfoDB.Entry en = infoDB.get(t);
+		if(en != null)
+		{
+			return en.getAlbum();
+		}
+		
 		String s = t.getRAlbum().getTitle();
 		if(CKit.isBlank(s))
 		{
@@ -433,14 +443,22 @@ public class MusicDB
 	
 	public String getArtist(RTrack t)
 	{
-		// TODO check user-defined artist
+		InfoDB.Entry en = infoDB.get(t);
+		if(en != null)
+		{
+			return en.getArtist();
+		}
 		return t.getRAlbum().getArtist();
 	}
 	
 	
 	public String getYear(RTrack t)
 	{
-		// TODO check user-defined year
+		InfoDB.Entry en = infoDB.get(t);
+		if(en != null)
+		{
+			return en.getYear();
+		}
 		return t.getRAlbum().getYear();
 	}
 
