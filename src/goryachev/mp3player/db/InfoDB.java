@@ -5,6 +5,7 @@ import goryachev.common.util.CKit;
 import goryachev.common.util.CList;
 import goryachev.common.util.CMap;
 import goryachev.common.util.CSorter;
+import goryachev.mp3player.Track;
 import goryachev.mp3player.util.Utils;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -12,6 +13,8 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
+import java.io.StringWriter;
+import java.io.Writer;
 
 
 /**
@@ -118,7 +121,7 @@ public class InfoDB
 	}
 
 
-	protected static void writeEntry(Entry en, BufferedWriter wr) throws Exception
+	protected static void writeEntry(Entry en, Writer wr) throws Exception
 	{
 		wr.write(Utils.encode(en.getKey()));
 		wr.write("|");
@@ -133,10 +136,37 @@ public class InfoDB
 	}
 
 
-	public void put(Entry en)
+	protected void put(Entry en)
 	{
 		entries.put(en.getKey(), en);
 		modified = true;
+	}
+	
+	
+	public void updateTrack(Track t)
+	{
+		RTrack r = t.getRTrack();
+		String key = r.getHash();
+		String title = t.getTitle();
+		String album = t.getAlbum();
+		String artist = t.getArtist();
+		String year = t.getYear();
+		
+		Entry en = new Entry(key, title, album, artist, year);
+		put(en);
+		
+		// TODO trigger save after short time
+		// or, append new entry at the end?
+		StringWriter wr = new StringWriter();
+		try
+		{
+			writeEntry(en, wr);
+		}
+		catch(Exception e)
+		{
+			e.printStackTrace();
+		}
+		System.out.println(wr.toString());
 	}
 	
 	

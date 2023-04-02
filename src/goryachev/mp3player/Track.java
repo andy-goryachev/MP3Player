@@ -34,6 +34,12 @@ public class Track
 	}
 	
 	
+	public RTrack getRTrack()
+	{
+		return track;
+	}
+	
+	
 	public File getFile()
 	{
 		String path = track.getRAlbum().getPath();

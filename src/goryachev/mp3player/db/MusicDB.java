@@ -264,8 +264,7 @@ public class MusicDB
 	public void updateTrack(Track t)
 	{
 		System.out.println("update " + t); // FIX
-//		Entry en = new Entry();
-//		infoDB.put(en);
+		infoDB.updateTrack(t);
 	}
 	
 	

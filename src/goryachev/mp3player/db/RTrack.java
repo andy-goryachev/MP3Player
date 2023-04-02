@@ -126,6 +126,12 @@ public class RTrack
 	}
 	
 	
+	public String getAlbum()
+	{
+		return album;
+	}
+	
+	
 	public String getYear()
 	{
 		return year;
