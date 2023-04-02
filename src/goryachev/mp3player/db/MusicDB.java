@@ -6,6 +6,7 @@ import goryachev.common.util.CKit;
 import goryachev.common.util.CList;
 import goryachev.common.util.CMap;
 import goryachev.common.util.CSorter;
+import goryachev.common.util.FileTools;
 import goryachev.mp3player.Track;
 import goryachev.mp3player.util.Utils;
 import java.io.BufferedInputStream;
@@ -31,25 +32,29 @@ public class MusicDB
 	// TODO search index
 	// TODO history buffer, for prevAlbum
 	private static final Log log = Log.get("MusicDB");
-	private static final String IDv1 = "F|2023.0326.2206";
-	private final File root;
-	private final CList<RTrack> tracks = new CList<>();
-	private final SmallImageCache imageCache = new SmallImageCache(8);
-	private final SecureRandom random;
-	private final CMap<Integer,WeakReference<Track>> cache = new CMap<>();
+	protected static final String DATA_FILE = "tracks.dat";
+	protected static final String INFO_FILE = "info.dat";
+	protected static final String IDv1 = "F|2023.0326.2206";
+	protected final File root;
+	protected final File dbDir;
+	protected final CList<RTrack> tracks = new CList<>();
+	protected final SmallImageCache imageCache = new SmallImageCache(8);
+	protected final SecureRandom random;
+	protected final CMap<Integer,WeakReference<Track>> cache = new CMap<>();
 	private InfoDB infoDB;
 	
 	
-	public MusicDB(File root)
+	public MusicDB(File musicDir, File dbDir)
 	{
-		this.root = root;
+		this.root = musicDir;
+		this.dbDir = dbDir;
 		this.random = new SecureRandom();
 	}
 	
 	
-	public static MusicDB scan(File dir)
+	public static MusicDB scan(File dir, File dbDir)
 	{
-		MusicDB d = new MusicDB(dir);
+		MusicDB d = new MusicDB(dir, dbDir);
 		long start = System.nanoTime();
 		d.scanDir(dir, dir);
 		double sec = (System.nanoTime() - start) / 1_000_000_000.0; 
@@ -263,7 +268,6 @@ public class MusicDB
 	
 	public void updateTrack(Track t)
 	{
-		System.out.println("update " + t); // FIX
 		infoDB.updateTrack(t);
 	}
 	
@@ -309,10 +313,13 @@ public class MusicDB
 	}
 
 
-	public void save(File f)
+	public void save()
 	{
 		try
 		{
+			File f = new File(dbDir, DATA_FILE);
+			FileTools.ensureParentFolder(f);
+			
 			RAlbum album = null;
 			try(BufferedWriter wr = new BufferedWriter(new FileWriter(f, CKit.CHARSET_UTF8)))
 			{
@@ -331,9 +338,24 @@ public class MusicDB
 					t.write(wr);
 				}
 			}
-			catch(Exception e)
+		}
+		catch(Exception e)
+		{
+			log.error(e);
+		}
+	}
+	
+	
+	public void saveInfoDB()
+	{
+		try
+		{
+			File f = new File(dbDir, INFO_FILE);
+			FileTools.ensureParentFolder(f);
+			
+			if(infoDB.isModified())
 			{
-				log.error(e);
+				infoDB.save(f);
 			}
 		}
 		catch(Exception e)
@@ -343,8 +365,11 @@ public class MusicDB
 	}
 
 
-	public static MusicDB load(File root, File dbFile, File infoFile)
+	public static MusicDB load(File root, File dbDir)
 	{
+		File dbFile = new File(dbDir, DATA_FILE);
+		File infoFile = new File(dbDir, INFO_FILE);
+
 		try(BufferedReader rd = new BufferedReader(new FileReader(dbFile, CKit.CHARSET_UTF8)))
 		{
 			String s = rd.readLine();
@@ -353,7 +378,7 @@ public class MusicDB
 				throw new Exception("Unknown file format"); 
 			}
 			
-			MusicDB db = new MusicDB(root);
+			MusicDB db = new MusicDB(root, dbDir);
 			int line = 2;
 			RAlbum album = null;
 			while((s = rd.readLine()) != null)

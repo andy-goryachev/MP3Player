@@ -289,9 +289,8 @@ public class MainWindow extends FxWindow
 			}
 			
 			// load db
-			File dbFile = Dirs.getDataFile();
-			File infoFile = Dirs.getInfoFile();
-			MusicDB db = MusicDB.load(musicDir, dbFile, infoFile);
+			File dbDir = Dirs.getDatabaseDirectory();
+			MusicDB db = MusicDB.load(musicDir, dbDir);
 			if(db == null)
 			{
 				// old track info is invalid
@@ -299,8 +298,8 @@ public class MainWindow extends FxWindow
 				
 				// FIX scanning should not happen in the FX thread!
 				// TODO scan dialog
-				db = MusicDB.scan(musicDir);
-				db.save(dbFile);
+				db = MusicDB.scan(musicDir, dbDir);
+				db.save();
 			}
 			
 			setDB(db);

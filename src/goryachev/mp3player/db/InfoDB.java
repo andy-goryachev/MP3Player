@@ -69,7 +69,7 @@ public class InfoDB
 	}
 
 
-	public void store(File f)
+	public void save(File f)
 	{
 		try
 		{

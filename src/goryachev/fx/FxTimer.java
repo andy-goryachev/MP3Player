@@ -78,7 +78,7 @@ public class FxTimer
 		}
 		catch(Throwable e)
 		{
-			log.error("action.run", e);
+			log.error(e);
 		}
 	}
 }
