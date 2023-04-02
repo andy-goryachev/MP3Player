@@ -258,7 +258,7 @@ public class ID3v2Info
 			cs = override;
 		}
 		
-		byte[] buf = new byte[frameSize - 1];
+		byte[] buf = new byte[frameSize];
 		in.read(buf);
 		return new String(buf, cs).trim();
 	}

@@ -1,0 +1,172 @@
+CODE|DESCRIPTION|
+CESU-8|Unicode CESU-8
+IBM00858|Variant of Cp850 with Euro character
+IBM437|MS-DOS United States, Australia, New Zealand, South Africa
+IBM775|PC Baltic
+IBM850|MS-DOS Latin-1
+IBM852|MS-DOS Latin-2
+IBM855|IBM Cyrillic
+IBM857|IBM Turkish
+IBM862|PC Hebrew
+IBM866|MS-DOS Russian
+ISO-8859-1|ISO-8859-1, Latin Alphabet No. 1
+ISO-8859-2|Latin Alphabet No. 2
+ISO-8859-4|Latin Alphabet No. 4
+ISO-8859-5|Latin/Cyrillic Alphabet
+ISO-8859-7|Latin/Greek Alphabet (ISO-8859-7:2003)
+ISO-8859-9|Latin Alphabet No. 5
+ISO-8859-13|Latin Alphabet No. 7
+ISO-8859-15|Latin Alphabet No. 9
+KOI8-R|KOI8-R, Russian
+KOI8-U|KOI8-U, Ukrainian
+US-ASCII|American Standard Code for Information Interchange
+UTF-8|Eight-bit Unicode (or UCS) Transformation Format
+UTF-16|Sixteen-bit Unicode (or UCS) Transformation Format, byte order identified by an optional byte-order mark
+UTF-16BE|Sixteen-bit Unicode (or UCS) Transformation Format, big-endian byte order
+UTF-16LE|Sixteen-bit Unicode (or UCS) Transformation Format, little-endian byte order
+UTF-32|32-bit Unicode (or UCS) Transformation Format, byte order identified by an optional byte-order mark
+UTF-32BE|32-bit Unicode (or UCS) Transformation Format, big-endian byte order
+UTF-32LE|32-bit Unicode (or UCS) Transformation Format, little-endian byte order
+x-UTF-32BE-BOM|32-bit Unicode (or UCS) Transformation Format, big-endian byte order, with byte-order mark
+x-UTF-32LE-BOM|32-bit Unicode (or UCS) Transformation Format, little-endian byte order, with byte-order mark
+windows-1250|Windows Eastern European
+windows-1251|Windows Cyrillic
+windows-1252|Windows Latin-1
+windows-1253|Windows Greek
+windows-1254|Windows Turkish
+windows-1257|Windows Baltic
+Not available|Sixteen-bit Unicode (or UCS) Transformation Format, big-endian byte order, with byte-order mark
+x-IBM737|PC Greek
+x-IBM874|IBM Thai
+x-UTF-16LE-BOM|Sixteen-bit Unicode (or UCS) Transformation Format, little-endian byte order, with byte-order mark
+Big5|Big5, Traditional Chinese
+Big5-HKSCS|Big5 with Hong Kong extensions, Traditional Chinese (incorporating 2001 revision)
+EUC-JP|JISX 0201, 0208 and 0212, EUC encoding Japanese
+EUC-KR|KS C 5601, EUC encoding, Korean
+GB18030|Simplified Chinese, PRC standard
+GB2312|GB2312, EUC encoding, Simplified Chinese
+GBK|GBK, Simplified Chinese
+IBM-Thai|IBM Thailand extended SBCS
+IBM01140|Variant of Cp037 with Euro character
+IBM01141|Variant of Cp273 with Euro character
+IBM01142|Variant of Cp277 with Euro character
+IBM01143|Variant of Cp278 with Euro character
+IBM01144|Variant of Cp280 with Euro character
+IBM01145|Variant of Cp284 with Euro character
+IBM01146|Variant of Cp285 with Euro character
+IBM01147|Variant of Cp297 with Euro character
+IBM01148|Variant of Cp500 with Euro character
+IBM01149|Variant of Cp871 with Euro character
+IBM037|USA, Canada (Bilingual, French), Netherlands, Portugal, Brazil, Australia
+IBM1026|IBM Latin-5, Turkey
+IBM1047|Latin-1 character set for EBCDIC hosts
+IBM273|IBM Austria, Germany
+IBM277|IBM Denmark, Norway
+IBM278|IBM Finland, Sweden
+IBM280|IBM Italy
+IBM284|IBM Catalan/Spain, Spanish Latin America
+IBM285|IBM United Kingdom, Ireland
+IBM290|IBM Japanese Katakana Host Extended SBCS
+IBM297|IBM France
+IBM420|IBM Arabic
+IBM424|IBM Hebrew
+IBM500|EBCDIC 500V1
+IBM860|MS-DOS Portuguese
+IBM861|MS-DOS Icelandic
+IBM863|MS-DOS Canadian French
+IBM864|PC Arabic
+IBM865|MS-DOS Nordic
+IBM868|MS-DOS Pakistan
+IBM869|IBM Modern Greek
+IBM870|IBM Multilingual Latin-2
+IBM871|IBM Iceland
+IBM918|IBM Pakistan (Urdu)
+ISO-2022-CN|GB2312 and CNS11643 in ISO 2022 CN form, Simplified and Traditional Chinese (conversion to Unicode only)
+ISO-2022-JP|JIS X 0201, 0208, in ISO 2022 form, Japanese
+ISO-2022-JP-2|JIS X 0201, 0208, 0212 in ISO 2022 form, Japanese
+ISO-2022-KR|ISO 2022 KR, Korean
+ISO-8859-3|Latin Alphabet No. 3
+ISO-8859-6|Latin/Arabic Alphabet
+ISO-8859-8|Latin/Hebrew Alphabet
+JIS_X0201|JIS X 0201
+JIS_X0212-1990|JIS X 0212
+Shift_JIS|Shift-JIS, Japanese
+TIS-620|TIS620, Thai
+windows-1255|Windows Hebrew
+windows-1256|Windows Arabic
+windows-1258|Windows Vietnamese
+windows-31j|Windows Japanese
+x-Big5-Solaris|Big5 with seven additional Hanzi ideograph character mappings for the Solaris zh_TW.BIG5 locale
+x-euc-jp-linux|JISX 0201, 0208, EUC encoding Japanese
+x-EUC-TW|CNS11643 (Plane 1-7,15), EUC encoding, Traditional Chinese
+x-eucJP-Open|JISX 0201, 0208, 0212, EUC encoding Japanese
+x-IBM1006|IBM AIX Pakistan (Urdu)
+x-IBM1025|IBM Multilingual Cyrillic: Bulgaria, Bosnia, Herzegovinia, Macedonia (FYR)
+x-IBM1046|IBM Arabic - Windows
+x-IBM1097|IBM Iran (Farsi)/Persian
+x-IBM1098|IBM Iran (Farsi)/Persian (PC)
+x-IBM1112|IBM Latvia, Lithuania
+x-IBM1122|IBM Estonia
+x-IBM1123|IBM Ukraine
+x-IBM1124|IBM AIX Ukraine
+x-IBM1166|IBM Cyrillic Multilingual with euro for Kazakhstan
+x-IBM1364|IBM EBCDIC KS X 1005-1
+x-IBM1381|IBM OS/2, DOS People's Republic of China (PRC)
+x-IBM1383|IBM AIX People's Republic of China (PRC)
+x-IBM300|IBM Japanese Latin Host Double-Byte
+x-IBM33722|IBM-eucJP - Japanese (superset of 5050)
+x-IBM833|IBM Korean Host Extended SBCS
+x-IBM834|IBM EBCDIC DBCS-only Korean
+x-IBM856|IBM Hebrew
+x-IBM875|IBM Greek
+x-IBM921|IBM Latvia, Lithuania (AIX, DOS)
+x-IBM922|IBM Estonia (AIX, DOS)
+x-IBM930|Japanese Katakana-Kanji mixed with 4370 UDC, superset of 5026
+x-IBM933|Korean Mixed with 1880 UDC, superset of 5029
+x-IBM935|Simplified Chinese Host mixed with 1880 UDC, superset of 5031
+x-IBM937|Traditional Chinese Host miexed with 6204 UDC, superset of 5033
+x-IBM939|Japanese Latin Kanji mixed with 4370 UDC, superset of 5035
+x-IBM942|IBM OS/2 Japanese, superset of Cp932
+x-IBM942C|Variant of Cp942
+x-IBM943|IBM OS/2 Japanese, superset of Cp932 and Shift-JIS
+x-IBM943C|Variant of Cp943
+x-IBM948|OS/2 Chinese (Taiwan) superset of 938
+x-IBM949|PC Korean
+x-IBM949C|Variant of Cp949
+x-IBM950|PC Chinese (Hong Kong, Taiwan)
+x-IBM964|AIX Chinese (Taiwan)
+x-IBM970|AIX Korean
+x-ISCII91|ISCII91 encoding of Indic scripts
+x-ISO2022-CN-CNS|CNS11643 in ISO 2022 CN form, Traditional Chinese (conversion from Unicode only)
+x-ISO2022-CN-GB|GB2312 in ISO 2022 CN form, Simplified Chinese (conversion from Unicode only)
+x-iso-8859-11|Latin/Thai Alphabet
+x-JIS0208|JIS X 0208
+x-JISAutoDetect|Detects and converts from Shift-JIS, EUC-JP, ISO 2022 JP (conversion to Unicode only)
+x-Johab|Korean, Johab character set
+x-MacArabic|Macintosh Arabic
+x-MacCentralEurope|Macintosh Latin-2
+x-MacCroatian|Macintosh Croatian
+x-MacCyrillic|Macintosh Cyrillic
+x-MacDingbat|Macintosh Dingbat
+x-MacGreek|Macintosh Greek
+x-MacHebrew|Macintosh Hebrew
+x-MacIceland|Macintosh Iceland
+x-MacRoman|Macintosh Roman
+x-MacRomania|Macintosh Romania
+x-MacSymbol|Macintosh Symbol
+x-MacThai|Macintosh Thai
+x-MacTurkish|Macintosh Turkish
+x-MacUkraine|Macintosh Ukraine
+x-MS932_0213|Shift_JISX0213 Windows MS932 Variant
+x-MS950-HKSCS|Windows Traditional Chinese with Hong Kong extensions
+x-MS950-HKSCS-XP|HKSCS Windows XP Variant
+x-mswin-936|Windows Simplified Chinese
+x-PCK|Solaris version of Shift_JIS
+x-SJIS_0213|Shift_JISX0213
+x-windows-50220|Windows Codepage 50220 (7-bit implementation)
+x-windows-50221|Windows Codepage 50221 (7-bit implementation)
+x-windows-874|Windows Thai
+x-windows-949|Windows Korean
+x-windows-950|Windows Traditional Chinese
+x-windows-iso2022jp|Variant ISO-2022-JP (MS932 based)
+

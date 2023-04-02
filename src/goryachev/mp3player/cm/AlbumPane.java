@@ -67,22 +67,22 @@ public class AlbumPane extends CPane
 		m.item("UTF-8", () -> updateEncoding("UTF-8"));
 		m.item("ISO-8859-1", () -> updateEncoding("ISO-8859-1"));
 		m.separator();
-		// cyrillic windows
-		m.item("KOI8-R (Cyrillic)", () -> updateEncoding("KOI8-R"));
+		// cyrillic
 		m.item("Cp1251 (Cyrillic)", () -> updateEncoding("Cp1251"));
+		m.item("KOI8-R (Cyrillic)", () -> updateEncoding("KOI8-R"));
 		m.separator();
 		// jp
+		m.item("x-JISAutoDetect (Japanese)", () -> updateEncoding("x-JISAutoDetect"));
 		m.item("ISO-2022-JP (Japanese)", () -> updateEncoding("ISO-2022-JP"));
 		m.item("EUC-JP (Japanese)", () -> updateEncoding("EUC-JP"));
 		m.item("Shift_JIS (Japanese)", () -> updateEncoding("Shift_JIS")).setMnemonicParsing(false);
-		m.item("windows-31j (Japanese)", () -> updateEncoding("windows-31j"));
 		m.separator();
 		// cn
 		m.item("Big5 (Trad. Chinese)", () -> updateEncoding("Big5"));
 		m.item("GB2312 (Simp. Chinese)", () -> updateEncoding("GB2312"));
 		m.separator();
 		// other
-		m.item("Other...");
+		m.item("Other...", this::openCharsetDialog);
 
 		
 		table = new TableView<>();
@@ -272,7 +272,12 @@ public class AlbumPane extends CPane
 	protected void updateEncoding(String enc)
 	{
 		Charset cs = Charset.forName(enc);
+		updateEncoding(cs);
+	}
+	
 		
+	public void updateEncoding(Charset cs)
+	{
 		List<Track> ts = table.getItems();
 		for(Track t: ts)
 		{
@@ -321,5 +326,11 @@ public class AlbumPane extends CPane
 				log.error(e);
 			}
 		}
+	}
+	
+	
+	protected void openCharsetDialog()
+	{
+		new CharsetDialog(this).open();
 	}
 }
