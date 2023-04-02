@@ -3,6 +3,7 @@ package goryachev.mp3player.db;
 import goryachev.common.log.Log;
 import java.io.File;
 import java.io.RandomAccessFile;
+import java.nio.charset.Charset;
 
 
 
@@ -64,14 +65,14 @@ public class ID3_Info
 	}
 
 
-	public static ID3_Info parseID3(File file)
+	public static ID3_Info parseID3(File file, Charset override)
 	{
 		try (RandomAccessFile in = new RandomAccessFile(file, "r"))
 		{
-			ID3_Info info = ID3v2Info.readInfo(in);
+			ID3_Info info = ID3v2Info.readInfo(in, override);
 			if(info == null)
 			{
-				info = ID3v1Info.readInfo(in);
+				info = ID3v1Info.readInfo(in, override);
 			}
 			return info;
 		}

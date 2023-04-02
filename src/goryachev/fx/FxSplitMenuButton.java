@@ -34,6 +34,14 @@ public class FxSplitMenuButton extends SplitMenuButton
 	}
 	
 	
+	public FxMenuItem item(String text, Runnable action)
+	{
+		FxMenuItem m = new FxMenuItem(text, action);
+		getItems().add(m);
+		return m;
+	}
+	
+	
 	public FxMenu menu(String text)
 	{
 		FxMenu m = new FxMenu(text);

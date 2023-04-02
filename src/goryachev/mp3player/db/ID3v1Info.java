@@ -2,6 +2,7 @@
 package goryachev.mp3player.db;
 import goryachev.common.util.CKit;
 import java.io.RandomAccessFile;
+import java.nio.charset.Charset;
 import org.mozilla.universalchardet.UniversalDetector;
 
 
@@ -18,28 +19,19 @@ import org.mozilla.universalchardet.UniversalDetector;
 public class ID3v1Info
 	extends ID3_Info
 {
-	public ID3v1Info(byte[] tag)
+	private ID3v1Info(byte[] tag, Charset cs)
 	{
 		if(tag.length == 128)
 		{
-			UniversalDetector d = new UniversalDetector();
-			handleData(d, tag, 3, 30);
-			handleData(d, tag, 33, 30);
-			handleData(d, tag, 63, 30);
-			handleData(d, tag, 93, 4);
-			handleData(d, tag, 97, 30);
-			d.dataEnd();
-			String enc = d.getDetectedCharset();
-			if(enc == null)
+			if(cs == null)
 			{
-				enc = "UTF-8";
+				cs = CKit.CHARSET_UTF8;
 			}
 
-			title = parse(tag, 3, 30, enc);
-			artist = parse(tag, 33, 30, enc);
-			album = parse(tag, 63, 30, enc);
-			year = parse(tag, 93, 4, enc);
-			//comment = parse(tag, 97, 30, enc);
+			title = parse(tag, 3, 30, cs);
+			artist = parse(tag, 33, 30, cs);
+			album = parse(tag, 63, 30, cs);
+			year = parse(tag, 93, 4, cs);
 		}
 	}
 	
@@ -67,13 +59,13 @@ public class ID3v1Info
 	}
 
 
-	protected String parse(byte[] bytes, int off, int len, String enc)
+	protected String parse(byte[] bytes, int off, int len, Charset cs)
 	{
 		len = findZero(bytes, off, len);
 		
 		try
 		{
-			return new String(bytes, off, len, enc).trim();
+			return new String(bytes, off, len, cs).trim();
 		}
 		catch(Exception e)
 		{
@@ -83,7 +75,7 @@ public class ID3v1Info
 	}
 
 
-	public static ID3_Info readInfo(RandomAccessFile in)
+	public static ID3_Info readInfo(RandomAccessFile in, Charset cs)
 	{
 		try
 		{
@@ -98,7 +90,7 @@ public class ID3v1Info
 				if((tag[0] == 'T') && (tag[1] == 'A') && (tag[2] == 'G'))
 				{
 					// it's a valid IDv1 tag
-					return new ID3v1Info(tag);
+					return new ID3v1Info(tag, cs);
 				}
 			}
 		}

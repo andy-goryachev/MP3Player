@@ -1,18 +1,23 @@
 // Copyright © 2023 Andy Goryachev <andy@goryachev.com>
 package goryachev.mp3player.cm;
+import goryachev.common.log.Log;
+import goryachev.common.util.CKit;
 import goryachev.common.util.CList;
 import goryachev.fx.CPane;
 import goryachev.fx.FX;
 import goryachev.fx.FxAction;
 import goryachev.fx.FxButton;
 import goryachev.fx.FxMenu;
-import goryachev.fx.FxObject;
 import goryachev.fx.FxSplitMenuButton;
-import goryachev.fx.FxString;
 import goryachev.mp3player.CoverArtLabel;
 import goryachev.mp3player.Track;
+import goryachev.mp3player.db.ID3_Info;
 import goryachev.mp3player.db.MusicDB;
+import java.awt.Desktop;
+import java.io.File;
+import java.nio.charset.Charset;
 import java.util.List;
+import java.util.function.Consumer;
 import javafx.geometry.Pos;
 import javafx.scene.control.SelectionMode;
 import javafx.scene.control.TableColumn;
@@ -25,6 +30,7 @@ import javafx.scene.control.TextField;
  */
 public class AlbumPane extends CPane
 {
+	protected static final Log log = Log.get("AlbumPane");
 	protected final MusicDB db;
 	protected final CoverArtLabel artField;
 	protected final TextField titleField;
@@ -56,20 +62,24 @@ public class AlbumPane extends CPane
 		yearField = new TextField();
 		
 		FxSplitMenuButton moreButton = new FxSplitMenuButton("More...");
-		moreButton.item("Reset");
+		moreButton.item("Open Directory", this::openDirectory);
 		FxMenu m = moreButton.menu("Encoding");
+		m.item("UTF-8", () -> updateEncoding("UTF-8"));
+		m.item("ISO-8859-1", () -> updateEncoding("ISO-8859-1"));
+		m.separator();
 		// cyrillic windows
-		m.item("KOI-8 (Cyrillic)");
-		m.item("KOI-7 (Cyrillic)");
-		m.item("Cp1251 (Cyrillic)");
+		m.item("KOI8-R (Cyrillic)", () -> updateEncoding("KOI8-R"));
+		m.item("Cp1251 (Cyrillic)", () -> updateEncoding("Cp1251"));
 		m.separator();
 		// jp
-		m.item("EUC-JP (Japanese)");
-		m.item("Shift_JIS (Japanese)");
+		m.item("ISO-2022-JP (Japanese)", () -> updateEncoding("ISO-2022-JP"));
+		m.item("EUC-JP (Japanese)", () -> updateEncoding("EUC-JP"));
+		m.item("Shift_JIS (Japanese)", () -> updateEncoding("Shift_JIS")).setMnemonicParsing(false);
+		m.item("windows-31j (Japanese)", () -> updateEncoding("windows-31j"));
 		m.separator();
 		// cn
-		m.item("Big5 (Trad. Chinese)");
-		m.item("GB2312 (Simp. Chinese)");
+		m.item("Big5 (Trad. Chinese)", () -> updateEncoding("Big5"));
+		m.item("GB2312 (Simp. Chinese)", () -> updateEncoding("GB2312"));
 		m.separator();
 		// other
 		m.item("Other...");
@@ -255,6 +265,61 @@ public class AlbumPane extends CPane
 			t.setAlbum(album);
 			t.setArtist(artist);
 			t.setYear(year);
+		}
+	}
+	
+	
+	protected void updateEncoding(String enc)
+	{
+		Charset cs = Charset.forName(enc);
+		
+		List<Track> ts = table.getItems();
+		for(Track t: ts)
+		{
+			try
+			{
+				File f = t.getFile();
+				ID3_Info d = ID3_Info.parseID3(f, cs);
+				if(d != null)
+				{
+					set(d.getTitle(), t::setTitle);
+					set(d.getAlbum(), t::setAlbum);
+					set(d.getArtist(), t::setArtist);
+					set(d.getYear(), t::setYear);
+				}
+			}
+			catch(Exception e)
+			{
+				log.error(e);
+			}
+		}
+		
+		handleSelection();
+	}
+	
+	
+	protected static void set(String text, Consumer<String> c)
+	{
+		if(CKit.isNotBlank(text))
+		{
+			c.accept(text);
+		}
+	}
+	
+	
+	protected void openDirectory()
+	{
+		File f = currentTrack.getFile().getParentFile();
+		if(Desktop.isDesktopSupported())
+		{
+			try
+			{
+				Desktop.getDesktop().open(f);
+			}
+			catch(Exception e)
+			{
+				log.error(e);
+			}
 		}
 	}
 }

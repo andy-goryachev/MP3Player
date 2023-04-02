@@ -1,6 +1,7 @@
 // Copyright © 2006-2023 Andy Goryachev <andy@goryachev.com>
 package goryachev.mp3player.db;
 import java.io.RandomAccessFile;
+import java.nio.charset.Charset;
 
 
 /*
@@ -142,9 +143,14 @@ encoding
 public class ID3v2Info 
 	extends ID3_Info
 {
+	private final Charset override;
+	
+	
 	// position in random access file is already set right after the header
-	public ID3v2Info(RandomAccessFile in) throws Exception
+	private ID3v2Info(RandomAccessFile in, Charset override) throws Exception
 	{
+		this.override = override;
+		
 		int flags = in.read();
 		int size = syncSafeInt(in);
 		
@@ -175,25 +181,24 @@ public class ID3v2Info
 			//Log.print(" frame=" + sb.toString() + " size=" + fsz);
 			
 			String type = sb.toString();
-			
 			if(type.equals("TPE1"))
 			{
-				artist = readString(in,fsz);
+				artist = readString(in, fsz);
 				//Log.print(" artist=" + artist);
 			}
 			else if(type.equals("TIT2"))
 			{
-				title = readString(in,fsz);
+				title = readString(in, fsz);
 				//Log.print(" title=" + title);
 			}
 			else if(type.equals("TALB"))
 			{
-				album = readString(in,fsz);
+				album = readString(in, fsz);
 				//Log.print(" album=" + album);
 			}
 			else if(type.equals("TYER"))
 			{
-				year = readString(in,fsz);
+				year = readString(in, fsz);
 				//Log.print(" year=" + year);
 			}
 //			else if(type.equals("COMM"))
@@ -227,28 +232,35 @@ public class ID3v2Info
 	*/
 	protected String readString(RandomAccessFile in, int frameSize) throws Exception
 	{
-		String enc;
+		Charset cs;
 		
-		switch(in.read())
+		if(override == null)
 		{
-		case 1:
-			enc = "UTF-16";
-			break;
-		case 2:
-			enc = "UTF-16BE";
-			break;
-		case 3:
-			enc = "UTF-8";
-			break;
-		case 0:
-		default:
-			enc = "ISO-8859-1";
-			break;
+			switch(in.read())
+			{
+			case 1:
+				cs = Charset.forName("UTF-16");
+				break;
+			case 2:
+				cs = Charset.forName("UTF-16BE");
+				break;
+			case 3:
+				cs = Charset.forName("UTF-8");
+				break;
+			case 0:
+			default:
+				cs = Charset.forName("ISO-8859-1");
+				break;
+			}
+		}
+		else
+		{
+			cs = override;
 		}
 		
 		byte[] buf = new byte[frameSize - 1];
 		in.read(buf);
-		return new String(buf, enc).trim();
+		return new String(buf, cs).trim();
 	}
 
 
@@ -274,7 +286,7 @@ public class ID3v2Info
 
 
 
-	public static ID3_Info readInfo(RandomAccessFile in)
+	public static ID3_Info readInfo(RandomAccessFile in, Charset override)
 	{
 		try
 		{
@@ -293,7 +305,7 @@ public class ID3v2Info
 						
 						if((minor < 0xff) && (major < 0xff))
 						{
-							return new ID3v2Info(in);
+							return new ID3v2Info(in, override);
 						}
 					}
 				}

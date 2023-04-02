@@ -74,6 +74,8 @@ public class ContentManagerWindow extends FxWindow
 		}
 		else
 		{
+			instance.tabPane.selectTab(1);
+			instance.albumPane.setTrack(t);
 			instance.requestFocus();
 		}
 	}
