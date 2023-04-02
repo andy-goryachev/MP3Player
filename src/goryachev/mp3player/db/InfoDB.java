@@ -23,7 +23,7 @@ import java.io.Writer;
 public class InfoDB
 {
 	private static final Log log = Log.get("InfoDB");
-	private static final String IDv1 = "InfoDB|2023.0330.2037";
+	private static final String IDv1 = "InfoDB|2023.0402.1237";
 	private final CMap<String,Entry> entries = new CMap<>();
 	private boolean modified;
 	
@@ -105,17 +105,17 @@ public class InfoDB
 	protected static Entry parseEntry(String text)
 	{
 		String[] ss = CKit.split(text, '|');
-		if(ss.length == 5)
+		if(ss.length == 6)
 		{
-			// TODO track number
 			// TODO consistent order
-			String key = Utils.decode(ss[1]);
+			String key = Utils.decode(ss[0]);
+			int num = Integer.parseInt(ss[1]);
 			String title = Utils.decode(ss[2]);
 			String album = Utils.decode(ss[3]);
 			String artist = Utils.decode(ss[4]);
 			String year = Utils.decode(ss[5]);
 
-			return new Entry(key, title, album, artist, year);
+			return new Entry(key, num, title, album, artist, year);
 		}
 		return null;
 	}
@@ -124,6 +124,8 @@ public class InfoDB
 	protected static void writeEntry(Entry en, Writer wr) throws Exception
 	{
 		wr.write(Utils.encode(en.getKey()));
+		wr.write("|");
+		wr.write(Utils.encode(String.valueOf(en.getTrackNumber())));
 		wr.write("|");
 		wr.write(Utils.encode(en.getTitle()));
 		wr.write("|");
@@ -154,12 +156,13 @@ public class InfoDB
 	{
 		RTrack r = t.getRTrack();
 		String key = r.getHash();
+		int num = t.getNumber();
 		String title = t.getTitle();
 		String album = t.getAlbum();
 		String artist = t.getArtist();
 		String year = t.getYear();
 		
-		Entry en = new Entry(key, title, album, artist, year);
+		Entry en = new Entry(key, num, title, album, artist, year);
 		put(en);
 		
 		// TODO trigger save after short time
@@ -195,15 +198,17 @@ public class InfoDB
 	protected static class Entry
 	{
 		private final String key;
+		private final int number;
 		private final String title;
 		private final String album;
 		private final String artist;
 		private final String year;
 		
 		
-		public Entry(String key, String title, String album, String artist, String year)
+		public Entry(String key, int number, String title, String album, String artist, String year)
 		{
 			this.key = key;
+			this.number = number;
 			this.title = title;
 			this.album = album;
 			this.artist = artist;
@@ -226,6 +231,12 @@ public class InfoDB
 		public String getTitle()
 		{
 			return title;
+		}
+		
+		
+		public int getTrackNumber()
+		{
+			return number;
 		}
 
 

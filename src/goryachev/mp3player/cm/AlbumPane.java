@@ -86,7 +86,7 @@ public class AlbumPane extends CPane
 			c.setSortable(false);
 			c.setCellValueFactory((d) ->
 			{
-				return new FxObject<Integer>(d.getValue().getNumber0() + 1);
+				return d.getValue().trackNumberProperty();
 			});
 		}
 		{

@@ -102,7 +102,7 @@ public class RTrack
 	
 
 	/** track index in the album, as scanned, starting with 0 */
-	public int getNumber0()
+	public int getTrackNumber0()
 	{
 		return parent.trackIndex(this);
 	}

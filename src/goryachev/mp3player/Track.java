@@ -1,10 +1,12 @@
 // Copyright © 2023 Andy Goryachev <andy@goryachev.com>
 package goryachev.mp3player;
 import goryachev.common.util.FH;
+import goryachev.fx.FxObject;
 import goryachev.fx.FxString;
 import goryachev.mp3player.db.MusicDB;
 import goryachev.mp3player.db.RTrack;
 import java.io.File;
+import javafx.beans.InvalidationListener;
 import javafx.scene.image.Image;
 
 
@@ -15,16 +17,22 @@ public class Track
 {
 	private final MusicDB db;
 	private final RTrack track;
+	private final InvalidationListener listener;
 	private FxString title;
 	private FxString album;
 	private FxString artist;
 	private FxString year;
+	private FxObject<Integer> trackNum;
 	
 	
 	public Track(MusicDB db, RTrack track)
 	{
 		this.db = db;
 		this.track = track;
+		this.listener = (x) ->
+		{
+			db.updateTrack2(this);
+		};
 	}
 	
 	
@@ -86,10 +94,7 @@ public class Track
 			
 			title = new FxString();
 			title.set(v);
-			title.addListener((s,p,c) ->
-			{
-				db.updateTrack(this);
-			});
+			title.addListener(listener);
 		}
 		return title;
 	}
@@ -115,10 +120,7 @@ public class Track
 			
 			album = new FxString();
 			album.set(v);
-			album.addListener((s,p,c) ->
-			{
-				db.updateTrack(this);
-			});
+			album.addListener(listener);
 		}
 		return album;
 	}
@@ -144,10 +146,7 @@ public class Track
 			
 			artist = new FxString();
 			artist.set(v);
-			artist.addListener((s,p,c) ->
-			{
-				db.updateTrack(this);
-			});
+			artist.addListener(listener);
 		}
 		return artist;
 	}
@@ -173,27 +172,43 @@ public class Track
 			
 			year = new FxString();
 			year.set(v);
-			year.addListener((s,p,c) ->
-			{
-				db.updateTrack(this);
-			});
+			year.addListener(listener);
 		}
 		return year;
 	}
 
 
-	/** track number in the album, as scanned, starting with 0 */
-	public int getNumber0()
+	/** track number in the album, 1-based */
+	public int getNumber()
 	{
-		// TODO property
-		return track.getNumber0();
+		return trackNumberProperty().get();
 	}
 	
 	
-	/** track number in the album, starting with 1 */
-	public int getNumber()
+	public void setNumber(int n)
 	{
-		return getNumber0() + 1;
+		trackNumberProperty().set(n);
+	}
+	
+	
+	public FxObject<Integer> trackNumberProperty()
+	{
+		if(trackNum == null)
+		{
+			int n = db.getTrackNumber(track);
+			
+			trackNum = new FxObject<Integer>();
+			trackNum.setValue(Integer.valueOf(n));
+			trackNum.addListener(listener);
+		}
+		return trackNum;
+	}
+	
+	
+	/** track number in the album, starting with 0 */
+	public int getNumber0()
+	{
+		return getNumber() - 1;
 	}
 	
 	

@@ -266,7 +266,7 @@ public class MusicDB
 	}
 	
 	
-	public void updateTrack(Track t)
+	public void updateTrack2(Track t)
 	{
 		infoDB.updateTrack(t);
 	}
@@ -485,6 +485,18 @@ public class MusicDB
 			return en.getYear();
 		}
 		return t.getRAlbum().getYear();
+	}
+	
+	
+	/** track number, 1-based */
+	public int getTrackNumber(RTrack t)
+	{
+		InfoDB.Entry en = infoDB.get(t);
+		if(en != null)
+		{
+			return en.getTrackNumber();
+		}
+		return t.getTrackNumber0() + 1;
 	}
 
 
