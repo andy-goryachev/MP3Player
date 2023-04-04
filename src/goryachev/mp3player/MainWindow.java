@@ -32,7 +32,7 @@ public class MainWindow extends FxWindow
 	public static final CssStyle BUTTON_PANE = new CssStyle("MainWindow_BUTTON_PANE");
 	public static final CssStyle MAIN_PANE = new CssStyle("MainWindow_MAIN_PANE");
 	public static final CssStyle INFO_PANE = new CssStyle("MainWindow_INFO_PANE");
-	protected MusicDB database;
+	protected MusicDB db;
 	protected final CoverArtLabel artField;
 	protected final Label titleField;
 	protected final Label albumField;
@@ -220,34 +220,35 @@ public class MainWindow extends FxWindow
 	
 	public void jump()
 	{
-		Track t = database.randomJump();
+		Track t = db.randomJump();
 		play(t);
 	}
 	
 	
 	public void prevAlbum()
 	{
-		// TODO track from history
+		Track t = db.fromHistory(currentTrack);
+		play(t);
 	}
 	
 	
 	public void nextAlbum()
 	{
-		Track t = database.nextAlbum(currentTrack);
+		Track t = db.nextAlbum(currentTrack);
 		play(t);
 	}
 	
 	
 	public void prevTrack()
 	{
-		Track t = database.prevTrack(currentTrack);
+		Track t = db.prevTrack(currentTrack);
 		play(t);
 	}
 	
 	
 	public void nextTrack()
 	{
-		Track t = database.nextTrack(currentTrack);
+		Track t = db.nextTrack(currentTrack);
 		play(t);
 	}
 	
@@ -272,7 +273,7 @@ public class MainWindow extends FxWindow
 	
 	protected void setDB(MusicDB d)
 	{
-		database = d;
+		db = d;
 	}
 	
 	
@@ -333,6 +334,8 @@ public class MainWindow extends FxWindow
 	protected void play(Track t)
 	{
 		log.info(t);
+		
+		db.addToHistory(t);
 		
 		// FIX remove
 		{

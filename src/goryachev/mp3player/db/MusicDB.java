@@ -42,6 +42,7 @@ public class MusicDB
 	protected final SmallImageCache imageCache = new SmallImageCache(8);
 	protected final SecureRandom random;
 	protected final CMap<Integer,WeakReference<Track>> cache = new CMap<>();
+	protected final History history = new History(32);
 	private InfoDB infoDB;
 	
 	
@@ -267,7 +268,7 @@ public class MusicDB
 	}
 	
 	
-	public void updateTrack2(Track t)
+	public void updateTrack(Track t)
 	{
 		infoDB.updateTrack(t);
 	}
@@ -285,10 +286,29 @@ public class MusicDB
 	}
 	
 	
+	public Track prevAlbum(Track t)
+	{
+		int delta = - t.getNumber0() - 1;
+		return changeTrack(t, delta);
+	}
+	
+	
 	public Track nextAlbum(Track t)
 	{
 		int delta = t.getAlbumTrackCount() - t.getNumber0();
 		return changeTrack(t, delta);
+	}
+	
+	
+	/** from history, or previous album? */
+	public Track fromHistory(Track t)
+	{
+		int ix = history.previous();
+		if(ix < 0)
+		{
+			return prevAlbum(t);
+		}
+		return getTrack(ix);
 	}
 
 
@@ -498,6 +518,12 @@ public class MusicDB
 			return en.getTrackNumber();
 		}
 		return t.getTrackNumber0() + 1;
+	}
+	
+	
+	public void addToHistory(Track t)
+	{
+		history.add(t.getIndex());
 	}
 
 

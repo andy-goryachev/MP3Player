@@ -31,7 +31,7 @@ public class Track
 		this.track = track;
 		this.listener = (x) ->
 		{
-			db.updateTrack2(this);
+			db.updateTrack(this);
 		};
 	}
 	
