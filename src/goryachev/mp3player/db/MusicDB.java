@@ -19,7 +19,6 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.FilenameFilter;
 import java.lang.ref.WeakReference;
-import java.nio.charset.Charset;
 import java.security.SecureRandom;
 import java.util.function.Function;
 import javafx.scene.image.Image;
@@ -191,7 +190,7 @@ public class MusicDB
 	
 	protected RTrack createTrack(File f)
 	{
-		ID3_Info t = ID3_Info.parseID3(f, Charset.defaultCharset());
+		ID3_Info t = ID3_Info.parseID3(f, null);
 		
 		String title;
 		String artist;

@@ -13,6 +13,7 @@ import goryachev.mp3player.CoverArtLabel;
 import goryachev.mp3player.Track;
 import goryachev.mp3player.db.ID3_Info;
 import goryachev.mp3player.db.MusicDB;
+import goryachev.mp3player.db.RussianConverter;
 import java.awt.Desktop;
 import java.io.File;
 import java.nio.charset.Charset;
@@ -68,14 +69,12 @@ public class AlbumPane extends CPane
 		m.item("ISO-8859-1", () -> updateEncoding("ISO-8859-1"));
 		m.separator();
 		// cyrillic
+		m.item("Autocorrect: Russian"); // TODO, () -> updateEncoding(new RussianConverter()));
 		m.item("Cp1251 (Cyrillic)", () -> updateEncoding("Cp1251"));
 		m.item("KOI8-R (Cyrillic)", () -> updateEncoding("KOI8-R"));
 		m.separator();
 		// jp
-		m.item("x-JISAutoDetect (Japanese)", () -> updateEncoding("x-JISAutoDetect"));
-		m.item("ISO-2022-JP (Japanese)", () -> updateEncoding("ISO-2022-JP"));
-		m.item("EUC-JP (Japanese)", () -> updateEncoding("EUC-JP"));
-		m.item("Shift_JIS (Japanese)", () -> updateEncoding("Shift_JIS")).setMnemonicParsing(false);
+		m.item("Autocorrect: Japanese", () -> updateEncoding("x-JISAutoDetect"));
 		m.separator();
 		// cn
 		m.item("Big5 (Trad. Chinese)", () -> updateEncoding("Big5"));
@@ -272,12 +271,6 @@ public class AlbumPane extends CPane
 	protected void updateEncoding(String enc)
 	{
 		Charset cs = Charset.forName(enc);
-		updateEncoding(cs);
-	}
-	
-		
-	public void updateEncoding(Charset cs)
-	{
 		List<Track> ts = table.getItems();
 		for(Track t: ts)
 		{

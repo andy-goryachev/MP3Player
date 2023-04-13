@@ -65,14 +65,14 @@ public class ID3_Info
 	}
 
 
-	public static ID3_Info parseID3(File file, Charset override)
+	public static ID3_Info parseID3(File file, Charset cs)
 	{
 		try (RandomAccessFile in = new RandomAccessFile(file, "r"))
 		{
-			ID3_Info info = ID3v2Info.readInfo(in, override);
+			ID3_Info info = ID3v2Info.readInfo(in, cs);
 			if(info == null)
 			{
-				info = ID3v1Info.readInfo(in, override);
+				info = ID3v1Info.readInfo(in, cs);
 			}
 			return info;
 		}

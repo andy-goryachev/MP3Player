@@ -6,7 +6,6 @@ import goryachev.mp3player.util.Utils;
 import java.io.File;
 import java.io.StringWriter;
 import java.io.Writer;
-import java.nio.charset.Charset;
 import java.util.List;
 import com.mpatric.mp3agic.ID3v1;
 import com.mpatric.mp3agic.ID3v2;
@@ -90,7 +89,7 @@ public class TestScan
 	
 	protected static RTrack createTrack(File f)
 	{
-		ID3_Info t = ID3_Info.parseID3(f, Charset.defaultCharset());
+		ID3_Info t = ID3_Info.parseID3(f, null);
 		
 		String title;
 		String artist;

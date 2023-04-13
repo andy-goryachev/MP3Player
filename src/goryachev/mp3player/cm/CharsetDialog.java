@@ -74,6 +74,6 @@ public class CharsetDialog extends FxDialog
 	protected void handleSelection(Charset cs)
 	{
 		// TODO update current track instead, use [Apply] and [Apply to Album] buttons
-		pane.updateEncoding(cs);
+		pane.updateEncoding(cs.toString());
 	}
 }

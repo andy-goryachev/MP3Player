@@ -53,7 +53,7 @@ Footer: 10, optional
 
 
 ----------------------------------------------------------------------
-http://www.id3.org/id3v2.3.0.html
+https://www.id3.org/id3v2.3.0.html
 
 encoding
      $00   ISO-8859-1 [ISO-8859-1]. Terminated with $00.
@@ -264,8 +264,7 @@ public class ID3v2Info
 	}
 
 
-	private int syncSafeInt(RandomAccessFile in) 
-		throws Exception
+	private int syncSafeInt(RandomAccessFile in) throws Exception
 	{
 		int d = (in.read() & 0x7f) << 24;
 		d |= ((in.read() & 0x7f) << 16);
