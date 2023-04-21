@@ -13,7 +13,7 @@ import goryachev.mp3player.CoverArtLabel;
 import goryachev.mp3player.Track;
 import goryachev.mp3player.db.ID3_Info;
 import goryachev.mp3player.db.MusicDB;
-import goryachev.mp3player.db.RussianConverter;
+import goryachev.mp3player.db.RussianDetector;
 import java.awt.Desktop;
 import java.io.File;
 import java.nio.charset.Charset;

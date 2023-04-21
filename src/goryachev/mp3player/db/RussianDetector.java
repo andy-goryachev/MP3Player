@@ -7,13 +7,13 @@ import java.nio.charset.Charset;
 /**
  * Russian Legacy Encoding Detector.
  */
-public class RussianConverter
+public class RussianDetector
 {
 	private final Charset[] charsets;
 	private final String letters = "абвгдеёжзийклмнопрстуфхцчшщъыьэюя";
 	
 	
-	public RussianConverter()
+	public RussianDetector()
 	{
 		charsets = new Charset[]
 		{
