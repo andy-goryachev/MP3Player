@@ -41,6 +41,7 @@ public class AlbumPane extends CPane
 	protected final TextField artistField;
 	protected final TextField yearField;
 	protected final TableView<Track> table;
+	protected final TextField pathField;
 	protected final FxAction updateAction = new FxAction(this::update);
 	protected final FxAction updateAlbumAction = new FxAction(this::updateAlbum);
 	private Track currentTrack;
@@ -63,6 +64,10 @@ public class AlbumPane extends CPane
 		artistField = new TextField();
 		
 		yearField = new TextField();
+		
+		pathField = new TextField();
+		pathField.setEditable(false);
+		pathField.setStyle("-fx-background-color:transparent; -fx-background-insets:0; -fx-background-radius:0; -fx-effect:none; -fx-padding:2 0 0 0; -fx-text-fill:#444444;");
 		
 		FxSplitMenuButton moreButton = new FxSplitMenuButton("More...");
 		moreButton.item("Open Directory", this::openDirectory);
@@ -157,7 +162,8 @@ public class AlbumPane extends CPane
 			CPane.PREF,
 			CPane.PREF,
 			CPane.PREF,
-			CPane.FILL
+			CPane.FILL,
+			CPane.PREF
 		);
 		int r = 0;
 		add(0, r, 1, 5, artField);
@@ -178,6 +184,8 @@ public class AlbumPane extends CPane
 		r++;
 		r++;
 		add(0, r, 6, 1, table);
+		r++;
+		add(0, r, 6, 1, pathField);
 
 		FX.addInvalidationListener(table.getSelectionModel().getSelectedItems(), true, this::handleSelection);
 	}
@@ -212,6 +220,7 @@ public class AlbumPane extends CPane
 		albumField.setText(t.getAlbum());
 		artistField.setText(t.getArtist());
 		yearField.setText(t.getYear());
+		pathField.setText(t.getFile().toString());
 	}
 	
 
