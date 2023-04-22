@@ -257,6 +257,11 @@ public class ID3v2Info
 	*/
 	private String parse(byte[] bytes, Charset cs)
 	{
+		if(bytes == null)
+		{
+			return null;
+		}
+
 		if(cs == null)
 		{
 			switch(bytes[0])
@@ -316,8 +321,9 @@ public class ID3v2Info
 				}
 			}
 		}
-		catch(Throwable t)
+		catch(Throwable e)
 		{
+			e.printStackTrace();
 		}
 
 		return null;

@@ -4,6 +4,7 @@ import goryachev.common.log.Log;
 import java.io.File;
 import java.io.RandomAccessFile;
 import java.nio.charset.Charset;
+import java.util.function.Supplier;
 
 
 
@@ -70,13 +71,15 @@ public class ID3_Info
 	}
 
 
-	public static ID3_Info parseID3(File file, ICharsetDetector det)
+	public static ID3_Info parseID3(File file, Supplier<ICharsetDetector> gen)
 	{
 		try (RandomAccessFile in = new RandomAccessFile(file, "r"))
 		{
+			ICharsetDetector det = (gen == null) ? null : gen.get();
 			ID3_Info info = ID3v2Info.readInfo(in, det);
 			if(info == null)
 			{
+				det = (gen == null) ? null : gen.get();
 				info = ID3v1Info.readInfo(in, det);
 			}
 			return info;

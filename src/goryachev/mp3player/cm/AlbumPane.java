@@ -306,8 +306,7 @@ public class AlbumPane extends CPane
 			try
 			{
 				File f = t.getFile();
-				ICharsetDetector det = (gen == null) ? null : gen.get();
-				ID3_Info d = ID3_Info.parseID3(f, det);
+				ID3_Info d = ID3_Info.parseID3(f, gen);
 				if(d != null)
 				{
 					set(d.getTitle(), t::setTitle);
