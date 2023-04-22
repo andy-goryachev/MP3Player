@@ -9,7 +9,7 @@ import java.nio.charset.Charset;
 public interface ICharsetDetector
 {
 	/** supply more data for analysis */
-	public void update(byte[] bytes);
+	public void update(byte[] bytes, int off, int len);
 
 
 	/** returns the best guess, or null */

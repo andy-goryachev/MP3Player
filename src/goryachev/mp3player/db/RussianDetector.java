@@ -38,13 +38,13 @@ public class RussianDetector implements ICharsetDetector
 
 
 	/** supply more data for analysis */
-	public void update(byte[] bytes)
+	public void update(byte[] bytes, int off, int len)
 	{
 		for(Stats st: stats)
 		{
 			try
 			{
-				process(st, bytes);
+				process(st, bytes, off, len);
 			}
 			catch(Exception e)
 			{
@@ -109,10 +109,10 @@ public class RussianDetector implements ICharsetDetector
 	}
 
 
-	protected void process(Stats st, byte[] bytes) throws Exception
+	protected void process(Stats st, byte[] bytes, int off, int len) throws Exception
 	{
 		Charset cs = st.charset;
-		String text = new String(bytes, cs);
+		String text = new String(bytes, off, len, cs);
 		st.total = text.length();
 
 		char prev = 0;

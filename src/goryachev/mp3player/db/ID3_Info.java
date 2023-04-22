@@ -10,6 +10,10 @@ import java.nio.charset.Charset;
 public class ID3_Info
 {
 	private static final Log log = Log.get("ID3_Info");
+	public static final  Charset UTF_16 = Charset.forName("UTF-16");
+	public static final  Charset UTF_16BE = Charset.forName("UTF-16BE");
+	public static final  Charset UTF_8 = Charset.forName("UTF-8");
+	public static final  Charset ISO_8858_1 = Charset.forName("ISO-8859-1");
 	protected String title;
 	protected String artist;
 	protected String album;
@@ -17,9 +21,10 @@ public class ID3_Info
 
 
 	protected ID3_Info()
-	{ }
-	
-	
+	{
+	}
+
+
 	public ID3_Info(String title, String artist, String album, String year)
 	{
 		this.title = title;
@@ -65,14 +70,14 @@ public class ID3_Info
 	}
 
 
-	public static ID3_Info parseID3(File file, Charset cs)
+	public static ID3_Info parseID3(File file, ICharsetDetector det)
 	{
 		try (RandomAccessFile in = new RandomAccessFile(file, "r"))
 		{
-			ID3_Info info = ID3v2Info.readInfo(in, cs);
+			ID3_Info info = ID3v2Info.readInfo(in, det);
 			if(info == null)
 			{
-				info = ID3v1Info.readInfo(in, cs);
+				info = ID3v1Info.readInfo(in, det);
 			}
 			return info;
 		}

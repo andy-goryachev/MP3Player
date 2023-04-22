@@ -143,29 +143,32 @@ encoding
 public class ID3v2Info 
 	extends ID3_Info
 {
-	private final Charset override;
+	private static final int HEADER_OVERHEAD = 10;
 	
 	
 	// position in random access file is already set right after the header
-	private ID3v2Info(RandomAccessFile in, Charset override) throws Exception
+	private ID3v2Info(RandomAccessFile in, ICharsetDetector det) throws Exception
 	{
-		this.override = override;
-		
 		int flags = in.read();
 		int size = syncSafeInt(in);
 		
-		long offset = 10;
+		long offset = HEADER_OVERHEAD;
 		
 		if((flags & 0x40) != 0)
 		{
 			// extended header
 			int sz = syncSafeInt(in);
-			//Log.print("extended header size=" + sz);
 			offset += sz;	
 		}
 		
+		byte[] al = null;
+		byte[] ar = null;
+		byte[] ti = null;
+		byte[] yr = null;
+		byte[] cm = null;
+		
 		StringBuffer sb = new StringBuffer();
-		int maxOffset = size + 10;
+		int maxOffset = size + HEADER_OVERHEAD;
 		do
 		{
 			sb.setLength(0);
@@ -178,37 +181,36 @@ public class ID3v2Info
 			in.read();
 			in.read();
 
-			//Log.print(" frame=" + sb.toString() + " size=" + fsz);
-			
 			String type = sb.toString();
 			if(type.equals("TPE1"))
 			{
-				artist = readString(in, fsz);
-				//Log.print(" artist=" + artist);
+				// artist
+				ar = readBytes(in, fsz);
+				update(det, ar);
 			}
 			else if(type.equals("TIT2"))
 			{
-				title = readString(in, fsz);
-				//Log.print(" title=" + title);
+				// title
+				ti = readBytes(in, fsz);
+				update(det, ti);
 			}
 			else if(type.equals("TALB"))
 			{
-				album = readString(in, fsz);
-				//Log.print(" album=" + album);
+				// album
+				al = readBytes(in, fsz);
+				update(det, al);
 			}
 			else if(type.equals("TYER"))
 			{
-				year = readString(in, fsz);
-				//Log.print(" year=" + year);
+				// year
+				yr = readBytes(in, fsz);
 			}
-//			else if(type.equals("COMM"))
-//			{
-//				if(comment != null)
-//				{
-//					comment = readString(in,fsz);
-//					//Log.print(" comment=" + comment);
-//				}
-//			}
+			else if(type.equals("COMM"))
+			{
+				// comment
+				cm = readBytes(in,fsz);
+				update(det, cm);
+			}
 			
 			if(fsz == 0)
 			{
@@ -218,6 +220,29 @@ public class ID3v2Info
 			offset += (fsz + 10);
 			in.seek(offset);
 		} while(offset < maxOffset);
+		
+		Charset cs = (det == null) ? null : det.guessCharset();
+		album = parse(al, cs);
+		artist = parse(ar, cs);
+		title = parse(ti, cs);
+		year = parse(yr, cs);
+	}
+	
+	
+	private void update(ICharsetDetector det, byte[] bytes)
+	{
+		if(det != null)
+		{
+			det.update(bytes, 1, bytes.length - 1);
+		}
+	}
+
+
+	private byte[] readBytes(RandomAccessFile in, int size) throws Exception
+	{
+		byte[] b = new byte[size];
+		in.read(b);
+		return b;
 	}
 	
 	
@@ -230,62 +255,43 @@ public class ID3v2Info
 		  Terminated with $00 00.
 	$03   UTF-8 [UTF-8] encoded Unicode [UNICODE]. Terminated with $00.
 	*/
-	protected String readString(RandomAccessFile in, int frameSize) throws Exception
+	private String parse(byte[] bytes, Charset cs)
 	{
-		Charset cs;
-		
-		if(override == null)
+		if(cs == null)
 		{
-			switch(in.read())
+			switch(bytes[0])
 			{
 			case 1:
-				cs = Charset.forName("UTF-16");
+				cs = UTF_16;
 				break;
 			case 2:
-				cs = Charset.forName("UTF-16BE");
+				cs = UTF_16BE;
 				break;
 			case 3:
-				cs = Charset.forName("UTF-8");
+				cs = UTF_8;
 				break;
 			case 0:
 			default:
-				cs = Charset.forName("ISO-8859-1");
+				cs = ISO_8858_1;
 				break;
 			}
 		}
-		else
-		{
-			cs = override;
-		}
 		
-		byte[] buf = new byte[frameSize];
-		in.read(buf);
-		return new String(buf, cs).trim();
+		return new String(bytes, 1, bytes.length - 1, cs).trim();
 	}
 
 
 	private int syncSafeInt(RandomAccessFile in) throws Exception
 	{
-		int d = (in.read() & 0x7f) << 24;
-		d |= ((in.read() & 0x7f) << 16);
-		d |= ((in.read() & 0x7f) << 8);
+		int d = (in.read() & 0x7f) << 21;
+		d |= ((in.read() & 0x7f) << 14);
+		d |= ((in.read() & 0x7f) << 7);
 		d |= (in.read() & 0x7f);
 		return d;
 	}
 
 
-	protected int syncSafeInt(byte[] data, int offset)
-	{
-		int d = (data[offset++] & 0x7f) << 24;
-		d |= ((data[offset++] & 0x7f) << 16);
-		d |= ((data[offset++] & 0x7f) << 8);
-		d |= (data[offset++] & 0x7f);
-		return d;
-	}
-
-
-
-	public static ID3_Info readInfo(RandomAccessFile in, Charset override)
+	public static ID3_Info readInfo(RandomAccessFile in, ICharsetDetector det)
 	{
 		try
 		{
@@ -304,7 +310,7 @@ public class ID3v2Info
 						
 						if((minor < 0xff) && (major < 0xff))
 						{
-							return new ID3v2Info(in, override);
+							return new ID3v2Info(in, det);
 						}
 					}
 				}

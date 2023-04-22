@@ -32,7 +32,7 @@ public class TestRussianDetector
 	{
 		byte[] b = input.getBytes(CKit.CHARSET_8859_1);
 		RussianDetector d = new RussianDetector();
-		d.update(b);
+		d.update(b, 0, b.length);
 		Charset cs = d.guessCharset();
 		D.print(cs);
 		if(cs != null)

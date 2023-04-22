@@ -11,6 +11,7 @@ import goryachev.fx.FxMenu;
 import goryachev.fx.FxSplitMenuButton;
 import goryachev.mp3player.CoverArtLabel;
 import goryachev.mp3player.Track;
+import goryachev.mp3player.db.ICharsetDetector;
 import goryachev.mp3player.db.ID3_Info;
 import goryachev.mp3player.db.MusicDB;
 import goryachev.mp3player.db.RussianDetector;
@@ -19,6 +20,7 @@ import java.io.File;
 import java.nio.charset.Charset;
 import java.util.List;
 import java.util.function.Consumer;
+import java.util.function.Supplier;
 import javafx.geometry.Pos;
 import javafx.scene.control.SelectionMode;
 import javafx.scene.control.TableColumn;
@@ -69,7 +71,7 @@ public class AlbumPane extends CPane
 		m.item("ISO-8859-1", () -> updateEncoding("ISO-8859-1"));
 		m.separator();
 		// cyrillic
-		m.item("Autocorrect: Russian"); // TODO, () -> updateEncoding(new RussianConverter()));
+		m.item("Autocorrect: Russian", () -> updateEncoding(() -> new RussianDetector()));
 		m.item("Cp1251 (Cyrillic)", () -> updateEncoding("Cp1251"));
 		m.item("KOI8-R (Cyrillic)", () -> updateEncoding("KOI8-R"));
 		m.separator();
@@ -271,13 +273,32 @@ public class AlbumPane extends CPane
 	protected void updateEncoding(String enc)
 	{
 		Charset cs = Charset.forName(enc);
+		
+		updateEncoding(() -> new ICharsetDetector()
+		{
+			public Charset guessCharset()
+			{
+				return cs;
+			}
+			
+			
+			public void update(byte[] bytes, int off, int len)
+			{
+			}
+		});
+	}
+	
+	
+	protected void updateEncoding(Supplier<ICharsetDetector> gen)
+	{
 		List<Track> ts = table.getItems();
 		for(Track t: ts)
 		{
 			try
 			{
 				File f = t.getFile();
-				ID3_Info d = ID3_Info.parseID3(f, cs);
+				ICharsetDetector det = (gen == null) ? null : gen.get();
+				ID3_Info d = ID3_Info.parseID3(f, det);
 				if(d != null)
 				{
 					set(d.getTitle(), t::setTitle);

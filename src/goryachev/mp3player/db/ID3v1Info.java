@@ -19,20 +19,38 @@ import org.mozilla.universalchardet.UniversalDetector;
 public class ID3v1Info
 	extends ID3_Info
 {
-	private ID3v1Info(byte[] tag, Charset cs)
+	private ID3v1Info(byte[] tag, ICharsetDetector det)
 	{
-		if(tag.length == 128)
+		Charset cs;
+		if(det == null)
 		{
-			if(cs == null)
-			{
-				cs = CKit.CHARSET_UTF8;
-			}
-
-			title = parse(tag, 3, 30, cs);
-			artist = parse(tag, 33, 30, cs);
-			album = parse(tag, 63, 30, cs);
-			year = parse(tag, 93, 4, cs);
+			cs = null;
 		}
+		else
+		{
+			update(det, tag, 3, 30); // title
+			update(det, tag, 33, 30); // artist
+			update(det, tag, 63, 30); // album
+			update(det, tag, 97, 30); // comment
+			
+			cs = det.guessCharset();
+		}
+		
+		if(cs == null)
+		{
+			cs = ISO_8858_1;
+		}
+		
+		title = parse(tag, 3, 30, cs);
+		artist = parse(tag, 33, 30, cs);
+		album = parse(tag, 63, 30, cs);
+		year = parse(tag, 93, 4, cs);
+	}
+	
+	
+	private static void update(ICharsetDetector d, byte[] buf, int off, int len)
+	{
+		d.update(buf, off, len);
 	}
 	
 	
@@ -50,7 +68,7 @@ public class ID3v1Info
 	{
 		for(int i=0; i<len; i++)
 		{
-			if(bytes[i] == 0)
+			if(bytes[off + i] == 0)
 			{
 				return i;
 			}
@@ -75,7 +93,7 @@ public class ID3v1Info
 	}
 
 
-	public static ID3_Info readInfo(RandomAccessFile in, Charset cs)
+	public static ID3_Info readInfo(RandomAccessFile in, ICharsetDetector det)
 	{
 		try
 		{
@@ -90,13 +108,12 @@ public class ID3v1Info
 				if((tag[0] == 'T') && (tag[1] == 'A') && (tag[2] == 'G'))
 				{
 					// it's a valid IDv1 tag
-					return new ID3v1Info(tag, cs);
+					return new ID3v1Info(tag, det);
 				}
 			}
 		}
 		catch(Throwable e)
-		{
-		}
+		{ }
 
 		return null;
 	}
