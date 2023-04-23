@@ -3,7 +3,6 @@ package goryachev.mp3player.db;
 import goryachev.common.util.CKit;
 import java.io.RandomAccessFile;
 import java.nio.charset.Charset;
-import org.mozilla.universalchardet.UniversalDetector;
 
 
 // Class parses ID3 v1 tag data
@@ -51,16 +50,6 @@ public class ID3v1Info
 	private static void update(ICharsetDetector d, byte[] buf, int off, int len)
 	{
 		d.update(buf, off, len);
-	}
-	
-	
-	private static void handleData(UniversalDetector d, byte[] bytes, int off, int len)
-	{
-		len = findZero(bytes, off, len);
-		if(len > 0)
-		{
-			d.handleData(bytes, off, len);
-		}
 	}
 	
 	
