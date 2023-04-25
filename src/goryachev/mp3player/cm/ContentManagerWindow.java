@@ -5,6 +5,8 @@ import goryachev.fx.FxWindow;
 import goryachev.mp3player.Track;
 import goryachev.mp3player.db.MusicDB;
 import javafx.geometry.Side;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 
 
 /**
@@ -54,6 +56,18 @@ public class ContentManagerWindow extends FxWindow
 		{
 			instance = null;
 		});
+		
+		addEventHandler(KeyEvent.KEY_PRESSED, this::handleKeyPress);
+	}
+	
+	
+	protected void handleKeyPress(KeyEvent ev)
+	{
+		if(ev.getCode() == KeyCode.ESCAPE)
+		{
+			close();
+			ev.consume();
+		}
 	}
 	
 	
