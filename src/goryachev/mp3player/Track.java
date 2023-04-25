@@ -116,7 +116,7 @@ public class Track
 	{
 		if(album == null)
 		{
-			String v = db.getAlbumName(track);
+			String v = db.getAlbum(track);
 			
 			album = new FxString();
 			album.set(v);

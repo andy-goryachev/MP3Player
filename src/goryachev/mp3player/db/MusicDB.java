@@ -412,7 +412,7 @@ public class MusicDB
 	}
 
 
-	public String getAlbumName(RTrack t)
+	public String getAlbum(RTrack t)
 	{
 		InfoDB.Entry en = infoDB.get(t);
 		if(en != null)
@@ -587,11 +587,11 @@ public class MusicDB
 	protected boolean isMatch(RTrack t, String pattern)
 	{
 		return
-			m(pattern, t.getAlbum()) ||
-			m(pattern, t.getArtist()) ||
-//			m(pattern, t.getFileName()) ||
-			m(pattern, t.getTitle()) ||
-			m(pattern, t.getYear());
+			m(pattern, getAlbum(t)) ||
+			m(pattern, getArtist(t)) ||
+			m(pattern, getTitle(t)) ||
+			m(pattern, getYear(t)) ||
+			m(pattern, t.getFileName());
 	}
 	
 	
