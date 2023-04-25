@@ -4,6 +4,7 @@ import goryachev.fx.CommonStyles;
 import goryachev.fx.FxStyleSheet;
 import goryachev.fx.Theme;
 import goryachev.fx.internal.CssTools;
+import goryachev.mp3player.util.MSlider;
 import javafx.scene.paint.Color;
 
 
@@ -50,10 +51,30 @@ public class Styles
 				prop("-fx-translate-x", "1px"),
 			    prop("-fx-translate-y", "1px")
 			),
+			// slider
 			selector("#artField").defines
 			(
 				effect("dropshadow(gaussian, gray, 10, 0, 2, 2)")
-			)
+			),
+			selector(MSlider.TRACK).defines
+			(
+			    prop("-fx-background-color", CssTools.toColor(darkBorder) + ", " + CssTools.toColor(lightBorder) + ", " + CssTools.toColor(buttonPanel)),
+			    prop("-fx-background-insets", "0, 1, 2"),
+			    prop("-fx-background-radius", "3px, 2px, 0px"),
+			    prop("-fx-padding", 0)
+			),
+			selector(MSlider.TRACK, ":hover").defines
+			(
+				prop("-fx-background-color", CssTools.toColor(darkBorder) + ", " + CssTools.toColor(lightBorder) + ", white")
+			),
+			selector(MSlider.THUMB).defines
+			(
+			    prop("-fx-background-color", CssTools.toColor(darkBorder) + ", " + CssTools.toColor(lightBorder) + ", " + CssTools.toColor(buttonPanel)),
+			    prop("-fx-background-insets", "0, 1, 2"),
+			    prop("-fx-background-radius", "0px, 0px, 0px"),
+			    prop("-fx-padding", 0)
+			),
+			""
 		);
 	}
 }

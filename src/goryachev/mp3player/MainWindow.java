@@ -10,6 +10,7 @@ import goryachev.fx.FxDump;
 import goryachev.fx.FxWindow;
 import goryachev.mp3player.cm.ContentManagerWindow;
 import goryachev.mp3player.db.MusicDB;
+import goryachev.mp3player.util.MSlider;
 import goryachev.mp3player.util.Utils;
 import java.io.File;
 import javafx.geometry.Pos;
@@ -41,7 +42,7 @@ public class MainWindow extends FxWindow
 	protected final Label trackField;
 	protected final Label timeField;
 	protected final Label durationField;
-	protected final Slider timeSlider;
+	protected final MSlider timeSlider;
 	protected final FxButton playButton;
 	protected final FxButton jumpButton;
 	protected final FxButton prevAlbumButton;
@@ -98,7 +99,7 @@ public class MainWindow extends FxWindow
 		nextAlbumButton = new FxButton(Icons.nextAlbum(), this::nextAlbum);
 		cmButton = new FxButton(Icons.contentManager(), this::openContentManager);
 
-		timeSlider = new Slider();
+		timeSlider = new MSlider();
 		timeSlider.valueProperty().addListener((x) ->
 		{
 			handleSliderMoved();
@@ -155,8 +156,8 @@ public class MainWindow extends FxWindow
 		);
 		bp.add(0, 0, 1, 3, playButton);
 		bp.add(1, 0, 1, 3, jumpButton);
-		//bp.add(4, 0, trackField);
-		//bp.add(6, 1, 2, 1, trackField);
+//		bp.add(2, 0, 2, 2, new FxButton(""));
+//		bp.add(6, 0, 2, 2, new FxButton(""));
 		bp.add(4, 1, timeField);
 		bp.add(5, 1, durationField);
 		bp.add(2, 2, prevAlbumButton);
@@ -193,7 +194,7 @@ public class MainWindow extends FxWindow
 		{
 			if(player != null)
 			{
-				player.seek(player.getMedia().getDuration().multiply(timeSlider.getValue() / 100));
+				player.seek(player.getMedia().getDuration().multiply(timeSlider.getValue()));
 				play();
 			}
 		}
@@ -378,7 +379,7 @@ public class MainWindow extends FxWindow
 			Duration duration = player.getTotalDuration();
 			durationField.setText(Utils.formatTime(duration));
 					
-			timeSlider.setValue(time.toMillis() / duration.toMillis() * 100);
+			timeSlider.setValue(time.toMillis() / duration.toMillis());
 		});
 		p.setOnEndOfMedia(() ->
 		{
