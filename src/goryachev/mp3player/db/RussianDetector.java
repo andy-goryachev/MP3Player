@@ -2,6 +2,7 @@
 package goryachev.mp3player.db;
 import goryachev.common.util.CKit;
 import goryachev.common.util.CSet;
+import goryachev.common.util.D;
 import java.nio.charset.Charset;
 
 
@@ -155,7 +156,7 @@ public class RussianDetector implements ICharsetDetector
 			prev = c;
 		}
 		
-		//D.print(cs, st, text);
+		D.print(cs, st, text);
 	}
 	
 	

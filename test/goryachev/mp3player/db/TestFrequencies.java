@@ -13,9 +13,9 @@ import javax.imageio.ImageIO;
 
 
 /**
- * Tests RussianConverter.
+ * Collects some statistics.
  */
-public class TestRussianConverter
+public class TestFrequencies
 {
 	private static final Charset[] CHARSETS =
 	{
@@ -29,28 +29,6 @@ public class TestRussianConverter
 	public static void main(String[] args) throws Exception
 	{
 		TF.run();
-	}
-	
-	
-	//@Test
-	public void test()
-	{
-		t("Ìàëåíüêàÿ õîçÿéêà", "Маленькая хозяйка"); // windows-1251
-		t("éÎÓÔÒÕÍÅÎÔÁÌØÎÙÅ", "Инструментальные"); // KOI8-R
-		t("ÎÍÀ ÁÛËÀ ×ÈÑÒÀ ÊÀÊ ÑÍÅÃ ÇÈÌÎÉ", "ОНА БЫЛА ЧИСТА КАК СНЕГ ЗИМОЙ"); // windows-1251
-		t("ß æèâîé ìåõàíèçì", "Я живой механизм"); // windows-1251 
-	}
-
-
-	protected void t(String input, String expected)
-	{
-		byte[] b = input.getBytes(CKit.CHARSET_8859_1);
-		
-		for(Charset cs: CHARSETS)
-		{
-			String s = new String(b, cs);
-			D.print(cs, s);
-		}
 	}
 	
 	

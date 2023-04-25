@@ -15,6 +15,7 @@ import goryachev.mp3player.util.Utils;
 import java.io.File;
 import javafx.geometry.Pos;
 import javafx.scene.control.Label;
+import javafx.scene.control.OverrunStyle;
 import javafx.scene.control.Slider;
 import javafx.scene.image.Image;
 import javafx.scene.media.Media;
@@ -64,16 +65,20 @@ public class MainWindow extends FxWindow
 		artField.setId("artField");
 
 		titleField = new Label();
+		titleField.setTextOverrun(OverrunStyle.CENTER_WORD_ELLIPSIS);
 		titleField.setId("titleField");
 		titleField.setStyle("-fx-font-weight:bold; -fx-font-size:125%;");
 		
 		albumField = new Label();
+		albumField.setTextOverrun(OverrunStyle.CENTER_WORD_ELLIPSIS);
 		albumField.setId("albumField");
 		
 		artistField = new Label();
+		artistField.setTextOverrun(OverrunStyle.CENTER_WORD_ELLIPSIS);
 		artistField.setId("artistField");
 		
 		yearField = new Label();
+		yearField.setTextOverrun(OverrunStyle.CENTER_WORD_ELLIPSIS);
 		yearField.setId("yearField");
 		
 		trackField = new Label();
@@ -87,8 +92,8 @@ public class MainWindow extends FxWindow
 		durationField.setAlignment(Pos.CENTER_RIGHT);
 		durationField.setId("durationField");
 		
-		int w0 = 60;
-		int w1 = 30;
+		int w0 = 50;
+		int w1 = 25;
 		int gp = 4;
 		
 		playButton = new FxButton(Icons.play(), this::togglePlay);
