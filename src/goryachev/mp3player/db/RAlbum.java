@@ -8,6 +8,8 @@ import java.io.Writer;
 
 /**
  * Repository Album.
+ * 
+ * TODO this should not contain names perhaps
  */
 public class RAlbum
 {

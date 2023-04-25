@@ -851,6 +851,53 @@ public class TextTools
 		
 		return TextTools.isWordDelimiter(c);
 	}
+	
+	
+	/** split text into tokens using whitespace as separator */
+	public static CList<String> splitWhitespace(String text)
+	{
+		CList<String> list = new CList<>();
+		if(text != null)
+		{
+			int start = 0;
+			int len = text.length();
+			boolean white = true;
+			
+			for(int i=0; i<len; i++)
+			{
+				char c = text.charAt(i);
+				if(CKit.isBlank(c))
+				{
+					if(!white)
+					{
+						if(i > start)
+						{
+							add(list, text.substring(start, i));
+						}
+						white = true;
+					}
+				}
+				else
+				{
+					if(white)
+					{
+						start = i;
+						white = false;
+					}
+				}
+			}
+			
+			if(!white)
+			{
+				if(start < len)
+				{
+					add(list, text.substring(start, len));
+				}
+			}
+		}
+		
+		return list;
+	}
 
 
 	/** split to words using whitespace and word-delimiting punctuation */

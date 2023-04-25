@@ -29,7 +29,7 @@ public class ContentManagerWindow extends FxWindow
 		setMinSize(500, 500);
 		setSize(1000, 600);
 		
-		searchPane = new SearchPane();
+		searchPane = new SearchPane(db);
 		
 		albumPane = new AlbumPane(db);
 		

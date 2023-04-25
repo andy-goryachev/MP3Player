@@ -21,6 +21,7 @@ import javafx.scene.image.Image;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 import javafx.scene.paint.Color;
+import javafx.stage.Window;
 import javafx.util.Duration;
 
 
@@ -337,7 +338,7 @@ public class MainWindow extends FxWindow
 	}
 	
 	
-	protected void play(Track t)
+	public void play(Track t)
 	{
 		log.info(t);
 		
@@ -393,5 +394,18 @@ public class MainWindow extends FxWindow
 		currentTrack = t;
 		p.play();
 		player = p;
+	}
+	
+	
+	public static void playTrack(Track t)
+	{
+		for(Window w: Window.getWindows())
+		{
+			if(w instanceof MainWindow mw)
+			{
+				mw.play(t);
+				return;
+			}
+		}
 	}
 }

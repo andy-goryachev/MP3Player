@@ -8,6 +8,7 @@ import goryachev.common.util.CMap;
 import goryachev.common.util.CSorter;
 import goryachev.common.util.FileTools;
 import goryachev.mp3player.Track;
+import goryachev.mp3player.cm.SearchEntry;
 import goryachev.mp3player.util.Utils;
 import java.io.BufferedInputStream;
 import java.io.BufferedReader;
@@ -20,6 +21,8 @@ import java.io.FileWriter;
 import java.io.FilenameFilter;
 import java.lang.ref.WeakReference;
 import java.security.SecureRandom;
+import java.util.List;
+import java.util.Locale;
 import java.util.function.Function;
 import javafx.scene.image.Image;
 
@@ -593,5 +596,63 @@ public class MusicDB
 			}
 		}
 		return null;
+	}
+
+
+	public List<SearchEntry> search(List<String> query)
+	{
+		String[] q = CKit.toArray(query);
+		for(int i=0; i<q.length; i++)
+		{
+			String s = q[i];
+			q[i]= s.toLowerCase(Locale.ROOT);
+		}
+		
+		List<SearchEntry> rv = new CList<>();
+		for(RTrack t: tracks)
+		{
+			if(isMatch(t, q))
+			{
+				rv.add(new SearchEntry(() ->
+				{
+					return getTrack(t.getIndex());
+				}));
+			}
+		}
+		return rv;
+	}
+	
+	
+	protected boolean isMatch(RTrack t, String[] query)
+	{
+		for(String pattern: query)
+		{
+			if(!isMatch(t, pattern))
+			{
+				return false;
+			}
+		}
+		return true;
+	}
+	
+	
+	protected boolean isMatch(RTrack t, String pattern)
+	{
+		return
+			m(pattern, t.getAlbum()) ||
+			m(pattern, t.getArtist()) ||
+//			m(pattern, t.getFileName()) ||
+			m(pattern, t.getTitle()) ||
+			m(pattern, t.getYear());
+	}
+	
+	
+	private static boolean m(String pattern, String text)
+	{
+		if(text != null)
+		{
+			return text.toLowerCase(Locale.ROOT).contains(pattern);
+		}
+		return false;
 	}
 }
