@@ -62,13 +62,9 @@ public class TestScan
 				{
 					RTrack[] trs = CKit.toArray(RTrack.class, ts);
 					
-					String hash = null;
 					String path = Utils.pathToRoot(root, dir);
-					String title = MusicDB.getIfSame(trs, (t) -> t.getTitle());
-					String artist = MusicDB.getIfSame(trs, (t) -> t.getArtist());
-					String year = MusicDB.getIfSame(trs, (t) -> t.getYear());
 					long time = dir.lastModified();
-					RAlbum a = new RAlbum(path, title, artist, year, hash, time, trs.length);
+					RAlbum a = new RAlbum(path, time, trs.length);
 					
 					for(RTrack t: trs)
 					{

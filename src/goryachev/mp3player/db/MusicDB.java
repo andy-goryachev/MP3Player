@@ -5,7 +5,6 @@ import goryachev.common.util.CComparator;
 import goryachev.common.util.CKit;
 import goryachev.common.util.CList;
 import goryachev.common.util.CMap;
-import goryachev.common.util.CSorter;
 import goryachev.common.util.FileTools;
 import goryachev.mp3player.Track;
 import goryachev.mp3player.cm.SearchEntry;
@@ -23,7 +22,6 @@ import java.lang.ref.WeakReference;
 import java.security.SecureRandom;
 import java.util.List;
 import java.util.Locale;
-import java.util.function.Function;
 import javafx.scene.image.Image;
 
 
@@ -37,7 +35,7 @@ public class MusicDB
 	private static final Log log = Log.get("MusicDB");
 	protected static final String DATA_FILE = "tracks.dat";
 	protected static final String INFO_FILE = "info.dat";
-	protected static final String IDv1 = "F|2023.0326.2206";
+	protected static final String IDv1 = "F|2023.0424.2319";
 	protected final File root;
 	protected final File dbDir;
 	protected final CList<RTrack> tracks = new CList<>();
@@ -53,6 +51,7 @@ public class MusicDB
 		this.root = musicDir;
 		this.dbDir = dbDir;
 		this.random = new SecureRandom();
+		this.infoDB = new InfoDB();
 	}
 	
 	
@@ -110,13 +109,9 @@ public class MusicDB
 					RTrack[] trs = CKit.toArray(RTrack.class, ts);
 					sort(trs);
 					
-					String hash = hashTracks(trs);
 					String path = Utils.pathToRoot(root, dir);
-					String title = getIfSame(trs, (t) -> t.getTitle());
-					String artist = getIfSame(trs, (t) -> t.getArtist());
-					String year = getIfSame(trs, (t) -> t.getYear());
 					long time = dir.lastModified();
-					RAlbum a = new RAlbum(path, title, artist, year, hash, time, trs.length);
+					RAlbum a = new RAlbum(path, time, trs.length);
 					
 					for(RTrack t: trs)
 					{
@@ -141,53 +136,6 @@ public class MusicDB
 				return compareAsStrings(a.getFileName(), b.getFileName());
 			}
 		}.sort(trs);
-	}
-
-
-	/** returns a value which is the same across the tracks, given the getter, or null */
-	protected static String getIfSame(RTrack[] ts, Function<RTrack,String> getter)
-	{
-		String rv = null;
-		for(RTrack t: ts)
-		{
-			String s = getter.apply(t);
-			if(CKit.isBlank(s))
-			{
-				if(rv != null)
-				{
-					return null;
-				}
-			}
-			else
-			{
-				s = s.trim();
-				if(rv == null)
-				{
-					rv = s;
-				}
-				else
-				{
-					if(!CKit.equals(s, rv))
-					{
-						return null;
-					}
-				}
-			}
-		}
-		return rv;
-	}
-	
-	
-	/** album hash: sorted track hashes */
-	protected String hashTracks(RTrack[] ts)
-	{
-		CList<String> hashes = new CList<>(ts.length);
-		for(RTrack t: ts)
-		{
-			hashes.add(t.getHash());
-		}
-		CSorter.sort(hashes);
-		return Utils.computeHash(hashes);
 	}
 
 	
@@ -472,7 +420,7 @@ public class MusicDB
 			return en.getAlbum();
 		}
 		
-		String s = t.getRAlbum().getTitle();
+		String s = t.getTitle();
 		if(CKit.isBlank(s))
 		{
 			s = t.getRAlbum().getPath();
@@ -496,7 +444,7 @@ public class MusicDB
 		{
 			return en.getArtist();
 		}
-		return t.getRAlbum().getArtist();
+		return t.getArtist();
 	}
 	
 	
@@ -507,7 +455,7 @@ public class MusicDB
 		{
 			return en.getYear();
 		}
-		return t.getRAlbum().getYear();
+		return t.getYear();
 	}
 	
 	

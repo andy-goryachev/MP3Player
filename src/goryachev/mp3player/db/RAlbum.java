@@ -8,30 +8,19 @@ import java.io.Writer;
 
 /**
  * Repository Album.
- * 
- * TODO this should not contain names perhaps
  */
 public class RAlbum
 {
 	/** path to root */
 	private final String path;
-	/** album title from metadata, or directory name */
-	private final String title;
-	private final String artist;
-	private final String year;
-	private final String hash;
 	private final long timestamp;
-	private final int trackCount;
+	private final int trackCount; // why is this needed?
 	private CList<RTrack> tracks;
 	
 	
-	public RAlbum(String path, String title, String artist, String year, String hash, long timestamp, int trackCount)
+	public RAlbum(String path, long timestamp, int trackCount)
 	{
 		this.path = path;
-		this.title = title;
-		this.artist = artist;
-		this.year = year;
-		this.hash = hash;
 		this.timestamp = timestamp;
 		this.trackCount = trackCount;
 		this.tracks = new CList<>(trackCount);
@@ -42,15 +31,7 @@ public class RAlbum
 	public void write(Writer wr) throws Exception
 	{
 		wr.write("A|");
-		wr.write(Utils.encode(title));
-		wr.write("|");
-		wr.write(Utils.encode(artist));
-		wr.write("|");
-		wr.write(Utils.encode(year));
-		wr.write("|");
 		wr.write(String.valueOf(getTrackCount()));
-		wr.write("|");
-		wr.write(Utils.encode(hash));
 		wr.write("|");
 		wr.write(String.valueOf(timestamp));
 		wr.write("|");
@@ -62,19 +43,15 @@ public class RAlbum
 	public static RAlbum parse(String text) throws Exception
 	{
 		String[] ss = CKit.split(text, '|');
-		if(ss.length == 8)
+		if(ss.length == 4)
 		{
 			if("A".equals(ss[0]))
 			{
-				String title = Utils.decode(ss[1]);
-				String artist = Utils.decode(ss[2]);
-				String year = Utils.decode(ss[3]);
-				int trackCount = Integer.parseInt(Utils.decode(ss[4]));
-				String hash = Utils.decode(ss[5]);
-				long time = Long.parseLong(ss[6]);
-				String path = Utils.decode(ss[7]);
+				int trackCount = Integer.parseInt(Utils.decode(ss[1]));
+				long time = Long.parseLong(ss[2]);
+				String path = Utils.decode(ss[3]);
 
-				return new RAlbum(path, title, artist, year, hash, time, trackCount);
+				return new RAlbum(path, time, trackCount);
 			}
 		}
 		return null;
@@ -98,35 +75,11 @@ public class RAlbum
 	{
 		return tracks.get(ix);
 	}
-	
-	
-	public String getTitle()
-	{
-		return title;
-	}
-	
-	
-	public String getArtist()
-	{
-		return artist;
-	}
-
-
-	public String getYear()
-	{
-		return year;
-	}
 
 
 	public String getPath()
 	{
 		return path;
-	}
-	
-	
-	public String getHash()
-	{
-		return hash;
 	}
 
 
