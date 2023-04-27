@@ -3,6 +3,7 @@ package goryachev.mp3player.db;
 import goryachev.common.util.CKit;
 import java.io.RandomAccessFile;
 import java.nio.charset.Charset;
+import java.util.function.Supplier;
 
 
 // Class parses ID3 v1 tag data
@@ -15,10 +16,36 @@ import java.nio.charset.Charset;
 30 (97-126) Comment
  1 (127)    Genre
 */
-public class ID3v1Info
-	extends ID3_Info
+public class ID3v1_Parser extends ID3_ParserBase
 {
-	private ID3v1Info(byte[] tag, ICharsetDetector det)
+	public ID3v1_Parser(Supplier<ICharsetDetector> gen)
+	{
+		super(gen);
+	}
+	
+	
+	public ID3_Info parse(RandomAccessFile in) throws Exception
+	{
+		// attempt to read ID3v1 tag
+		long length = in.length();
+		if(length >= 128)
+		{
+			in.seek(length - 128);
+			byte[] tag = new byte[128];
+			in.read(tag);
+
+			if((tag[0] == 'T') && (tag[1] == 'A') && (tag[2] == 'G'))
+			{
+				// it's a valid IDv1 tag
+				return parse(tag);
+			}
+		}
+
+		return null;
+	}
+	
+	
+	private ID3_Info parse(byte[] tag)
 	{
 		byte[] ti = trim(tag, 3, 30); // title
 		byte[] ar = trim(tag, 33, 30); // artist
@@ -27,18 +54,18 @@ public class ID3v1Info
 		byte[] co = trim(tag, 97, 30); // comment		
 		
 		Charset cs;
-		if(det == null)
+		if(detector == null)
 		{
 			cs = null;
 		}
 		else
 		{
-			update(det, ti);
-			update(det, ar);
-			update(det, al);
-			update(det, co);
+			update(ti);
+			update(ar);
+			update(al);
+			update(co);
 			
-			cs = det.guessCharset();
+			cs = detector.guessCharset();
 		}
 		
 		if(cs == null)
@@ -46,10 +73,12 @@ public class ID3v1Info
 			cs = ISO_8858_1;
 		}
 		
-		title = parse(ti, cs);
-		artist = parse(ar, cs);
-		album = parse(al, cs);
-		year = parse(yr, cs);
+		String title = toString(ti, cs);
+		String artist = toString(ar, cs);
+		String album = toString(al, cs);
+		String year = toString(yr, cs);
+		
+		return new ID3_Info(title, artist, album, year);
 	}
 	
 	
@@ -65,11 +94,11 @@ public class ID3v1Info
 	}
 	
 	
-	private static void update(ICharsetDetector d, byte[] b)
+	private void update(byte[] b)
 	{
 		if(b != null)
 		{
-			d.update(b);
+			detector.update(b);
 		}
 	}
 	
@@ -88,7 +117,7 @@ public class ID3v1Info
 	}
 
 
-	protected String parse(byte[] bytes, Charset cs)
+	protected static String toString(byte[] bytes, Charset cs)
 	{
 		if(bytes == null)
 		{
@@ -104,31 +133,5 @@ public class ID3v1Info
 			e.printStackTrace();
 			return new String(bytes, CKit.CHARSET_ASCII).trim();
 		}
-	}
-
-
-	public static ID3_Info readInfo(RandomAccessFile in, ICharsetDetector det)
-	{
-		try
-		{
-			// attempt to read ID3v1 tag
-			long length = in.length();
-			if(length >= 128)
-			{
-				in.seek(length - 128);
-				byte[] tag = new byte[128];
-				in.read(tag);
-
-				if((tag[0] == 'T') && (tag[1] == 'A') && (tag[2] == 'G'))
-				{
-					// it's a valid IDv1 tag
-					return new ID3v1Info(tag, det);
-				}
-			}
-		}
-		catch(Throwable e)
-		{ }
-
-		return null;
 	}
 }

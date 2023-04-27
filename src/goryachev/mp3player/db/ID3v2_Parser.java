@@ -2,6 +2,7 @@
 package goryachev.mp3player.db;
 import java.io.RandomAccessFile;
 import java.nio.charset.Charset;
+import java.util.function.Supplier;
 
 
 /*
@@ -140,14 +141,46 @@ encoding
 4.3.1	WPUB	Publishers official webpage
 4.3.2	WXXX	User defined URL link frame
 */
-public class ID3v2Info 
-	extends ID3_Info
+public class ID3v2_Parser extends ID3_ParserBase
 {
 	private static final int HEADER_OVERHEAD = 10;
 	
 	
+	public ID3v2_Parser(Supplier<ICharsetDetector> gen)
+	{
+		super(gen);
+	}
+	
+	
+	public ID3_Info parse(RandomAccessFile in) throws Exception
+	{
+		// An ID3v2 tag can be detected with the following pattern:
+		// $49 44 33 yy yy xx zz zz zz zz
+		// Where yy is less than $FF, xx is the 'flags' byte and zz is less than $80.
+		if(in.read() == 'I')
+		{
+			if(in.read() == 'D')
+			{
+				if(in.read() == '3')
+				{
+					int major = (in.read() & 0xff);
+					int minor = (in.read() & 0xff);
+					
+					if((minor < 0xff) && (major < 0xff))
+					{
+						return parsePrivate(in);
+					}
+				}
+			}
+		}
+
+		return null;
+	}
+
+	
+	
 	// position in random access file is already set right after the header
-	private ID3v2Info(RandomAccessFile in, ICharsetDetector det) throws Exception
+	private ID3_Info parsePrivate(RandomAccessFile in) throws Exception
 	{
 		int flags = in.read();
 		int size = syncSafeInt(in);
@@ -186,19 +219,19 @@ public class ID3v2Info
 			{
 				// artist
 				ar = readBytes(in, fsz);
-				update(det, ar);
+				update(ar);
 			}
 			else if(type.equals("TIT2"))
 			{
 				// title
 				ti = readBytes(in, fsz);
-				update(det, ti);
+				update(ti);
 			}
 			else if(type.equals("TALB"))
 			{
 				// album
 				al = readBytes(in, fsz);
-				update(det, al);
+				update(al);
 			}
 			else if(type.equals("TYER"))
 			{
@@ -209,7 +242,7 @@ public class ID3v2Info
 			{
 				// comment
 				cm = readBytes(in,fsz);
-				update(det, cm);
+				update(cm);
 			}
 			
 			if(fsz == 0)
@@ -221,42 +254,46 @@ public class ID3v2Info
 			in.seek(offset);
 		} while(offset < maxOffset);
 		
-		Charset cs = (det == null) ? null : det.guessCharset();
-		album = parse(al, cs);
-		artist = parse(ar, cs);
-		title = parse(ti, cs);
-		year = parse(yr, cs);
+		Charset cs = (detector == null) ? null : detector.guessCharset();
+		String album = toString(al, cs);
+		String artist = toString(ar, cs);
+		String title = toString(ti, cs);
+		String year = toString(yr, cs);
+		
+		return new ID3_Info(title, artist, album, year);
 	}
 	
 	
-	private void update(ICharsetDetector det, byte[] bytes)
+	private void update(byte[] bytes)
 	{
-		if(det != null)
+		if(detector != null)
 		{
-			det.update(bytes, 1, bytes.length - 1);
+			detector.update(bytes, 1, bytes.length - 1);
 		}
 	}
 
 
-	private byte[] readBytes(RandomAccessFile in, int size) throws Exception
+	private static byte[] readBytes(RandomAccessFile in, int size) throws Exception
 	{
 		byte[] b = new byte[size];
 		in.read(b);
-		// trim null bytes
+		// TODO trim null bytes
 		return b;
 	}
 	
 	
-	/* encoding
-	$00   ISO-8859-1 [ISO-8859-1]. Terminated with $00.
-	$01   UTF-16 [UTF-16] encoded Unicode [UNICODE] with BOM. All
-		  strings in the same frame SHALL have the same byteorder.
-		  Terminated with $00 00.
-	$02   UTF-16BE [UTF-16] encoded Unicode [UNICODE] without BOM.
-		  Terminated with $00 00.
-	$03   UTF-8 [UTF-8] encoded Unicode [UNICODE]. Terminated with $00.
-	*/
-	private String parse(byte[] bytes, Charset cs)
+	/*
+	 * Encoding:
+	 * 
+	 * $00   ISO-8859-1 [ISO-8859-1]. Terminated with $00.
+	 * $01   UTF-16 [UTF-16] encoded Unicode [UNICODE] with BOM. All
+	 *       strings in the same frame SHALL have the same byteorder.
+  	 *       Terminated with $00 00.
+	 * $02   UTF-16BE [UTF-16] encoded Unicode [UNICODE] without BOM.
+	 *       Terminated with $00 00.
+	 * $03   UTF-8 [UTF-8] encoded Unicode [UNICODE]. Terminated with $00.
+	 */
+	private static String toString(byte[] bytes, Charset cs)
 	{
 		if(bytes == null)
 		{
@@ -287,46 +324,12 @@ public class ID3v2Info
 	}
 
 
-	private int syncSafeInt(RandomAccessFile in) throws Exception
+	private static int syncSafeInt(RandomAccessFile in) throws Exception
 	{
 		int d = (in.read() & 0x7f) << 21;
 		d |= ((in.read() & 0x7f) << 14);
 		d |= ((in.read() & 0x7f) << 7);
 		d |= (in.read() & 0x7f);
 		return d;
-	}
-
-
-	public static ID3_Info readInfo(RandomAccessFile in, ICharsetDetector det)
-	{
-		try
-		{
-			// An ID3v2 tag can be detected with the following pattern:
-			// $49 44 33 yy yy xx zz zz zz zz
-			// Where yy is less than $FF, xx is the 'flags' byte and zz is less than $80.
-			//
-			if(in.read() == 'I')
-			{
-				if(in.read() == 'D')
-				{
-					if(in.read() == '3')
-					{
-						int major = (in.read() & 0xff);
-						int minor = (in.read() & 0xff);
-						
-						if((minor < 0xff) && (major < 0xff))
-						{
-							return new ID3v2Info(in, det);
-						}
-					}
-				}
-			}
-		}
-		catch(Throwable e)
-		{
-			e.printStackTrace();
-		}
-
-		return null;
 	}
 }
