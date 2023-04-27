@@ -1,6 +1,7 @@
 // Copyright © 2023 Andy Goryachev <andy@goryachev.com>
 package goryachev.fx;
 import javafx.scene.control.MenuItem;
+import javafx.scene.control.SeparatorMenuItem;
 import javafx.scene.control.SplitMenuButton;
 
 
@@ -45,6 +46,14 @@ public class FxSplitMenuButton extends SplitMenuButton
 	public FxMenu menu(String text)
 	{
 		FxMenu m = new FxMenu(text);
+		getItems().add(m);
+		return m;
+	}
+	
+	
+	public SeparatorMenuItem separator()
+	{
+		SeparatorMenuItem m = new SeparatorMenuItem();
 		getItems().add(m);
 		return m;
 	}

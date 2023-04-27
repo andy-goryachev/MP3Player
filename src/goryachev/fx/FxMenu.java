@@ -56,6 +56,14 @@ public class FxMenu
 	}
 	
 	
+	public FxMenu submenu(String text)
+	{
+		FxMenu m = new FxMenu(text);
+		getItems().add(m);
+		return m;
+	}
+	
+	
 	public FxCheckMenuItem item(String text, Property<Boolean> prop)
 	{
 		FxCheckMenuItem m = new FxCheckMenuItem(text, prop);

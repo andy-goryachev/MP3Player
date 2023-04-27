@@ -167,16 +167,16 @@ public class InfoDB
 		
 		// TODO trigger save after short time
 		// or, append new entry at the end?
-		StringWriter wr = new StringWriter();
-		try
-		{
-			writeEntry(en, wr);
-		}
-		catch(Exception e)
-		{
-			e.printStackTrace();
-		}
-		System.out.println(wr.toString());
+//		StringWriter wr = new StringWriter();
+//		try
+//		{
+//			writeEntry(en, wr);
+//		}
+//		catch(Exception e)
+//		{
+//			e.printStackTrace();
+//		}
+//		System.out.println(wr.toString());
 	}
 	
 	

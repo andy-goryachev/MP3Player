@@ -6,6 +6,7 @@ import goryachev.common.util.CKit;
 import goryachev.common.util.CList;
 import goryachev.common.util.CMap;
 import goryachev.common.util.FileTools;
+import goryachev.fx.FxTimer;
 import goryachev.mp3player.Track;
 import goryachev.mp3player.cm.SearchEntry;
 import goryachev.mp3player.util.Utils;
@@ -23,6 +24,7 @@ import java.security.SecureRandom;
 import java.util.List;
 import java.util.Locale;
 import javafx.scene.image.Image;
+import javafx.util.Duration;
 
 
 /**
@@ -30,7 +32,6 @@ import javafx.scene.image.Image;
  */
 public class MusicDB
 {
-	// TODO search index
 	// TODO history buffer, for prevAlbum
 	private static final Log log = Log.get("MusicDB");
 	protected static final String DATA_FILE = "tracks.dat";
@@ -44,6 +45,7 @@ public class MusicDB
 	protected final CMap<Integer,WeakReference<Track>> cache = new CMap<>();
 	protected final History history = new History(32);
 	private InfoDB infoDB;
+	private FxTimer saveTimer;
 	
 	
 	public MusicDB(File musicDir, File dbDir)
@@ -221,6 +223,16 @@ public class MusicDB
 	public void updateTrack(Track t)
 	{
 		infoDB.updateTrack(t);
+		
+		if(saveTimer == null)
+		{
+			saveTimer = new FxTimer(Duration.millis(100), this::saveInfoDB);
+			saveTimer.start();
+		}
+		else
+		{
+			saveTimer.restart();
+		}
 	}
 	
 	
@@ -321,11 +333,11 @@ public class MusicDB
 	{
 		try
 		{
-			File f = new File(dbDir, INFO_FILE);
-			FileTools.ensureParentFolder(f);
-			
 			if(infoDB.isModified())
 			{
+				File f = new File(dbDir, INFO_FILE);
+				FileTools.ensureParentFolder(f);
+
 				infoDB.save(f);
 			}
 		}
