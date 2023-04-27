@@ -27,9 +27,10 @@ public class TestRussianDetector
 		t("ß æèâîé ìåõàíèçì", "Я живой механизм"); // windows-1251
 		t("Áåëàÿ ãâàðäèÿ", "");
 		t("×¸ðíàÿ Âîäà Êðûëüÿ Ground Beat", "");
+		t("ÁÀËËÀÄÀ Î ÊÍÈÆÍÛÕ ÄÅÒßÕ", "");
 	}
-
-
+	
+	
 	protected void t(String input, String expected)
 	{
 		byte[] b = input.getBytes(CKit.CHARSET_8859_1);

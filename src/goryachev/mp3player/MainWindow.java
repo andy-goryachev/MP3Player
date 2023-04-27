@@ -10,14 +10,15 @@ import goryachev.fx.FxDump;
 import goryachev.fx.FxWindow;
 import goryachev.mp3player.cm.ContentManagerWindow;
 import goryachev.mp3player.db.MusicDB;
+import goryachev.mp3player.util.CoverArtLabel;
 import goryachev.mp3player.util.MSlider;
 import goryachev.mp3player.util.Utils;
 import java.io.File;
 import javafx.geometry.Pos;
 import javafx.scene.control.Label;
 import javafx.scene.control.OverrunStyle;
-import javafx.scene.control.Slider;
 import javafx.scene.image.Image;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 import javafx.scene.paint.Color;
@@ -84,7 +85,6 @@ public class MainWindow extends FxWindow
 		
 		trackField = new Label();
 		trackField.setId("trackField");
-//		trackField.setAlignment(Pos.CENTER_RIGHT);
 		
 		timeField = new Label();
 		timeField.setId("timeField");
@@ -106,16 +106,13 @@ public class MainWindow extends FxWindow
 		cmButton = new FxButton(Icons.contentManager(), this::openContentManager);
 
 		timeSlider = new MSlider();
-		timeSlider.valueProperty().addListener((x) ->
-		{
-			handleSliderMoved();
-		});
+		
+		timeSlider.addEventHandler(MouseEvent.MOUSE_PRESSED, this::handleSliderClick);
 				
 		CPane tp = new CPane();
 		INFO_PANE.set(tp);
 		tp.setPadding(gp);
 		tp.setHGap(10);
-		//tp.setVGap(gp);
 		tp.addRows
 		(
 			CPane.PREF,
@@ -192,21 +189,20 @@ public class MainWindow extends FxWindow
 		setWidth(550);
 		setResizable(false);
 	}
-	
-	
-	protected void handleSliderMoved()
+
+
+	protected void handleSliderClick(MouseEvent ev)
 	{
-		if(timeSlider.isPressed())
+		if(player != null)
 		{
-			if(player != null)
-			{
-				player.seek(player.getMedia().getDuration().multiply(timeSlider.getValue()));
-				play();
-			}
+			double v = timeSlider.getValueForX(ev.getX());
+			Duration d = player.getMedia().getDuration().multiply(v);
+			player.seek(d);
+			play();
 		}
 	}
-	
-	
+
+
 	protected void togglePlay()
 	{
 		if(player != null)
@@ -293,6 +289,7 @@ public class MainWindow extends FxWindow
 			if((musicDir == null) || (!musicDir.exists()) || (!musicDir.isDirectory()))
 			{
 				new WelcomeDialog(this).open();
+				// TODO probably that's why Platform.exit() does not
 				continue;
 			}
 			

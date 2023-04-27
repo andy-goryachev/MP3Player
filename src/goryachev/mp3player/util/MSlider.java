@@ -1,13 +1,11 @@
 // Copyright © 2023 Andy Goryachev <andy@goryachev.com>
 package goryachev.mp3player.util;
-import goryachev.common.util.D;
 import goryachev.fx.CssStyle;
 import goryachev.fx.FX;
 import goryachev.fx.FxDouble;
 import javafx.beans.property.DoubleProperty;
 import javafx.geometry.HPos;
 import javafx.geometry.VPos;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Region;
 
 
@@ -20,7 +18,6 @@ public class MSlider extends Region
 	public static final CssStyle THUMB = new CssStyle("MSlider_THUMB");
 	private final FxDouble value = new FxDouble();
 	private final Region thumb;
-	private boolean pressed;
 	private static final double ASPECT = 0.6;
 	
 	
@@ -34,40 +31,28 @@ public class MSlider extends Region
 		getChildren().add(thumb);
 
 		FX.addInvalidationListener(value, true, this::positionThumb);
-		addEventHandler(MouseEvent.MOUSE_PRESSED, this::handleMousePressed);
-		addEventHandler(MouseEvent.MOUSE_RELEASED, this::handleMouseReleased);
 	}
 	
 	
-	// FIX audio clicks on mouse press and hold??
-	protected void handleMousePressed(MouseEvent ev)
+	public double getValueForX(double x)
 	{
-		if(pressed)
+		double tw = thumb.getWidth();
+		double w = getWidth() - tw;
+		if(w <= 0.0)
 		{
-			return;
+			return 0.0;
 		}
 		
-		pressed = true;
-		
-		double w = getHeight() * ASPECT;
-		double v = (ev.getX()  - w/2) / (getWidth() - w);
+		double v = (x - (tw / 2.0)) / w;
 		if(v < 0.0)
 		{
-			v = 0.0;
+			return 0.0;
 		}
 		else if(v > 1.0)
 		{
-			v = 1.0;
+			return 1.0;
 		}
-		setValue(v);
-		ev.consume();
-	}
-	
-	
-	protected void handleMouseReleased(MouseEvent ev)
-	{
-		pressed = false;
-		ev.consume();
+		return v;
 	}
 	
 	

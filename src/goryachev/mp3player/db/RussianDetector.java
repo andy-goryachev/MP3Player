@@ -26,8 +26,7 @@ public class RussianDetector implements ICharsetDetector
 			Charset.forName("KOI8-R"),
 			Charset.forName("cp866"),
 			Charset.forName("ISO-8859-5"),
-			CKit.CHARSET_UTF8,
-			CKit.CHARSET_ASCII
+			CKit.CHARSET_UTF8
 		};
 		
 		stats = new Stats[charsets.length];
@@ -69,7 +68,9 @@ public class RussianDetector implements ICharsetDetector
 			}
 		}
 		
-		return best == null ? null : best.charset;
+		Charset cs = best == null ? null : best.charset;
+		log.debug("charset=%s", cs);
+		return cs;
 	}
 	
 	

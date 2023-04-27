@@ -1,5 +1,6 @@
 // Copyright © 2006-2023 Andy Goryachev <andy@goryachev.com>
 package goryachev.mp3player.db;
+import goryachev.common.log.Log;
 import java.io.RandomAccessFile;
 import java.nio.charset.Charset;
 import java.util.function.Supplier;
@@ -143,6 +144,7 @@ encoding
 */
 public class ID3v2_Parser extends ID3_ParserBase
 {
+	private static final Log log = Log.get("ID3v2_Parser");
 	private static final int HEADER_OVERHEAD = 10;
 	
 	
@@ -214,6 +216,7 @@ public class ID3v2_Parser extends ID3_ParserBase
 			in.read();
 
 			String type = sb.toString();
+			log.debug(type);
 			if(type.equals("TPE1"))
 			{
 				// artist
