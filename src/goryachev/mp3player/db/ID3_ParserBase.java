@@ -28,7 +28,7 @@ public class ID3_ParserBase
 	
 	public static ID3_Info parseID3(File file, Supplier<ICharsetDetector> gen)
 	{
-		try (RandomAccessFile in = new RandomAccessFile(file, "r"))
+		try(RandomAccessFile in = new RandomAccessFile(file, "r"))
 		{
 			ID3_Info rv;
 			try

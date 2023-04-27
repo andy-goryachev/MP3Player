@@ -176,10 +176,8 @@ public class ID3v2_Parser extends ID3_ParserBase
 
 		return null;
 	}
-
 	
 	
-	// position in random access file is already set right after the header
 	private ID3_Info parsePrivate(RandomAccessFile in) throws Exception
 	{
 		int flags = in.read();
@@ -209,6 +207,7 @@ public class ID3v2_Parser extends ID3_ParserBase
 			sb.append((char)in.read());
 			sb.append((char)in.read());
 			sb.append((char)in.read());
+			
 			int fsz = syncSafeInt(in);
 			// flags
 			in.read();
@@ -240,9 +239,13 @@ public class ID3v2_Parser extends ID3_ParserBase
 			}
 			else if(type.equals("COMM"))
 			{
+				/*
+				going to skip comments because they seem to contain leading 0x00 bytes
+				in addition to the encoding byte
 				// comment
-				cm = readBytes(in,fsz);
+				cm = readBytes(in, fsz);
 				update(cm);
+				*/
 			}
 			
 			if(fsz == 0)
