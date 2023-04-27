@@ -1,8 +1,8 @@
 // Copyright © 2023 Andy Goryachev <andy@goryachev.com>
 package goryachev.mp3player.db;
+import goryachev.common.log.Log;
 import goryachev.common.util.CKit;
 import goryachev.common.util.CSet;
-import goryachev.common.util.D;
 import java.nio.charset.Charset;
 
 
@@ -11,6 +11,7 @@ import java.nio.charset.Charset;
  */
 public class RussianDetector implements ICharsetDetector
 {
+	private static final Log log = Log.get("RussianDetector");
 	private static final CSet<String> illegal = initIllegal();
 	private static final CSet<String> frequent = initFrequent();
 	private static final String ALPHABET = "абвгдеёжзийклмнопрстуфхцчшщъыьэюя";
@@ -156,7 +157,7 @@ public class RussianDetector implements ICharsetDetector
 			prev = c;
 		}
 		
-		D.print(cs, st, text);
+		log.debug("%s %s %s", cs, st, text);
 	}
 	
 	
