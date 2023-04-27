@@ -242,6 +242,7 @@ public class ID3v2Info
 	{
 		byte[] b = new byte[size];
 		in.read(b);
+		// trim null bytes
 		return b;
 	}
 	

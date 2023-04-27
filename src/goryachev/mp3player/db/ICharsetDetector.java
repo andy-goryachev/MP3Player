@@ -14,4 +14,10 @@ public interface ICharsetDetector
 
 	/** returns the best guess, or null */
 	public Charset guessCharset();
+	
+	
+	default public void update(byte[] bytes)
+	{
+		update(bytes, 0, bytes.length);
+	}
 }

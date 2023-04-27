@@ -2383,6 +2383,38 @@ public final class CKit
 	}
 	
 	
+	public static byte[] copy(byte[] b, int off, int len)
+	{
+		if(b == null)
+		{
+			return null;
+		}
+		
+		if(off < 0)
+		{
+			off = 0;
+		}
+		else if(off > b.length)
+		{
+			return new byte[0];
+		}
+		
+		if(off + len > b.length)
+		{
+			len = b.length - off;
+		}
+		
+		if(len <= 0)
+		{
+			return new byte[0];
+		}
+		
+		byte[] rv = new byte[len];
+		System.arraycopy(b, off, rv, 0, len);
+		return rv;
+	}
+	
+	
 	public static <S,T> List<T> transform(List<S> src, Function<S,T> converter)
 	{
 		return transform(src, null, converter);

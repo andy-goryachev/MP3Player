@@ -20,6 +20,12 @@ public class ID3v1Info
 {
 	private ID3v1Info(byte[] tag, ICharsetDetector det)
 	{
+		byte[] ti = trim(tag, 3, 30); // title
+		byte[] ar = trim(tag, 33, 30); // artist
+		byte[] al = trim(tag, 63, 30); // album
+		byte[] yr = trim(tag, 93, 4); // year
+		byte[] co = trim(tag, 97, 30); // comment		
+		
 		Charset cs;
 		if(det == null)
 		{
@@ -27,10 +33,10 @@ public class ID3v1Info
 		}
 		else
 		{
-			update(det, tag, 3, 30); // title
-			update(det, tag, 33, 30); // artist
-			update(det, tag, 63, 30); // album
-			update(det, tag, 97, 30); // comment
+			update(det, ti);
+			update(det, ar);
+			update(det, al);
+			update(det, co);
 			
 			cs = det.guessCharset();
 		}
@@ -40,19 +46,35 @@ public class ID3v1Info
 			cs = ISO_8858_1;
 		}
 		
-		title = parse(tag, 3, 30, cs);
-		artist = parse(tag, 33, 30, cs);
-		album = parse(tag, 63, 30, cs);
-		year = parse(tag, 93, 4, cs);
+		title = parse(ti, cs);
+		artist = parse(ar, cs);
+		album = parse(al, cs);
+		year = parse(yr, cs);
 	}
 	
 	
-	private static void update(ICharsetDetector d, byte[] buf, int off, int len)
+	private static byte[] trim(byte[] b, int off, int len)
 	{
-		d.update(buf, off, len);
+		len = findZero(b, off, len);
+		if(len == 0)
+		{
+			return null;
+		}
+		
+		return CKit.copy(b, off, len);
 	}
 	
 	
+	private static void update(ICharsetDetector d, byte[] b)
+	{
+		if(b != null)
+		{
+			d.update(b);
+		}
+	}
+	
+	
+	// FIX
 	private static int findZero(byte[] bytes, int off, int len)
 	{
 		for(int i=0; i<len; i++)
@@ -66,18 +88,21 @@ public class ID3v1Info
 	}
 
 
-	protected String parse(byte[] bytes, int off, int len, Charset cs)
+	protected String parse(byte[] bytes, Charset cs)
 	{
-		len = findZero(bytes, off, len);
-		
+		if(bytes == null)
+		{
+			return null;
+		}
+
 		try
 		{
-			return new String(bytes, off, len, cs).trim();
+			return new String(bytes, cs).trim();
 		}
 		catch(Exception e)
 		{
 			e.printStackTrace();
-			return new String(bytes, off, len, CKit.CHARSET_ASCII).trim();
+			return new String(bytes, CKit.CHARSET_ASCII).trim();
 		}
 	}
 
