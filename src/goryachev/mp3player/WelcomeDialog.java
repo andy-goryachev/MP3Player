@@ -104,7 +104,9 @@ public class WelcomeDialog extends FxDialog
 	
 	protected void exit()
 	{
-		close();
+		System.exit(0);
+		// why doesn't it work??
 		Platform.exit();
+		close();
 	}
 }
