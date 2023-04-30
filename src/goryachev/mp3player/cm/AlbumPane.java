@@ -9,6 +9,7 @@ import goryachev.fx.FxAction;
 import goryachev.fx.FxButton;
 import goryachev.fx.FxMenu;
 import goryachev.fx.FxSplitMenuButton;
+import goryachev.mp3player.MainWindow;
 import goryachev.mp3player.Track;
 import goryachev.mp3player.db.ICharsetDetector;
 import goryachev.mp3player.db.ID3_Info;
@@ -26,6 +27,7 @@ import javafx.scene.control.SelectionMode;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
+import javafx.scene.input.MouseEvent;
 
 
 /**
@@ -187,6 +189,7 @@ public class AlbumPane extends CPane
 		add(0, r, 6, 1, pathField);
 
 		FX.addInvalidationListener(table.getSelectionModel().getSelectedItems(), true, this::handleSelection);
+		table.addEventHandler(MouseEvent.MOUSE_CLICKED, this::handleClick);
 	}
 	
 	
@@ -353,5 +356,18 @@ public class AlbumPane extends CPane
 	protected void openCharsetDialog()
 	{
 		new CharsetDialog(this).open();
+	}
+	
+	
+	protected void handleClick(MouseEvent ev)
+	{
+		if(ev.getClickCount() == 2)
+		{
+			Track t = table.getSelectionModel().getSelectedItem();
+			if(t != null)
+			{
+				MainWindow.playTrack(t);
+			}
+		}
 	}
 }
