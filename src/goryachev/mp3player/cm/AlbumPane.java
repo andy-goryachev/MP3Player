@@ -209,14 +209,14 @@ public class AlbumPane extends CPane
 		default:
 		}
 		
-		titleField.setDisable(sz == 0);
-		
-//		updateAlbumAction.setEnabled(
+		titleField.setDisable(sz != 1);
 	}
 
 	
 	public void updateTrackInfo(Track t)
 	{
+		currentTrack = t;
+		
 		artField.setImage(t.getCoverArt());
 		titleField.setText(t.getTitle());
 		albumField.setText(t.getAlbum());
@@ -228,8 +228,6 @@ public class AlbumPane extends CPane
 
 	public void setTrack(Track t)
 	{
-		currentTrack = t;
-		
 		updateTrackInfo(t);
 		
 		// TODO move to Track?
