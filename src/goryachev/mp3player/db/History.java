@@ -1,11 +1,10 @@
 // Copyright © 2023 Andy Goryachev <andy@goryachev.com>
 package goryachev.mp3player.db;
 import goryachev.common.util.CList;
-import goryachev.mp3player.Track;
 
 
 /**
- * History.
+ * Playback History.
  */
 public class History
 {
@@ -23,7 +22,6 @@ public class History
 	
 	public void add(int ix)
 	{
-		System.out.println("add: " + ix);
 		if(index > 0)
 		{
 			int ix2 = list.get(index);
@@ -50,7 +48,6 @@ public class History
 			ix = -1;
 		}
 		
-		System.out.println("previous: " + ix);
 		return  ix;
 	}
 }

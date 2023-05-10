@@ -342,6 +342,7 @@ public class MainWindow extends FxWindow
 		db.addToHistory(t);
 		
 		// FIX remove
+		if(false)
 		{
 			playButton.setGraphic(Icons.play());
 			jumpButton.setGraphic(Icons.jump());
@@ -354,7 +355,7 @@ public class MainWindow extends FxWindow
 		int ix = t.getIndex();
 		GlobalSettings.setInt(CURRENT_TRACK, ix);
 		
-		trackField.setText(t.getNumber() + "/" + t.getAlbumTrackCount());
+		trackField.setText(t.getNumber() + " / " + t.getAlbumTrackCount());
 		titleField.textProperty().bind(t.titleProperty());
 		albumField.textProperty().bind(t.albumProperty());
 		artistField.textProperty().bind(t.artistProperty());
