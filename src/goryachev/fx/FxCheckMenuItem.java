@@ -5,7 +5,7 @@ import javafx.scene.control.CheckMenuItem;
 
 
 /**
- * CheckMenuItem that knows how to deal with CAction or a Property.
+ * CheckMenuItem that knows how to deal with FxAction or a Property.
  */
 public class FxCheckMenuItem
 	extends CheckMenuItem
