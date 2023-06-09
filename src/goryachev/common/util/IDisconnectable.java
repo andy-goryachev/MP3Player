@@ -5,7 +5,7 @@ package goryachev.common.util;
 /**
  * Disconnectable.
  */
-public interface Disconnectable
+public interface IDisconnectable
 {
 	public void disconnect();
 }

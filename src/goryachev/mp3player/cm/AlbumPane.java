@@ -3,10 +3,11 @@ package goryachev.mp3player.cm;
 import goryachev.common.log.Log;
 import goryachev.common.util.CKit;
 import goryachev.common.util.CList;
+import goryachev.common.util.IDisconnectable;
 import goryachev.fx.CPane;
 import goryachev.fx.FX;
 import goryachev.fx.FxAction;
-import goryachev.fx.FxButton;
+import goryachev.fx.FxDisconnector;
 import goryachev.fx.FxMenu;
 import goryachev.fx.FxSplitMenuButton;
 import goryachev.mp3player.MainWindow;
@@ -44,8 +45,9 @@ public class AlbumPane extends CPane
 	protected final TextField yearField;
 	protected final TableView<Track> table;
 	protected final TextField pathField;
-	protected final FxAction updateAction = new FxAction(this::update);
 	protected final FxAction updateAlbumAction = new FxAction(this::updateAlbum);
+	private final FxDisconnector disconnector = new FxDisconnector();
+	private IDisconnectable titleDisconnectable;
 	private Track currentTrack;
 	
 	
@@ -71,12 +73,13 @@ public class AlbumPane extends CPane
 		pathField.setEditable(false);
 		pathField.setStyle("-fx-background-color:transparent; -fx-background-insets:0; -fx-background-radius:0; -fx-effect:none; -fx-padding:2 0 0 0; -fx-text-fill:#444444;");
 		
-		FxSplitMenuButton moreButton = new FxSplitMenuButton("More...");
-		moreButton.item("Open Directory", this::openDirectory);
-		moreButton.separator();
-		moreButton.item("Autocorrect: Russian", () -> updateEncoding(() -> new RussianDetector()));
-		moreButton.item("Autocorrect: Japanese", () -> updateEncoding("x-JISAutoDetect"));
-		FxMenu m = moreButton.menu("Encoding");
+		FxSplitMenuButton editButton = new FxSplitMenuButton("Edit...");
+		editButton.item("Open Directory", this::openDirectory);
+		editButton.item("Add Cover Art"); // TODO
+		editButton.separator();
+		editButton.item("Autocorrect: Russian", () -> updateEncoding(() -> new RussianDetector()));
+		editButton.item("Autocorrect: Japanese", () -> updateEncoding("x-JISAutoDetect"));
+		FxMenu m = editButton.menu("Encoding");
 		m.separator();
 		m.item("UTF-8", () -> updateEncoding("UTF-8"));
 		m.item("ISO-8859-1", () -> updateEncoding("ISO-8859-1"));
@@ -91,6 +94,8 @@ public class AlbumPane extends CPane
 		m.separator();
 		// other
 		m.item("Other...", this::openCharsetDialog);
+		editButton.separator();
+		editButton.item("Copy to All in Album", updateAlbumAction); // TODO with undo?
 
 		table = new TableView<>();
 		table.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
@@ -152,8 +157,6 @@ public class AlbumPane extends CPane
 			120,
 			CPane.PREF,
 			CPane.FILL,
-			CPane.PREF,
-			CPane.PREF,
 			CPane.PREF
 		);
 		addRows
@@ -169,24 +172,24 @@ public class AlbumPane extends CPane
 		int r = 0;
 		add(0, r, 1, 5, artField);
 		add(1, r, FX.label("Title:", Pos.CENTER_RIGHT));
-		add(2, r, 4, 1, titleField);
+		add(2, r, 2, 1, titleField);
 		r++;
 		add(1, r, FX.label("Album:", Pos.CENTER_RIGHT));
-		add(2, r, 4, 1, albumField);
+		add(2, r, 2, 1, albumField);
 		r++;
 		add(1, r, FX.label("Artist:", Pos.CENTER_RIGHT));
-		add(2, r, 4, 1, artistField);
+		add(2, r, 2, 1, artistField);
 		r++;
 		add(1, r, FX.label("Year:", Pos.CENTER_RIGHT));
 		add(2, r, yearField);
-		add(3, r, moreButton);
-		add(4, r, new FxButton("Update Album", updateAlbumAction));
-		add(5, r, new FxButton("Update", updateAction, FxButton.AFFIRM));
+		add(3, r, editButton);
+//		add(4, r, new FxButton("Update Album", updateAlbumAction));
+//		add(5, r, new FxButton("Update", updateAction, FxButton.AFFIRM));
 		r++;
 		r++;
-		add(0, r, 6, 1, table);
+		add(0, r, 4, 1, table);
 		r++;
-		add(0, r, 6, 1, pathField);
+		add(0, r, 4, 1, pathField);
 
 		FX.addInvalidationListener(table.getSelectionModel().getSelectedItems(), true, this::handleSelection);
 		table.addEventHandler(MouseEvent.MOUSE_CLICKED, this::handleClick);
@@ -200,6 +203,10 @@ public class AlbumPane extends CPane
 		switch(sz)
 		{
 		case 0:
+			if(titleDisconnectable != null)
+			{
+				titleDisconnectable.disconnect();
+			}
 			titleField.setText(null);
 			break;
 		case 1:
@@ -215,10 +222,12 @@ public class AlbumPane extends CPane
 	
 	public void updateTrackInfo(Track t)
 	{
+		disconnector.disconnect();
+		
 		currentTrack = t;
 		
 		artField.setImage(t.getCoverArt());
-		titleField.setText(t.getTitle());
+		titleDisconnectable = disconnector.bindBidirectional(titleField.textProperty(), t.titleProperty());
 		albumField.setText(t.getAlbum());
 		artistField.setText(t.getArtist());
 		yearField.setText(t.getYear());
@@ -244,23 +253,23 @@ public class AlbumPane extends CPane
 	}
 
 
-	protected void update()
-	{
-		String title = titleField.getText();
-		String album = albumField.getText();
-		String artist = artistField.getText();
-		String year = yearField.getText();
-
-		currentTrack.setTitle(title);
-
-		List<Track> ts = table.getSelectionModel().getSelectedItems();
-		for(Track t: ts)
-		{
-			t.setAlbum(album);
-			t.setArtist(artist);
-			t.setYear(year);
-		}
-	}
+//	protected void update()
+//	{
+//		String title = titleField.getText();
+//		String album = albumField.getText();
+//		String artist = artistField.getText();
+//		String year = yearField.getText();
+//
+//		currentTrack.setTitle(title);
+//
+//		List<Track> ts = table.getSelectionModel().getSelectedItems();
+//		for(Track t: ts)
+//		{
+//			t.setAlbum(album);
+//			t.setArtist(artist);
+//			t.setYear(year);
+//		}
+//	}
 
 
 	protected void updateAlbum()

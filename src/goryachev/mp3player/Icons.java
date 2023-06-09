@@ -137,19 +137,22 @@ public class Icons
 	private static IconBase album(double angle)
 	{
 		double sz2 = size / 2;
-		double stroke = 1;
+		double stroke = 0.5;
 		double p0 = size * 0.1;
 		double p1 = size * 0.5;
 		
 		FxIconBuilder b = new FxIconBuilder(size, sz2, sz2);
-		b.setFill(Color.gray(0.6));
+		b.setFill(Color.gray(0.4));
 		b.setStrokeWidth(stroke);
-		b.setStrokeLineCap(StrokeLineCap.ROUND);
-		b.setStrokeColor(Color.gray(0.3));
-		b.setRotateDegrees(45);
+		b.setStrokeLineCap(StrokeLineCap.SQUARE);
+		b.setStrokeColor(null); //Color.gray(0.3));
+		b.setRotateDegrees(0);
+		//b.setScale(0.8);
+		
+		b.svgPath("M4.65079 5.24076C4.35428 4.9866 3.93694 4.92832 3.58214 5.0915C3.22734 5.25469 3 5.60948 3 6.00001V18C3 18.3905 3.22734 18.7453 3.58214 18.9085C3.93694 19.0717 4.35428 19.0134 4.65079 18.7593L11.6508 12.7593C11.8724 12.5693 12 12.2919 12 12C12 11.7081 11.8724 11.4307 11.6508 11.2408L4.65079 5.24076ZM9.46341 12L5 15.8258V8.17423L9.46341 12ZM14.6508 5.24076C14.3543 4.9866 13.9369 4.92832 13.5821 5.0915C13.2273 5.25469 13 5.60948 13 6.00001V18C13 18.3905 13.2273 18.7453 13.5821 18.9085C13.9369 19.0717 14.3543 19.0134 14.6508 18.7593L21.6508 12.7593C21.8724 12.5693 22 12.2919 22 12C22 11.7081 21.8724 11.4307 21.6508 11.2408L14.6508 5.24076ZM19.4634 12L15 15.8258V8.17423L19.4634 12Z");
 
-		b.newPath();		
-		b.closePath();
+//		b.newPath();		
+//		b.closePath();
 		
 		return b.getIcon();
 	}

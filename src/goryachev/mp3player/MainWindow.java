@@ -307,6 +307,9 @@ public class MainWindow extends FxWindow
 				db.save();
 			}
 			
+			log.info("Music dir: %s", musicDir);
+			log.info("DB dir: %s", dbDir);
+			
 			setDB(db);
 			
 			// if current track  exists, play it
@@ -342,7 +345,7 @@ public class MainWindow extends FxWindow
 		db.addToHistory(t);
 		
 		// FIX remove
-		if(false)
+		if(true)
 		{
 			playButton.setGraphic(Icons.play());
 			jumpButton.setGraphic(Icons.jump());

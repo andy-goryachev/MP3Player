@@ -4,7 +4,7 @@ import goryachev.common.log.Log;
 import goryachev.common.util.CKit;
 import goryachev.common.util.CList;
 import goryachev.common.util.CPlatform;
-import goryachev.common.util.Disconnectable;
+import goryachev.common.util.IDisconnectable;
 import goryachev.common.util.GlobalSettings;
 import goryachev.common.util.SystemTask;
 import goryachev.fx.internal.CssTools;
@@ -1430,14 +1430,14 @@ public final class FX
 	
 	
 	/** adds a ChangeListener to the specified ObservableValue(s) */
-	public static Disconnectable onChange(Runnable callback, ObservableValue<?> ... props)
+	public static IDisconnectable onChange(Runnable callback, ObservableValue<?> ... props)
 	{
 		return onChange(callback, false, props);
 	}
 	
 	
 	/** adds a ChangeListener to the specified ObservableValue(s) */
-	public static Disconnectable onChange(Runnable callback, boolean fireImmediately, ObservableValue<?> ... props)
+	public static IDisconnectable onChange(Runnable callback, boolean fireImmediately, ObservableValue<?> ... props)
 	{
 		FxChangeListener li = new FxChangeListener(callback);
 		li.listen(props);
@@ -1452,7 +1452,7 @@ public final class FX
 	
 	
 	/** adds a ChangeListener to the specified ObservableValue(s).  The callback will be invokedLater() */
-	public static Disconnectable onChangeLater(Runnable callback, ObservableValue<?> ... props)
+	public static IDisconnectable onChangeLater(Runnable callback, ObservableValue<?> ... props)
 	{
 		FxChangeListener li = new FxChangeListener(callback)
 		{
@@ -2120,7 +2120,7 @@ public final class FX
 	}
 
 
-	public static Disconnectable onChange(ReadOnlyIntegerProperty prop, IntConsumer onChange)
+	public static IDisconnectable onChange(ReadOnlyIntegerProperty prop, IntConsumer onChange)
 	{
 		return new DisconnectableIntegerListener(prop, onChange);
 	}
