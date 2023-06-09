@@ -54,7 +54,7 @@ public class Icons
 		double sz2 = size / 2;
 		double stroke = 1;
 		double p0 = size * 0.1;
-		double p1 = size * 0.5;
+		double p1 = size * 0.45;
 		
 		FxIconBuilder b = new FxIconBuilder(size, sz2, sz2);
 		b.setFill(Color.gray(0.6));
@@ -84,25 +84,25 @@ public class Icons
 	
 	public static IconBase prevAlbum()
 	{
-		return album(180);
+		return album(true);
 	}
 	
 	
 	public static IconBase nextAlbum()
 	{
-		return album(0);
+		return album(false);
 	}
 	
 	
 	public static IconBase prevTrack()
 	{
-		return track(180);
+		return track(true);
 	}
 	
 	
 	public static IconBase nextTrack()
 	{
-		return track(0);
+		return track(false);
 	}
 	
 	
@@ -113,46 +113,62 @@ public class Icons
 	}
 	
 	
-	private static IconBase track(double angle)
+	private static IconBase track(boolean flip)
 	{
 		double sz2 = size / 2;
-		double stroke = 1;
-		double p0 = size * 0.1;
-		double p1 = size * 0.5;
+		double scale = 1.25;
+		double stroke = 1.0 / scale;		
 		
 		FxIconBuilder b = new FxIconBuilder(size, sz2, sz2);
 		b.setFill(Color.gray(0.6));
 		b.setStrokeWidth(stroke);
 		b.setStrokeLineCap(StrokeLineCap.ROUND);
 		b.setStrokeColor(Color.gray(0.3));
-		b.setRotateDegrees(45);
-
-		b.newPath();		
+		b.setTranslate(-3.5, 0);
+		b.setScale(scale);
+		b.setRotateDegrees(flip ? 180 : 0);
+		
+		b.newPath();
+		b.moveTo(0, 3);
+		b.lineTo(5, 0);
+		b.lineTo(0, -3);
 		b.closePath();
+		
+		b.moveTo(7, 3);
+		b.lineTo(7, -3);
 		
 		return b.getIcon();
 	}
 
 	
-	private static IconBase album(double angle)
+	private static IconBase album(boolean flip)
 	{
 		double sz2 = size / 2;
-		double stroke = 0.5;
-		double p0 = size * 0.1;
-		double p1 = size * 0.5;
+		double scale = 1.25;
+		double stroke = 1.0 / scale;		
 		
 		FxIconBuilder b = new FxIconBuilder(size, sz2, sz2);
-		b.setFill(Color.gray(0.4));
+		b.setFill(Color.gray(0.6));
 		b.setStrokeWidth(stroke);
-		b.setStrokeLineCap(StrokeLineCap.SQUARE);
-		b.setStrokeColor(null); //Color.gray(0.3));
-		b.setRotateDegrees(0);
-		//b.setScale(0.8);
+		b.setStrokeLineCap(StrokeLineCap.ROUND);
+		b.setStrokeColor(Color.gray(0.3));
+		b.setTranslate(-6.5, 0);
+		b.setScale(scale);
+		b.setRotateDegrees(flip ? 180 : 0);
 		
-		b.svgPath("M4.65079 5.24076C4.35428 4.9866 3.93694 4.92832 3.58214 5.0915C3.22734 5.25469 3 5.60948 3 6.00001V18C3 18.3905 3.22734 18.7453 3.58214 18.9085C3.93694 19.0717 4.35428 19.0134 4.65079 18.7593L11.6508 12.7593C11.8724 12.5693 12 12.2919 12 12C12 11.7081 11.8724 11.4307 11.6508 11.2408L4.65079 5.24076ZM9.46341 12L5 15.8258V8.17423L9.46341 12ZM14.6508 5.24076C14.3543 4.9866 13.9369 4.92832 13.5821 5.0915C13.2273 5.25469 13 5.60948 13 6.00001V18C13 18.3905 13.2273 18.7453 13.5821 18.9085C13.9369 19.0717 14.3543 19.0134 14.6508 18.7593L21.6508 12.7593C21.8724 12.5693 22 12.2919 22 12C22 11.7081 21.8724 11.4307 21.6508 11.2408L14.6508 5.24076ZM19.4634 12L15 15.8258V8.17423L19.4634 12Z");
-
-//		b.newPath();		
-//		b.closePath();
+		b.newPath();
+		b.moveTo(0, 3);
+		b.lineTo(5, 0);
+		b.lineTo(0, -3);
+		b.closePath();
+		
+		b.moveTo(7, 3);
+		b.lineTo(12, 0);
+		b.lineTo(7, -3);
+		b.closePath();
+		
+		b.moveTo(14, 3);
+		b.lineTo(14, -3);
 		
 		return b.getIcon();
 	}
