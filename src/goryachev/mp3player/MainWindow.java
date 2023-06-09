@@ -7,6 +7,7 @@ import goryachev.fx.CssStyle;
 import goryachev.fx.FX;
 import goryachev.fx.FxButton;
 import goryachev.fx.FxDump;
+import goryachev.fx.FxTimer;
 import goryachev.fx.FxWindow;
 import goryachev.mp3player.cm.ContentManagerWindow;
 import goryachev.mp3player.db.MusicDB;
@@ -36,6 +37,7 @@ public class MainWindow extends FxWindow
 	public static final CssStyle BUTTON_PANE = new CssStyle("MainWindow_BUTTON_PANE");
 	public static final CssStyle MAIN_PANE = new CssStyle("MainWindow_MAIN_PANE");
 	public static final CssStyle INFO_PANE = new CssStyle("MainWindow_INFO_PANE");
+	protected static final Duration DELAY = Duration.millis(1000);
 	protected MusicDB db;
 	protected final CoverArtLabel artField;
 	protected final Label titleField;
@@ -53,8 +55,10 @@ public class MainWindow extends FxWindow
 	protected final FxButton nextTrackButton;
 	protected final FxButton nextAlbumButton;
 	protected final FxButton cmButton;
+	protected final FxTimer blink;
 	private MediaPlayer player;
 	private Track currentTrack;
+	private boolean blinkOn;
 
 	
 	public MainWindow()
@@ -97,13 +101,15 @@ public class MainWindow extends FxWindow
 		int w1 = 25;
 		int gp = 4;
 		
-		playButton = new FxButton(Icons.play(), this::togglePlay);
+		playButton = new FxButton(Icons.play(true, false), this::togglePlay);
 		jumpButton = new FxButton(Icons.jump(), this::jump);
 		prevAlbumButton = new FxButton(Icons.prevAlbum(), this::prevAlbum);
 		prevTrackButton = new FxButton(Icons.prevTrack(), this::prevTrack);
 		nextTrackButton = new FxButton(Icons.nextTrack(), this::nextTrack);
 		nextAlbumButton = new FxButton(Icons.nextAlbum(), this::nextAlbum);
 		cmButton = new FxButton(Icons.contentManager(), this::openContentManager);
+		
+		blink = new FxTimer(Duration.ZERO, DELAY, this::handleBlink);
 
 		timeSlider = new MSlider();
 		
@@ -159,8 +165,6 @@ public class MainWindow extends FxWindow
 		);
 		bp.add(0, 0, 1, 3, playButton);
 		bp.add(1, 0, 1, 3, jumpButton);
-//		bp.add(2, 0, 2, 2, new FxButton(""));
-//		bp.add(6, 0, 2, 2, new FxButton(""));
 		bp.add(4, 1, timeField);
 		bp.add(5, 1, durationField);
 		bp.add(2, 2, prevAlbumButton);
@@ -211,13 +215,27 @@ public class MainWindow extends FxWindow
 			switch(st)
 			{
 			case PLAYING:
+				// pause
 				player.pause();
+				blinkOn = true;
+				playButton.setGraphic(Icons.play(false, blinkOn));
+				blink.start();
 				break;
 			case PAUSED:
+				// play
+				playButton.setGraphic(Icons.play(true, false));
 				player.play();
+				blink.stop();
 				break;
 			}
 		}
+	}
+	
+	
+	protected void handleBlink()
+	{
+		blinkOn = !blinkOn;
+		playButton.setGraphic(Icons.play(false, blinkOn));
 	}
 	
 	
@@ -343,17 +361,6 @@ public class MainWindow extends FxWindow
 		log.info(t);
 		
 		db.addToHistory(t);
-		
-		// FIX remove
-		if(true)
-		{
-			playButton.setGraphic(Icons.play());
-			jumpButton.setGraphic(Icons.jump());
-			prevAlbumButton.setGraphic(Icons.prevAlbum());
-			prevTrackButton.setGraphic(Icons.prevTrack());
-			nextTrackButton.setGraphic(Icons.nextTrack());
-			nextAlbumButton.setGraphic(Icons.nextAlbum());
-		}
 		
 		int ix = t.getIndex();
 		GlobalSettings.setInt(CURRENT_TRACK, ix);
