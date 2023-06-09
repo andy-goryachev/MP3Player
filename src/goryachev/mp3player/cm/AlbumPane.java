@@ -228,9 +228,9 @@ public class AlbumPane extends CPane
 		
 		artField.setImage(t.getCoverArt());
 		titleDisconnectable = disconnector.bindBidirectional(titleField.textProperty(), t.titleProperty());
-		albumField.setText(t.getAlbum());
-		artistField.setText(t.getArtist());
-		yearField.setText(t.getYear());
+		disconnector.bindBidirectional(albumField.textProperty(), t.albumProperty());
+		disconnector.bindBidirectional(artistField.textProperty(), t.artistProperty());
+		disconnector.bindBidirectional(yearField.textProperty(), t.yearProperty());
 		pathField.setText(t.getFile().toString());
 	}
 	
@@ -251,25 +251,6 @@ public class AlbumPane extends CPane
 		table.getSelectionModel().clearSelection();
 		table.getSelectionModel().select(t);
 	}
-
-
-//	protected void update()
-//	{
-//		String title = titleField.getText();
-//		String album = albumField.getText();
-//		String artist = artistField.getText();
-//		String year = yearField.getText();
-//
-//		currentTrack.setTitle(title);
-//
-//		List<Track> ts = table.getSelectionModel().getSelectedItems();
-//		for(Track t: ts)
-//		{
-//			t.setAlbum(album);
-//			t.setArtist(artist);
-//			t.setYear(year);
-//		}
-//	}
 
 
 	protected void updateAlbum()
