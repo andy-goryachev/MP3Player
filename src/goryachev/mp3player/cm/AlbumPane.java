@@ -63,8 +63,6 @@ public class AlbumPane extends CPane
 		setBackground(Background.fill(Color.gray(0, 0.05)));
 		
 		artField = new CoverArtLabel();
-		artField.setMaxWidth(120);
-		artField.setMaxHeight(120);
 		
 		titleField = new TextField();
 		

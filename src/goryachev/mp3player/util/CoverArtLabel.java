@@ -19,10 +19,12 @@ public class CoverArtLabel extends Pane
 		view.setSmooth(true);
 		view.setPreserveRatio(true);
 		// TODO adjust computationally to clip so it uses 100% of the area
-//		view.fitWidthProperty().bind(widthProperty());
-//		view.fitHeightProperty().bind(heightProperty());
-		view.setFitHeight(120);
-		view.setFitWidth(120);
+		view.fitWidthProperty().bind(widthProperty());
+		view.fitHeightProperty().bind(heightProperty());
+//		view.setFitHeight(120);
+//		view.setFitWidth(120);
+		setMaxWidth(120);
+		setMaxHeight(120);
 		
 		getChildren().add(view);
 	}
