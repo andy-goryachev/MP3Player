@@ -1,5 +1,6 @@
 // Copyright © 2023 Andy Goryachev <andy@goryachev.com>
 package goryachev.mp3player.util;
+import javafx.geometry.Insets;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
@@ -10,6 +11,7 @@ import javafx.scene.layout.Pane;
  */
 public class CoverArtLabel extends Pane
 {
+	public final static double SIZE = 105;
 	private final ImageView view;
 	
 	
@@ -18,13 +20,11 @@ public class CoverArtLabel extends Pane
 		view = new ImageView();
 		view.setSmooth(true);
 		view.setPreserveRatio(true);
-		// TODO adjust computationally to clip so it uses 100% of the area
-		view.fitWidthProperty().bind(widthProperty());
-		view.fitHeightProperty().bind(heightProperty());
-//		view.setFitHeight(120);
-//		view.setFitWidth(120);
-		setMaxWidth(120);
-		setMaxHeight(120);
+		view.setFitHeight(SIZE);
+		view.setFitWidth(SIZE);
+		setPrefWidth(SIZE);
+		setPrefHeight(SIZE);
+		setPadding(Insets.EMPTY);
 		
 		getChildren().add(view);
 	}

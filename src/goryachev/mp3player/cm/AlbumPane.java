@@ -157,7 +157,7 @@ public class AlbumPane extends CPane
 		
 		addColumns
 		(
-			120,
+			CoverArtLabel.SIZE,
 			CPane.PREF,
 			CPane.FILL,
 			CPane.PREF
