@@ -1,12 +1,19 @@
 // Copyright © 2023 Andy Goryachev <andy@goryachev.com>
 package goryachev.mp3player.cm;
+import goryachev.fx.FxMenuBar;
 import goryachev.fx.FxTabPane;
 import goryachev.fx.FxWindow;
+import goryachev.fx.HPane;
 import goryachev.mp3player.Track;
 import goryachev.mp3player.db.MusicDB;
+import javafx.geometry.Insets;
 import javafx.geometry.Side;
+import javafx.scene.control.Label;
+import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
+import javafx.scene.layout.Background;
+import javafx.scene.paint.Color;
 
 
 /**
@@ -15,6 +22,7 @@ import javafx.scene.input.KeyEvent;
 public class ContentManagerWindow extends FxWindow
 {
 	protected final MusicDB db;
+	protected final TextField searchField;
 	protected final SearchPane searchPane;
 	protected final AlbumPane albumPane;
 	protected final FileSystemPane fileSystemPane;
@@ -31,6 +39,10 @@ public class ContentManagerWindow extends FxWindow
 		setMinSize(500, 500);
 		setSize(1000, 600);
 		
+		searchField = new TextField();
+		searchField.setPrefColumnCount(30);
+		// TODO clear search button
+
 		searchPane = new SearchPane(db);
 		
 		albumPane = new AlbumPane(db);
@@ -41,7 +53,7 @@ public class ContentManagerWindow extends FxWindow
 		tabPane.addTab("Search", searchPane);
 		tabPane.addTab("Album", albumPane);
 		// TODO later
-		//tabPane.addTab("Files", fileSystemPane);
+		tabPane.addTab("Files", fileSystemPane);
 		tabPane.setSide(Side.LEFT);
 		tabPane.getSelectionModel().selectedIndexProperty().addListener((s,p,c) ->
 		{
@@ -51,6 +63,24 @@ public class ContentManagerWindow extends FxWindow
 			}
 		});
 		
+		FxMenuBar m = new FxMenuBar();
+		// app
+		m.menu("Application");
+		m.item("Preferences");
+		m.separator();
+		m.item("Quit");
+		// help
+		m.menu("Help");
+		m.item("About");
+		
+		HPane tb = new HPane();
+		tb.setPadding(new Insets(2, 10, 2, 0));
+		tb.add(m);
+		tb.fill();
+		tb.add(new Label("Find: "));
+		tb.add(searchField);
+		
+		setTop(tb);
 		setCenter(tabPane);
 		setOnHidden((ev) ->
 		{

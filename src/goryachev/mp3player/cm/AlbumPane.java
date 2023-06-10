@@ -29,6 +29,8 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.Background;
+import javafx.scene.paint.Color;
 
 
 /**
@@ -58,8 +60,11 @@ public class AlbumPane extends CPane
 		setHGap(5);
 		setVGap(3);
 		setPadding(10);
+		setBackground(Background.fill(Color.gray(0, 0.05)));
 		
 		artField = new CoverArtLabel();
+		artField.setMaxWidth(120);
+		artField.setMaxHeight(120);
 		
 		titleField = new TextField();
 		
