@@ -360,6 +360,27 @@ public class MainWindow extends FxWindow
 	{
 		log.info(t);
 		
+		File f = t.getFile();
+		if(!f.exists())
+		{
+			rescanRequired();
+			return;
+		}
+		// TODO if file not found, tell musicDB that a re-scan is required
+
+		String uri = f.toURI().toString();
+		Media media;
+		try
+		{
+			media = new Media(uri);
+		}
+		catch(Exception e)
+		{
+			log.error(e);
+			rescanRequired();
+			return;
+		}
+		
 		db.addToHistory(t);
 		
 		if(Icons.DEBUG)
@@ -380,14 +401,9 @@ public class MainWindow extends FxWindow
 		albumField.textProperty().bind(t.albumProperty());
 		artistField.textProperty().bind(t.artistProperty());
 		yearField.textProperty().bind(t.yearProperty());
-		
-		File f = t.getFile();
-		// TODO if file not found, tell musicDB that a re-scan is required
-		
+				
 		Image im = t.getCoverArt();
 		artField.setImage(im);
-		
-		Media media = new Media(f.toURI().toString());
 
 		if(player != null)
 		{
@@ -425,5 +441,11 @@ public class MainWindow extends FxWindow
 				return;
 			}
 		}
+	}
+	
+	
+	protected void rescanRequired()
+	{
+		// TODO dialog? flag?
 	}
 }
