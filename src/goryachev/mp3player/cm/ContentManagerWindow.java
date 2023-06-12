@@ -69,6 +69,9 @@ public class ContentManagerWindow extends FxWindow
 		m.item("Preferences");
 		m.separator();
 		m.item("Quit");
+		// file
+		m.menu("File");
+		m.item("Re-scan File System");
 		// help
 		m.menu("Help");
 		m.item("About");

@@ -362,6 +362,16 @@ public class MainWindow extends FxWindow
 		
 		db.addToHistory(t);
 		
+		if(Icons.DEBUG)
+		{
+			jumpButton.setGraphic(Icons.jump());
+			prevAlbumButton.setGraphic(Icons.prevAlbum());
+			prevTrackButton.setGraphic(Icons.prevTrack());
+			nextTrackButton.setGraphic(Icons.nextTrack());
+			nextAlbumButton.setGraphic(Icons.nextAlbum());
+			cmButton.setGraphic(Icons.contentManager());
+		}
+		
 		int ix = t.getIndex();
 		GlobalSettings.setInt(CURRENT_TRACK, ix);
 		

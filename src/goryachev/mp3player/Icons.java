@@ -11,11 +11,13 @@ import javafx.scene.shape.StrokeLineCap;
  */
 public class Icons
 {
+	public static final boolean DEBUG = false;
 	private static final double size = 25;
 	private static final double smSize = 20;
 	private static final Color GRAY_FILL = Color.gray(0.6);
 	private static final Color GRAY_OUTLINE = Color.gray(0.3);
-
+	private static final Color TRANSPARENT = Color.gray(0.0, 0.0);
+	
 	
 	public static IconBase play(boolean play, boolean blink)
 	{
@@ -114,15 +116,41 @@ public class Icons
 	
 	public static IconBase contentManager()
 	{
-		// TODO
-		return new IconBase(16);
+		double sz2 = size / 2;
+		double scale = 1.1;
+		double stroke = 1.0 / scale;		
+		
+		FxIconBuilder b = new FxIconBuilder(size, sz2, sz2);
+		b.setFill(TRANSPARENT);
+		b.setStrokeWidth(stroke);
+		b.setStrokeLineCap(StrokeLineCap.ROUND);
+		b.setStrokeColor(GRAY_OUTLINE);
+		b.setScale(scale);
+		b.setTranslate(-3.5, 0);
+		
+		b.newPath();
+		b.moveTo(0, 4);
+		b.lineTo(8, 4);
+		b.lineTo(8, -4);
+		b.lineTo(0, -4);
+		b.lineTo(0, 4);
+		
+		b.setFill(GRAY_FILL);
+		b.newPath();
+		b.moveTo(0, -1);
+		b.lineTo(3, -1);
+		b.lineTo(3, -4);
+		b.lineTo(0, -4);
+		b.closePath();
+		
+		return b.getIcon();
 	}
 	
 	
 	private static IconBase track(boolean flip)
 	{
 		double sz2 = size / 2;
-		double scale = 1.25;
+		double scale = 1.1;
 		double stroke = 1.0 / scale;		
 		
 		FxIconBuilder b = new FxIconBuilder(size, sz2, sz2);
@@ -142,6 +170,9 @@ public class Icons
 		
 		b.moveTo(7, 3);
 		b.lineTo(7, -3);
+		b.lineTo(8, -3);
+		b.lineTo(8, 3);
+		b.closePath();
 		
 		return b.getIcon();
 	}
@@ -150,7 +181,7 @@ public class Icons
 	private static IconBase album(boolean flip)
 	{
 		double sz2 = size / 2;
-		double scale = 1.25;
+		double scale = 1.1;
 		double stroke = 1.0 / scale;		
 		
 		FxIconBuilder b = new FxIconBuilder(size, sz2, sz2);
@@ -158,7 +189,7 @@ public class Icons
 		b.setStrokeWidth(stroke);
 		b.setStrokeLineCap(StrokeLineCap.ROUND);
 		b.setStrokeColor(GRAY_OUTLINE);
-		b.setTranslate(-6.5, 0);
+		b.setTranslate(-7, 0);
 		b.setScale(scale);
 		b.setRotateDegrees(flip ? 180 : 0);
 		
@@ -175,6 +206,9 @@ public class Icons
 		
 		b.moveTo(14, 3);
 		b.lineTo(14, -3);
+		b.lineTo(15, -3);
+		b.lineTo(15, 3);
+		b.closePath();
 		
 		return b.getIcon();
 	}
