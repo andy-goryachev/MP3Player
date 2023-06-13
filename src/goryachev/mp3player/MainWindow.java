@@ -7,7 +7,6 @@ import goryachev.fx.CssStyle;
 import goryachev.fx.FX;
 import goryachev.fx.FxButton;
 import goryachev.fx.FxDump;
-import goryachev.fx.FxTimer;
 import goryachev.fx.FxWindow;
 import goryachev.mp3player.cm.ContentManagerWindow;
 import goryachev.mp3player.db.MusicDB;
@@ -37,7 +36,6 @@ public class MainWindow extends FxWindow
 	public static final CssStyle BUTTON_PANE = new CssStyle("MainWindow_BUTTON_PANE");
 	public static final CssStyle MAIN_PANE = new CssStyle("MainWindow_MAIN_PANE");
 	public static final CssStyle INFO_PANE = new CssStyle("MainWindow_INFO_PANE");
-	protected static final Duration DELAY = Duration.millis(1000);
 	protected MusicDB db;
 	protected final CoverArtLabel artField;
 	protected final Label titleField;
@@ -55,10 +53,8 @@ public class MainWindow extends FxWindow
 	protected final FxButton nextTrackButton;
 	protected final FxButton nextAlbumButton;
 	protected final FxButton cmButton;
-	protected final FxTimer blink;
 	private MediaPlayer player;
 	private Track currentTrack;
-	private boolean blinkOn;
 
 	
 	public MainWindow()
@@ -101,7 +97,7 @@ public class MainWindow extends FxWindow
 		int w1 = 25;
 		int gp = 4;
 		
-		playButton = new FxButton(Icons.play(true, false), this::togglePlay);
+		playButton = new FxButton(Icons.play(true), this::togglePlay);
 		jumpButton = new FxButton(Icons.jump(), this::jump);
 		prevAlbumButton = new FxButton(Icons.prevAlbum(), this::prevAlbum);
 		prevTrackButton = new FxButton(Icons.prevTrack(), this::prevTrack);
@@ -109,8 +105,6 @@ public class MainWindow extends FxWindow
 		nextAlbumButton = new FxButton(Icons.nextAlbum(), this::nextAlbum);
 		cmButton = new FxButton(Icons.contentManager(), this::openContentManager);
 		
-		blink = new FxTimer(Duration.ZERO, DELAY, this::handleBlink);
-
 		timeSlider = new MSlider();
 		
 		timeSlider.addEventHandler(MouseEvent.MOUSE_PRESSED, this::handleSliderClick);
@@ -217,25 +211,15 @@ public class MainWindow extends FxWindow
 			case PLAYING:
 				// pause
 				player.pause();
-				blinkOn = true;
-				playButton.setGraphic(Icons.play(false, blinkOn));
-				blink.start();
+				playButton.setGraphic(Icons.play(false));
 				break;
 			case PAUSED:
 				// play
-				playButton.setGraphic(Icons.play(true, false));
+				playButton.setGraphic(Icons.play(true));
 				player.play();
-				blink.stop();
 				break;
 			}
 		}
-	}
-	
-	
-	protected void handleBlink()
-	{
-		blinkOn = !blinkOn;
-		playButton.setGraphic(Icons.play(false, blinkOn));
 	}
 	
 	

@@ -19,7 +19,7 @@ public class Icons
 	private static final Color TRANSPARENT = Color.gray(0.0, 0.0);
 	
 	
-	public static IconBase play(boolean play, boolean blink)
+	public static IconBase play(boolean play)
 	{
 		double sz2 = size / 2;
 		double scale = 1.5;
@@ -39,7 +39,7 @@ public class Icons
 		b.lineTo(0, -6);
 		b.closePath();
 
-		b.setFill(!play && blink ? Color.YELLOW : GRAY_FILL);
+		b.setFill(!play ? Color.YELLOW : GRAY_FILL);
 		b.newPath();
 		b.moveTo(20, 6);
 		b.lineTo(24, 6);
