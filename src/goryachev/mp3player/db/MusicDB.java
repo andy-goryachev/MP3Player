@@ -59,12 +59,16 @@ public class MusicDB
 	
 	public static MusicDB scan(File dir, File dbDir)
 	{
-		MusicDB d = new MusicDB(dir, dbDir);
+		MusicDB db = new MusicDB(dir, dbDir);
 		long start = System.nanoTime();
-		d.scanDir(dir, dir);
+		db.scanDir(dir, dir);
 		double sec = (System.nanoTime() - start) / 1_000_000_000.0; 
-		log.info("%d track(s) loaded in %.1f sec.", d.trackCount(), sec);
-		return d;
+		log.info("%d track(s) loaded in %.1f sec.", db.trackCount(), sec);
+		
+		File infoFile = new File(dbDir, INFO_FILE);
+		db.infoDB = InfoDB.load(infoFile);
+		
+		return db;
 	}
 	
 	
