@@ -1,6 +1,8 @@
 // Copyright © 2023 Andy Goryachev <andy@goryachev.com>
 package goryachev.mp3player;
+import goryachev.common.util.CKit;
 import goryachev.common.util.FH;
+import goryachev.common.util.SB;
 import goryachev.fx.FxObject;
 import goryachev.fx.FxString;
 import goryachev.mp3player.db.MusicDB;
@@ -212,9 +214,30 @@ public class Track
 	}
 	
 	
+	private static boolean a(SB sb, String name, String val, boolean sep)
+	{
+		if(CKit.isNotBlank(val))
+		{
+			sb.append(name);
+			sb.append(val);
+			return true;
+		}
+		return sep;
+	}
+	
+	
 	public String toString()
 	{
-		return track.toString();
+		SB sb = new SB();
+		sb.append("{");
+		boolean sep = false;
+		sep = a(sb, "title=", getTitle(), sep);
+		sep = a(sb, "artist=", getArtist(), sep);
+		sep = a(sb, "album=", getAlbum(), sep);
+		sep = a(sb, "year=", getYear(), sep);
+		sep = a(sb, "filename=", getFileName(), sep);
+		sb.append("}");
+		return sb.toString();
 	}
 
 
