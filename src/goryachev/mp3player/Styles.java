@@ -69,7 +69,7 @@ public class Styles
 			),
 			selector(MSlider.THUMB).defines
 			(
-			    prop("-fx-background-color", CssTools.toColor(darkBorder) + ", " + CssTools.toColor(lightBorder) + ", " + CssTools.toColor(buttonPanel)),
+			    prop("-fx-background-color", CssTools.toColor(darkBorder) + ", " + CssTools.toColor(lightBorder) + ", " + CssTools.toColor(Color.LIGHTGREEN)),
 			    prop("-fx-background-insets", "0, 1, 2"),
 			    prop("-fx-background-radius", "0px, 0px, 0px"),
 			    prop("-fx-padding", 0)

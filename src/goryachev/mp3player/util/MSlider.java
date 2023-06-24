@@ -18,7 +18,7 @@ public class MSlider extends Region
 	public static final CssStyle THUMB = new CssStyle("MSlider_THUMB");
 	private final FxDouble value = new FxDouble();
 	private final Region thumb;
-	private static final double ASPECT = 0.6;
+	private static final double ASPECT = 0.25;
 	
 	
 	public MSlider()
@@ -73,9 +73,8 @@ public class MSlider extends Region
 
 	protected void layoutChildren()
 	{
-		double aspect = 0.6;
 		double x = thumbX();
-		double w = getHeight() * aspect;
+		double w = getHeight() * ASPECT;
 		double h = getHeight();
 		layoutInArea(thumb, x, 0, w, h, 0.0, HPos.CENTER, VPos.CENTER);
 	}
