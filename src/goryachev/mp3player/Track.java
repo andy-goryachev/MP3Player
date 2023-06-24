@@ -52,9 +52,7 @@ public class Track
 	
 	public File getFile()
 	{
-		String path = track.getRAlbum().getPath();
-		String filename = track.getFileName();
-		return db.getFile(path, filename);
+		return db.getFile(track);
 	}
 	
 	

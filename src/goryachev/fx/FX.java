@@ -4,8 +4,8 @@ import goryachev.common.log.Log;
 import goryachev.common.util.CKit;
 import goryachev.common.util.CList;
 import goryachev.common.util.CPlatform;
-import goryachev.common.util.IDisconnectable;
 import goryachev.common.util.GlobalSettings;
+import goryachev.common.util.IDisconnectable;
 import goryachev.common.util.SystemTask;
 import goryachev.fx.internal.CssTools;
 import goryachev.fx.internal.DisconnectableIntegerListener;
@@ -14,6 +14,7 @@ import goryachev.fx.internal.FxStyleHandler;
 import goryachev.fx.internal.ParentWindow;
 import goryachev.fx.internal.WindowsFx;
 import goryachev.fx.table.FxTable;
+import java.awt.image.BufferedImage;
 import java.io.File;
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
@@ -24,6 +25,7 @@ import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.IntConsumer;
 import java.util.function.Supplier;
+import javax.imageio.ImageIO;
 import javafx.application.Platform;
 import javafx.beans.InvalidationListener;
 import javafx.beans.Observable;
@@ -44,6 +46,7 @@ import javafx.collections.ObservableList;
 import javafx.collections.ObservableMap;
 import javafx.collections.transformation.TransformationList;
 import javafx.css.Styleable;
+import javafx.embed.swing.SwingFXUtils;
 import javafx.event.EventHandler;
 import javafx.geometry.Bounds;
 import javafx.geometry.Insets;
@@ -2178,6 +2181,20 @@ public final class FX
 				
 				scene.getStylesheets().add(cur);
 			}			
+		}
+	}
+
+
+	public static void writePNG(Image im, File file)
+	{
+		try
+		{
+			BufferedImage bim = SwingFXUtils.fromFXImage(im, null);
+			ImageIO.write(bim, "PNG", file);
+		}
+		catch(Exception e)
+		{
+			log.error(e);
 		}
 	}
 }

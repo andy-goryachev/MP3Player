@@ -96,7 +96,7 @@ public class MainWindow extends FxWindow
 		
 		int w0 = 50;
 		int w1 = 25;
-		int gp = 4;
+		int gp = 6;
 		
 		playButton = new FxButton(Icons.play(true), this::togglePlay);
 		jumpButton = new FxButton(Icons.jump(), this::jump);

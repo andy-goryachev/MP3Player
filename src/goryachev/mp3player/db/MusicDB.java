@@ -493,8 +493,10 @@ public class MusicDB
 	}
 
 
-	public File getFile(String path, String filename)
+	public File getFile(RTrack t)
 	{
+		String path = t.getRAlbum().getPath();
+		String filename = t.getFileName();
 		return new File(root, path + "/" + filename);
 	}
 	
@@ -602,12 +604,14 @@ public class MusicDB
 	
 	protected boolean isMatch(RTrack t, String pattern)
 	{
+		String path = getFile(t).toString();
+
 		return
 			m(pattern, getAlbum(t)) ||
 			m(pattern, getArtist(t)) ||
 			m(pattern, getTitle(t)) ||
 			m(pattern, getYear(t)) ||
-			m(pattern, t.getFileName());
+			m(pattern, path);
 	}
 	
 	
