@@ -1,5 +1,6 @@
 // Copyright © 2023 Andy Goryachev <andy@goryachev.com>
 package goryachev.mp3player.util;
+import goryachev.fx.CssStyle;
 import javafx.geometry.Insets;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
@@ -16,6 +17,7 @@ import javafx.scene.paint.Color;
 public class CoverArtLabel extends Pane
 {
 	public final static int SIZE = 105;
+	public static final CssStyle ART = new CssStyle("CoverArtLabel_ART");
 	private final ImageView view;
 	private static Image blank;
 	
@@ -30,6 +32,7 @@ public class CoverArtLabel extends Pane
 		setPrefWidth(SIZE);
 		setPrefHeight(SIZE);
 		setPadding(Insets.EMPTY);
+		ART.set(view);
 		
 		getChildren().add(view);
 	}

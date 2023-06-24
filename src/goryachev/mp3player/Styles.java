@@ -4,6 +4,7 @@ import goryachev.fx.CommonStyles;
 import goryachev.fx.FxStyleSheet;
 import goryachev.fx.Theme;
 import goryachev.fx.internal.CssTools;
+import goryachev.mp3player.util.CoverArtLabel;
 import goryachev.mp3player.util.MSlider;
 import javafx.scene.paint.Color;
 
@@ -52,7 +53,7 @@ public class Styles
 			    prop("-fx-translate-y", "1px")
 			),
 			// slider
-			selector("#artField").defines
+			selector(CoverArtLabel.ART).defines
 			(
 				effect("dropshadow(gaussian, gray, 10, 0, 2, 2)")
 			),
