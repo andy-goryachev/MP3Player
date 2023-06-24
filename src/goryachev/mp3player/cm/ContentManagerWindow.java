@@ -1,19 +1,20 @@
 // Copyright © 2023 Andy Goryachev <andy@goryachev.com>
 package goryachev.mp3player.cm;
+import goryachev.common.util.CList;
+import goryachev.common.util.TextTools;
 import goryachev.fx.FxMenuBar;
 import goryachev.fx.FxTabPane;
 import goryachev.fx.FxWindow;
 import goryachev.fx.HPane;
 import goryachev.mp3player.Track;
 import goryachev.mp3player.db.MusicDB;
+import java.util.List;
 import javafx.geometry.Insets;
 import javafx.geometry.Side;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
-import javafx.scene.layout.Background;
-import javafx.scene.paint.Color;
 
 
 /**
@@ -22,7 +23,7 @@ import javafx.scene.paint.Color;
 public class ContentManagerWindow extends FxWindow
 {
 	protected final MusicDB db;
-	protected final TextField searchField;
+	protected final TextField queryField;
 	protected final SearchPane searchPane;
 	protected final AlbumPane albumPane;
 	protected final FileSystemPane fileSystemPane;
@@ -39,8 +40,11 @@ public class ContentManagerWindow extends FxWindow
 		setMinSize(500, 500);
 		setSize(1000, 600);
 		
-		searchField = new TextField();
-		searchField.setPrefColumnCount(30);
+		queryField = new TextField();
+		queryField.setPrefColumnCount(30);
+		queryField.setOnAction((ev) -> {
+			doSearch();	
+		});
 		// TODO clear search button
 
 		searchPane = new SearchPane(db);
@@ -81,7 +85,7 @@ public class ContentManagerWindow extends FxWindow
 		tb.add(m);
 		tb.fill();
 		tb.add(new Label("Find: "));
-		tb.add(searchField);
+		tb.add(queryField);
 		
 		setTop(tb);
 		setCenter(tabPane);
@@ -100,6 +104,19 @@ public class ContentManagerWindow extends FxWindow
 		{
 			close();
 			ev.consume();
+		}
+	}
+	
+
+	protected void doSearch()
+	{
+		String text = queryField.getText();
+		CList<String> ss = TextTools.splitWhitespace(text);
+		if(ss.size() > 0)
+		{
+			List<SearchEntry> result = db.search(ss);
+			tabPane.selectNode(searchPane);
+			searchPane.setResult(result);
 		}
 	}
 	
