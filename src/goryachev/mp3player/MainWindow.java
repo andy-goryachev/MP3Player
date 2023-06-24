@@ -1,6 +1,7 @@
 // Copyright © 2023 Andy Goryachev <andy@goryachev.com>
 package goryachev.mp3player;
 import goryachev.common.log.Log;
+import goryachev.common.util.CPlatform;
 import goryachev.common.util.GlobalSettings;
 import goryachev.fx.CPane;
 import goryachev.fx.CssStyle;
@@ -111,7 +112,14 @@ public class MainWindow extends FxWindow
 				
 		CPane tp = new CPane();
 		INFO_PANE.set(tp);
-		tp.setPadding(gp);
+		if(CPlatform.isMac())
+		{
+			tp.setPadding(gp, gp + gp);	
+		}
+		else
+		{
+			tp.setPadding(gp);
+		}
 		tp.setHGap(10);
 		tp.addRows
 		(
@@ -136,7 +144,14 @@ public class MainWindow extends FxWindow
 				
 		CPane bp = new CPane();
 		BUTTON_PANE.set(bp);
-		bp.setPadding(gp);
+		if(CPlatform.isMac())
+		{
+			bp.setPadding(gp, gp + gp, gp + gp, gp + gp);
+		}
+		else
+		{
+			bp.setPadding(gp);
+		}
 		bp.setHGap(gp);
 		bp.setVGap(gp);
 		bp.addRows

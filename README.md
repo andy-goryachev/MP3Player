@@ -2,13 +2,13 @@
 
 A simple MP3 player, a modern version of an older project.
 
-Work in progress.
+(Work in progress).
 
 
 
 ## Old Version
 
-![screenshot](screenshots/2006-0829-162321.png)
+![screenshot](screenshots/screenshot.png)
 
 
 
@@ -19,4 +19,4 @@ It's got one function that no other MP3 player has - one-click jump to a random 
 
 # Software Requirements
 
-Requires JDK 17+ with JavaFX 20+.
+Requires JDK 20+ with JavaFX 20+.
