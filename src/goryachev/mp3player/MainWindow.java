@@ -65,34 +65,34 @@ public class MainWindow extends FxWindow
 		FxDump.attach(this); // FIX
 
 		artField = new CoverArtLabel();
-		artField.setId("artField");
+		artField.setId("art");
 
 		titleField = new Label();
 		titleField.setTextOverrun(OverrunStyle.CENTER_WORD_ELLIPSIS);
-		titleField.setId("titleField");
 		titleField.setStyle("-fx-font-weight:bold; -fx-font-size:125%;");
+		titleField.setId("title");
 		
 		albumField = new Label();
 		albumField.setTextOverrun(OverrunStyle.CENTER_WORD_ELLIPSIS);
-		albumField.setId("albumField");
+		albumField.setId("album");
 		
 		artistField = new Label();
 		artistField.setTextOverrun(OverrunStyle.CENTER_WORD_ELLIPSIS);
-		artistField.setId("artistField");
+		artistField.setId("artist");
 		
 		yearField = new Label();
 		yearField.setTextOverrun(OverrunStyle.CENTER_WORD_ELLIPSIS);
-		yearField.setId("yearField");
+		yearField.setId("year");
 		
 		trackField = new Label();
-		trackField.setId("trackField");
+		trackField.setId("track");
 		
 		timeField = new Label();
-		timeField.setId("timeField");
+		timeField.setId("time");
 		
 		durationField = new Label();
 		durationField.setAlignment(Pos.CENTER_RIGHT);
-		durationField.setId("durationField");
+		durationField.setId("duration");
 		
 		int w0 = 50;
 		int w1 = 25;

@@ -52,6 +52,12 @@ public class Styles
 				prop("-fx-translate-x", "1px"),
 			    prop("-fx-translate-y", "1px")
 			),
+			// offset
+			selector(MainWindow.INFO_PANE, "#album, #artist, #year, #track").defines
+			(
+				padding(0, 0, 0, 10),
+				prop("-fx-fill", "red")
+			),
 			// slider
 			selector(CoverArtLabel.ART).defines
 			(
