@@ -1,8 +1,0 @@
-TODO
-
-- click on cover art opens album info window (with search?)
-- a search button? to open a search window
-- content manager window: search tab, album info tab, file system tab
-- detect file system changes
-- remove 'update' button
-- re-scan ui
