@@ -55,7 +55,7 @@ public class Styles
 			// offset
 			selector(MainWindow.INFO_PANE, "#album, #artist, #year, #track").defines
 			(
-				padding(0, 0, 0, 10),
+				padding(0, 0, 0, 4),
 				prop("-fx-fill", "red")
 			),
 			// slider
