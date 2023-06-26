@@ -1,17 +1,21 @@
 // Copyright © 2023 Andy Goryachev <andy@goryachev.com>
 package goryachev.mp3player.cm;
 import goryachev.common.util.CList;
+import goryachev.common.util.GlobalSettings;
 import goryachev.common.util.TextTools;
+import goryachev.fx.CPane;
+import goryachev.fx.FX;
 import goryachev.fx.FxMenuBar;
-import goryachev.fx.FxTabPane;
 import goryachev.fx.FxWindow;
+import goryachev.fx.GlobalBooleanProperty;
 import goryachev.fx.HPane;
 import goryachev.mp3player.Track;
 import goryachev.mp3player.db.MusicDB;
+import java.io.File;
 import java.util.List;
 import javafx.geometry.Insets;
-import javafx.geometry.Side;
 import javafx.scene.control.Label;
+import javafx.scene.control.SplitPane;
 import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
@@ -26,9 +30,11 @@ public class ContentManagerWindow extends FxWindow
 	protected final TextField queryField;
 	protected final SearchPane searchPane;
 	protected final AlbumPane albumPane;
-	protected final FileSystemPane fileSystemPane;
-	protected final FxTabPane tabPane;
+	protected final FileTreePane fileTreePane;
+	protected final CPane mainPane;
 	private static ContentManagerWindow instance;
+	// FIX GlobalSettings.getBooleanProperty(key, initialValue)
+	private static final GlobalBooleanProperty showFileSystemProperty = new GlobalBooleanProperty("showFileSystem");
 	
 	
 	public ContentManagerWindow(MusicDB db)
@@ -42,7 +48,8 @@ public class ContentManagerWindow extends FxWindow
 		
 		queryField = new TextField();
 		queryField.setPrefColumnCount(30);
-		queryField.setOnAction((ev) -> {
+		queryField.setOnAction((ev) ->
+		{
 			doSearch();	
 		});
 		// TODO clear search button
@@ -51,21 +58,19 @@ public class ContentManagerWindow extends FxWindow
 		
 		albumPane = new AlbumPane(db);
 		
-		fileSystemPane = new FileSystemPane();
-		
-		tabPane = new FxTabPane();
-		tabPane.addTab("Search", searchPane);
-		tabPane.addTab("Album", albumPane);
-		// TODO later
-		tabPane.addTab("Files", fileSystemPane);
-		tabPane.setSide(Side.LEFT);
-		tabPane.getSelectionModel().selectedIndexProperty().addListener((s,p,c) ->
+		fileTreePane = new FileTreePane();
+		fileTreePane.visibleProperty().bind(showFileSystemProperty);
+		fileTreePane.visibleProperty().addListener((p) ->
 		{
-			if((c != null) && (c.intValue() == 2))
-			{
-				fileSystemPane.init();
-			}
+			updateFileSystemPane();
 		});
+		fileTreePane.tree.getSelectionModel().selectedItemProperty().addListener((s,p,c) ->
+		{
+			handleFileTreeSelection(c == null ? null : c.getValue());
+		});
+		
+		mainPane = new CPane();
+		mainPane.setCenter(albumPane);
 		
 		FxMenuBar m = new FxMenuBar();
 		// app
@@ -76,6 +81,9 @@ public class ContentManagerWindow extends FxWindow
 		// file
 		m.menu("File");
 		m.item("Re-scan File System");
+		// view
+		m.menu("View");
+		m.checkItem("Show File System", showFileSystemProperty);
 		// help
 		m.menu("Help");
 		m.item("About");
@@ -88,21 +96,56 @@ public class ContentManagerWindow extends FxWindow
 		tb.add(queryField);
 		
 		setTop(tb);
-		setCenter(tabPane);
 		setOnHidden((ev) ->
 		{
 			instance = null;
 		});
 		
 		addEventHandler(KeyEvent.KEY_PRESSED, this::handleKeyPress);
+		updateFileSystemPane();
 	}
-	
-	
+
+
+	protected void handleFileTreeSelection(File dir)
+	{
+		Track t = db.findFirstTrack(dir);
+		if(t == null)
+		{
+			mainPane.setCenter(new CPane());
+		}
+		else
+		{
+			albumPane.setTrack(t);
+			mainPane.setCenter(albumPane);
+		}
+	}
+
+
+	protected void updateFileSystemPane()
+	{
+		FX.storeSettings(this);
+		
+		if(fileTreePane.isVisible())
+		{
+			fileTreePane.init();
+			SplitPane sp = new SplitPane(fileTreePane, mainPane);
+			setCenter(sp);
+			FX.restoreSettings(this);
+		}
+		else
+		{
+			setCenter(mainPane);
+			FX.restoreSettings(this);
+		}
+	}
+
+
 	protected void handleKeyPress(KeyEvent ev)
 	{
 		if(ev.getCode() == KeyCode.ESCAPE)
 		{
-			close();
+			//close();
+			mainPane.setCenter(albumPane);
 			ev.consume();
 		}
 	}
@@ -115,7 +158,7 @@ public class ContentManagerWindow extends FxWindow
 		if(ss.size() > 0)
 		{
 			List<SearchEntry> result = db.search(ss);
-			tabPane.selectNode(searchPane);
+			mainPane.setCenter(searchPane);
 			searchPane.setResult(result);
 		}
 	}
@@ -132,13 +175,13 @@ public class ContentManagerWindow extends FxWindow
 		if(instance == null)
 		{
 			instance = new ContentManagerWindow(t.getDB());
-			instance.tabPane.selectTab(1);
+//			instance.tabPane.selectTab(1);
 			instance.albumPane.setTrack(t);
 			instance.open();
 		}
 		else
 		{
-			instance.tabPane.selectTab(1);
+//			instance.tabPane.selectTab(1);
 			instance.albumPane.setTrack(t);
 			instance.requestFocus();
 		}

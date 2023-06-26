@@ -623,4 +623,40 @@ public class MusicDB
 		}
 		return false;
 	}
+
+
+	public Track findFirstTrack(File dir)
+	{
+		RAlbum a = findAlbum(dir);
+		if(a != null)
+		{
+			if(a.getTrackCount() > 0)
+			{
+				RTrack t = a.getTrack(0);
+				int ix = t.getIndex();
+				return getTrack(ix);
+			}
+		}
+		return null;
+	}
+	
+	
+	private RAlbum findAlbum(File dir)
+	{
+		RAlbum prev = null;
+		for(RTrack t: tracks)
+		{
+			RAlbum a = t.getRAlbum();
+			if(a != prev)
+			{
+				prev = a;
+				File f = getFile(t);
+				if(dir.equals(f.getParentFile()))
+				{
+					return a;
+				}
+			}
+		}
+		return null;
+	}
 }
