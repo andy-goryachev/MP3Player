@@ -1,6 +1,8 @@
 // Copyright © 2023 Andy Goryachev <andy@goryachev.com>
 package goryachev.mp3player.cm;
 import goryachev.fx.CPane;
+import goryachev.fx.FX;
+import goryachev.fx.FxPopupMenu;
 import goryachev.mp3player.Dirs;
 import java.io.File;
 import javafx.scene.control.TreeView;
@@ -46,6 +48,8 @@ public class FileTreePane extends CPane
 			};
 		});
 		
+		FX.setPopupMenu(tree, this::createTreePopupMenu);
+		
 		setCenter(tree);
 	}
 
@@ -58,5 +62,13 @@ public class FileTreePane extends CPane
 			tree.setRoot(new DirTreeItem(f));
 			tree.getRoot().setExpanded(true);
 		}
+	}
+
+
+	protected FxPopupMenu createTreePopupMenu()
+	{
+		FxPopupMenu m = new FxPopupMenu();
+		m.item("Open Folder"); 
+		return m;
 	}
 }

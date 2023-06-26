@@ -1,7 +1,7 @@
 // Copyright © 2023 Andy Goryachev <andy@goryachev.com>
 package goryachev.mp3player.cm;
+import goryachev.common.log.Log;
 import goryachev.common.util.CList;
-import goryachev.common.util.GlobalSettings;
 import goryachev.common.util.TextTools;
 import goryachev.fx.CPane;
 import goryachev.fx.FX;
@@ -11,9 +11,11 @@ import goryachev.fx.GlobalBooleanProperty;
 import goryachev.fx.HPane;
 import goryachev.mp3player.Track;
 import goryachev.mp3player.db.MusicDB;
+import java.awt.Desktop;
 import java.io.File;
 import java.util.List;
 import javafx.geometry.Insets;
+import javafx.geometry.Orientation;
 import javafx.scene.control.Label;
 import javafx.scene.control.SplitPane;
 import javafx.scene.control.TextField;
@@ -26,6 +28,7 @@ import javafx.scene.input.KeyEvent;
  */
 public class ContentManagerWindow extends FxWindow
 {
+	private static final Log log = Log.get("ContentManagerWindow");
 	protected final MusicDB db;
 	protected final TextField queryField;
 	protected final SearchPane searchPane;
@@ -129,6 +132,9 @@ public class ContentManagerWindow extends FxWindow
 		{
 			fileTreePane.init();
 			SplitPane sp = new SplitPane(fileTreePane, mainPane);
+			sp.setOrientation(Orientation.HORIZONTAL);
+			sp.setDividerPositions(0.25);
+			SplitPane.setResizableWithParent(fileTreePane, Boolean.FALSE);
 			setCenter(sp);
 			FX.restoreSettings(this);
 		}
@@ -175,15 +181,26 @@ public class ContentManagerWindow extends FxWindow
 		if(instance == null)
 		{
 			instance = new ContentManagerWindow(t.getDB());
-//			instance.tabPane.selectTab(1);
 			instance.albumPane.setTrack(t);
 			instance.open();
 		}
 		else
 		{
-//			instance.tabPane.selectTab(1);
 			instance.albumPane.setTrack(t);
 			instance.requestFocus();
+		}
+	}
+	
+	
+	protected void openFolder(File dir)
+	{
+		try
+		{
+			Desktop.getDesktop().open(dir);
+		}
+		catch(Exception e)
+		{
+			log.error(e);
 		}
 	}
 }

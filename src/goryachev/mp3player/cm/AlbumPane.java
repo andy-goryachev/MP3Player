@@ -38,7 +38,7 @@ import javafx.scene.paint.Color;
  */
 public class AlbumPane extends CPane
 {
-	protected static final Log log = Log.get("AlbumPane");
+	private static final Log log = Log.get("AlbumPane");
 	protected final MusicDB db;
 	protected final CoverArtLabel artField;
 	protected final TextField titleField;
@@ -330,16 +330,13 @@ public class AlbumPane extends CPane
 	protected void openDirectory()
 	{
 		File f = currentTrack.getFile().getParentFile();
-		if(Desktop.isDesktopSupported())
+		try
 		{
-			try
-			{
-				Desktop.getDesktop().open(f);
-			}
-			catch(Exception e)
-			{
-				log.error(e);
-			}
+			Desktop.getDesktop().open(f);
+		}
+		catch(Exception e)
+		{
+			log.error(e);
 		}
 	}
 	
