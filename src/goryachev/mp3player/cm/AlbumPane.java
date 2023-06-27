@@ -238,16 +238,19 @@ public class AlbumPane extends CPane
 	
 	public void updateTrackInfo(Track t)
 	{
-		disconnector.disconnect();
-		
-		currentTrack = t;
-		
-		artField.setImage(t.getCoverArt());
-		titleDisconnectable = disconnector.bindBidirectional(titleField.textProperty(), t.titleProperty());
-		disconnector.bindBidirectional(albumField.textProperty(), t.albumProperty());
-		disconnector.bindBidirectional(artistField.textProperty(), t.artistProperty());
-		disconnector.bindBidirectional(yearField.textProperty(), t.yearProperty());
-		pathField.setText(t.getFile().toString());
+		//if(currentTrack != t)
+		{
+			disconnector.disconnect();
+			
+			currentTrack = t;
+			
+			artField.setImage(t.getCoverArt());
+			titleDisconnectable = disconnector.bindBidirectional(titleField.textProperty(), t.titleProperty());
+			disconnector.bindBidirectional(albumField.textProperty(), t.albumProperty());
+			disconnector.bindBidirectional(artistField.textProperty(), t.artistProperty());
+			disconnector.bindBidirectional(yearField.textProperty(), t.yearProperty());
+			pathField.setText(t.getFile().toString());
+		}
 	}
 	
 
