@@ -9,6 +9,7 @@ import goryachev.fx.FX;
 import goryachev.fx.FxAction;
 import goryachev.fx.FxDisconnector;
 import goryachev.fx.FxMenu;
+import goryachev.fx.FxPopupMenu;
 import goryachev.fx.FxSplitMenuButton;
 import goryachev.mp3player.MainWindow;
 import goryachev.mp3player.Track;
@@ -21,6 +22,7 @@ import java.awt.Desktop;
 import java.io.File;
 import java.nio.charset.Charset;
 import java.util.List;
+import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 import javafx.geometry.Pos;
@@ -28,6 +30,7 @@ import javafx.scene.control.SelectionMode;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
+import javafx.scene.input.Clipboard;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Background;
 import javafx.scene.paint.Color;
@@ -47,7 +50,7 @@ public class AlbumPane extends CPane
 	protected final TextField yearField;
 	protected final TableView<Track> table;
 	protected final TextField pathField;
-	protected final FxAction updateAlbumAction = new FxAction(this::updateAlbum);
+	protected final FxAction copyInfoToAllTracksAction = new FxAction(this::copyInfoToAllTracks);
 	private final FxDisconnector disconnector = new FxDisconnector();
 	private IDisconnectable titleDisconnectable;
 	private Track currentTrack;
@@ -67,10 +70,22 @@ public class AlbumPane extends CPane
 		titleField = new TextField();
 		
 		albumField = new TextField();
+		createPopupMenu(albumField, (t,s) ->
+		{
+			t.setAlbum(s);
+		});
 		
 		artistField = new TextField();
+		createPopupMenu(artistField, (t,s) ->
+		{
+			t.setArtist(s);
+		});
 		
 		yearField = new TextField();
+		createPopupMenu(yearField, (t,s) ->
+		{
+			t.setYear(s);
+		});
 		
 		pathField = new TextField();
 		pathField.setEditable(false);
@@ -97,8 +112,6 @@ public class AlbumPane extends CPane
 		m.separator();
 		// other
 		m.item("Other...", this::openCharsetDialog);
-		editButton.separator();
-		editButton.item("Copy to All in Album", updateAlbumAction); // TODO with undo?
 
 		table = new TableView<>();
 		table.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
@@ -256,7 +269,7 @@ public class AlbumPane extends CPane
 	}
 
 
-	protected void updateAlbum()
+	protected void copyInfoToAllTracks()
 	{
 		String album = albumField.getText();
 		String artist = artistField.getText();
@@ -269,6 +282,72 @@ public class AlbumPane extends CPane
 			t.setArtist(artist);
 			t.setYear(year);
 		}
+	}
+	
+	
+	protected void createPopupMenu(TextField t, BiConsumer<Track,String> action)
+	{
+		boolean sel = (t.getSelection().getLength() > 0);
+		boolean clip = Clipboard.getSystemClipboard().hasString();
+		
+		FxAction undo = new FxAction(t::undo);
+		undo.setEnabled(t.isUndoable());
+		
+		FxAction redo = new FxAction(t::undo);
+		redo.setEnabled(t.isRedoable());
+		
+		FxAction cut = new FxAction(t::cut);
+		cut.setEnabled(sel);
+		
+		FxAction copy = new FxAction(t::cut);
+		copy.setEnabled(sel);
+		
+		FxAction paste = new FxAction(t::paste);
+		paste.setEnabled(clip);
+		
+		FxAction copyToAll = new FxAction(() -> {
+			String text = t.getText();
+			List<Track> ts = table.getItems();
+			for(Track track: ts)
+			{
+				action.accept(track, text);
+			}
+		});
+		
+		String dest;
+		if(t == albumField)
+		{
+			dest = "Album";
+		}
+		else if(t == artistField)
+		{
+			dest = "Artist";
+		}
+		else if(t == yearField)
+		{
+			dest = "Year";
+		}
+		else
+		{
+			dest = "??";
+		}
+		String msg = String.format("Copy %s to All Tracks", dest);
+		
+		FX.setPopupMenu(t, () ->
+		{
+			FxPopupMenu m = new FxPopupMenu();
+			m.item(msg, copyToAll);
+			m.item("Copy Album, Artist, Year to All Tracks", copyInfoToAllTracksAction);
+			m.separator();
+			m.item("Undo", undo);
+			m.item("Redo", redo);
+			m.item("Cut", cut);
+			m.item("Copy", copy);
+			m.item("Paste", paste);
+			m.separator();
+			m.item("Select All", t::selectAll);
+			return m;
+		});
 	}
 	
 	
