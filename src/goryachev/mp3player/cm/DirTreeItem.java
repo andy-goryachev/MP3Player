@@ -78,10 +78,13 @@ public class DirTreeItem extends TreeItem<File>
 
 	protected List<DirTreeItem> loadChildren()
 	{
-		CList<DirTreeItem> rv = new CList<>(files.length);
-		for(File f: files)
+		CList<DirTreeItem> rv = new CList<>();
+		if(files != null)
 		{
-			rv.add(new DirTreeItem(f));
+			for(File f: files)
+			{
+				rv.add(new DirTreeItem(f));
+			}
 		}
 		return rv;
 	}
