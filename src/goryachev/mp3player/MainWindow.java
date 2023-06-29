@@ -226,12 +226,28 @@ public class MainWindow extends FxWindow
 			case PLAYING:
 				// pause
 				player.pause();
-				playButton.setGraphic(Icons.play(false));
 				break;
 			case PAUSED:
 				// play
-				playButton.setGraphic(Icons.play(true));
 				player.play();
+				break;
+			}
+		}
+	}
+	
+
+	protected void updateStatus()
+	{
+		if(player != null)
+		{
+			MediaPlayer.Status st = player.getStatus();
+			switch(st)
+			{
+			case PLAYING:
+				playButton.setGraphic(Icons.play(true));
+				break;
+			case PAUSED:
+				playButton.setGraphic(Icons.play(false));
 				break;
 			}
 		}
@@ -427,6 +443,10 @@ public class MainWindow extends FxWindow
 		currentTrack = t;
 		p.play();
 		player = p;
+		player.statusProperty().addListener((x) ->
+		{
+			updateStatus();
+		});
 	}
 	
 	

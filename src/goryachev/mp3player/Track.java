@@ -216,7 +216,12 @@ public class Track
 	{
 		if(CKit.isNotBlank(val))
 		{
+			if(sep)
+			{
+				sb.append(", ");
+			}
 			sb.append(name);
+			sb.append("=");
 			sb.append(val);
 			return true;
 		}
@@ -229,11 +234,11 @@ public class Track
 		SB sb = new SB();
 		sb.append("{");
 		boolean sep = false;
-		sep = a(sb, "title=", getTitle(), sep);
-		sep = a(sb, "artist=", getArtist(), sep);
-		sep = a(sb, "album=", getAlbum(), sep);
-		sep = a(sb, "year=", getYear(), sep);
-		sep = a(sb, "filename=", getFileName(), sep);
+		sep = a(sb, "title", getTitle(), sep);
+		sep = a(sb, "artist", getArtist(), sep);
+		sep = a(sb, "album", getAlbum(), sep);
+		sep = a(sb, "year", getYear(), sep);
+		sep = a(sb, "filename", getFileName(), sep);
 		sb.append("}");
 		return sb.toString();
 	}
