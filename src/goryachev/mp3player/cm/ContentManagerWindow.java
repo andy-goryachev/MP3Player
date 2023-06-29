@@ -126,7 +126,10 @@ public class ContentManagerWindow extends FxWindow
 
 	protected void updateFileSystemPane()
 	{
-		FX.storeSettings(this);
+		if(isShowing())
+		{
+			FX.storeSettings(this);
+		}
 		
 		if(fileTreePane.isVisible())
 		{

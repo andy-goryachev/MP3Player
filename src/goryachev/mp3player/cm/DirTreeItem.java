@@ -13,23 +13,27 @@ import javafx.scene.control.TreeItem;
  */
 public class DirTreeItem extends TreeItem<File>
 {
-	private final File[] files;
+	private Boolean leaf;
 	
 	
 	public DirTreeItem(File f)
 	{
 		super(f);
 		
-		this.files = listFiles();
-		
-		// TODO list files here and set leaf property
-		expandedProperty().addListener((x) -> updateChildren());
+		expandedProperty().addListener((x) ->
+		{
+			updateChildren();	
+		});
 	}
 	
 	
 	public boolean isLeaf()
 	{
-		return files == null;
+		if(leaf == null)
+		{
+			leaf = (listFiles() == null);
+		}
+		return leaf;
 	}
 	
 	
@@ -48,6 +52,7 @@ public class DirTreeItem extends TreeItem<File>
 		}
 		else
 		{
+			leaf = null;
 			getChildren().clear();
 		}
 	}
@@ -79,6 +84,7 @@ public class DirTreeItem extends TreeItem<File>
 	protected List<DirTreeItem> loadChildren()
 	{
 		CList<DirTreeItem> rv = new CList<>();
+		File[] files = listFiles();
 		if(files != null)
 		{
 			for(File f: files)
