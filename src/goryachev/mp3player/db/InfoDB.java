@@ -5,6 +5,7 @@ import goryachev.common.util.CKit;
 import goryachev.common.util.CList;
 import goryachev.common.util.CMap;
 import goryachev.common.util.CSorter;
+import goryachev.common.util.SW;
 import goryachev.mp3player.Track;
 import goryachev.mp3player.util.Utils;
 import java.io.BufferedReader;
@@ -13,7 +14,6 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
-import java.io.StringWriter;
 import java.io.Writer;
 
 
@@ -71,6 +71,7 @@ public class InfoDB
 
 	public void save(File f)
 	{
+		SW sw = new SW();
 		try
 		{
 			RAlbum album = null;
@@ -78,9 +79,12 @@ public class InfoDB
 			{
 				wr.write(IDv1);
 				wr.write("\n");
-				
+
+				sw.reset();
 				CList<String> keys = entries.keys();
 				CSorter.sort(keys);
+				log.debug("size=%d, sorting %s", keys.size(), sw);
+				sw.reset();
 				
 				for(String k: keys)
 				{
@@ -99,6 +103,8 @@ public class InfoDB
 		{
 			log.error(e);
 		}
+		
+		log.debug("saving %s", sw);
 	}
 	
 

@@ -32,11 +32,11 @@ import javafx.util.Duration;
  */
 public class MusicDB
 {
-	// TODO history buffer, for prevAlbum
 	private static final Log log = Log.get("MusicDB");
 	protected static final String DATA_FILE = "tracks.dat";
 	protected static final String INFO_FILE = "info.dat";
 	protected static final String IDv1 = "F|2023.0424.2319";
+	protected static final Duration SAVE_DELAY = Duration.millis(1000);
 	protected final File root;
 	protected final File dbDir;
 	protected final CList<RTrack> tracks = new CList<>();
@@ -230,7 +230,7 @@ public class MusicDB
 		
 		if(saveTimer == null)
 		{
-			saveTimer = new FxTimer(Duration.millis(100), this::saveInfoDB);
+			saveTimer = new FxTimer(SAVE_DELAY, this::saveInfoDB);
 			saveTimer.start();
 		}
 		else

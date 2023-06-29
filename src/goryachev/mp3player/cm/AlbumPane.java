@@ -199,8 +199,6 @@ public class AlbumPane extends CPane
 		add(1, r, FX.label("Year:", Pos.CENTER_RIGHT));
 		add(2, r, yearField);
 		add(3, r, editButton);
-//		add(4, r, new FxButton("Update Album", updateAlbumAction));
-//		add(5, r, new FxButton("Update", updateAction, FxButton.AFFIRM));
 		r++;
 		r++;
 		add(0, r, 4, 1, table);

@@ -1,10 +1,13 @@
 // Copyright © 2023 Andy Goryachev <andy@goryachev.com>
 package goryachev.mp3player.cm;
+import goryachev.common.log.Log;
 import goryachev.fx.CPane;
 import goryachev.fx.FX;
 import goryachev.fx.FxPopupMenu;
 import goryachev.mp3player.Dirs;
+import java.awt.Desktop;
 import java.io.File;
+import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeView;
 import javafx.scene.control.cell.TextFieldTreeCell;
 
@@ -14,6 +17,7 @@ import javafx.scene.control.cell.TextFieldTreeCell;
  */
 public class FileTreePane extends CPane
 {
+	private static final Log log = Log.get("FileTreePane");
 	public final TreeView<File> tree;
 	
 	
@@ -68,7 +72,28 @@ public class FileTreePane extends CPane
 	protected FxPopupMenu createTreePopupMenu()
 	{
 		FxPopupMenu m = new FxPopupMenu();
-		m.item("Open Folder"); 
+		m.item("Open Folder", this::openDirectory); 
 		return m;
+	}
+	
+	
+	protected void openDirectory()
+	{
+		TreeItem<File> item = tree.getSelectionModel().getSelectedItem();
+		if(item != null)
+		{
+			File f = item.getValue();
+			if(f != null)
+			{
+				try
+				{
+					Desktop.getDesktop().open(f);
+				}
+				catch(Exception e)
+				{
+					log.error(e);
+				}
+			}
+		}
 	}
 }
