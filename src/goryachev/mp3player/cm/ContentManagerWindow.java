@@ -28,6 +28,13 @@ import javafx.scene.input.KeyEvent;
  */
 public class ContentManagerWindow extends FxWindow
 {
+	enum Page
+	{
+		ALBUM,
+		EMPTY,
+		SEARCH
+	}
+	
 	private static final Log log = Log.get("ContentManagerWindow");
 	protected final MusicDB db;
 	protected final TextField queryField;
@@ -114,12 +121,12 @@ public class ContentManagerWindow extends FxWindow
 		Track t = db.findFirstTrack(dir);
 		if(t == null)
 		{
-			mainPane.setCenter(new CPane());
+			setPage(Page.EMPTY);
 		}
 		else
 		{
 			albumPane.setTrack(t);
-			mainPane.setCenter(albumPane);
+			setPage(Page.ALBUM);
 		}
 	}
 
@@ -153,8 +160,7 @@ public class ContentManagerWindow extends FxWindow
 	{
 		if(ev.getCode() == KeyCode.ESCAPE)
 		{
-			//close();
-			mainPane.setCenter(albumPane);
+			setPage(Page.ALBUM);
 			ev.consume();
 		}
 	}
@@ -167,8 +173,8 @@ public class ContentManagerWindow extends FxWindow
 		if(ss.size() > 0)
 		{
 			List<SearchEntry> result = db.search(ss);
-			mainPane.setCenter(searchPane);
 			searchPane.setResult(result);
+			setPage(Page.SEARCH);
 		}
 	}
 	
@@ -185,11 +191,13 @@ public class ContentManagerWindow extends FxWindow
 		{
 			instance = new ContentManagerWindow(t.getDB());
 			instance.albumPane.setTrack(t);
+			instance.setPage(Page.ALBUM);
 			instance.open();
 		}
 		else
 		{
 			instance.albumPane.setTrack(t);
+			instance.setPage(Page.ALBUM);
 			instance.requestFocus();
 		}
 	}
@@ -204,6 +212,25 @@ public class ContentManagerWindow extends FxWindow
 		catch(Exception e)
 		{
 			log.error(e);
+		}
+	}
+	
+	
+	protected void setPage(Page p)
+	{
+		switch(p)
+		{
+		case ALBUM:
+			mainPane.setCenter(albumPane);
+			break;
+		case EMPTY:
+			mainPane.setCenter(new CPane());
+			break;
+		case SEARCH:
+			mainPane.setCenter(searchPane);
+			break;
+		default:
+			throw new Error("?" + p);
 		}
 	}
 }
