@@ -4,8 +4,9 @@ A simple MP3 player, a modern version of an older project.
 
 (Work in progress).
 
-![screenshot](screenshots/screenshot.png)
+![Screenshot](screenshots/screenshot.png)
 
+![Content Manager Screenshot](screenshots/content-manager.png)
 
 
 # Why
