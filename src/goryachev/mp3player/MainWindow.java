@@ -7,7 +7,6 @@ import goryachev.fx.CPane;
 import goryachev.fx.CssStyle;
 import goryachev.fx.FX;
 import goryachev.fx.FxButton;
-import goryachev.fx.FxDump;
 import goryachev.fx.FxWindow;
 import goryachev.mp3player.cm.ContentManagerWindow;
 import goryachev.mp3player.db.MusicDB;
@@ -61,7 +60,6 @@ public class MainWindow extends FxWindow
 	{
 		super("MainWindow");
 		setTitle("MP3 Player");
-		FxDump.attach(this); // FIX
 
 		artField = new CoverArtLabel();
 		artField.setId("art");

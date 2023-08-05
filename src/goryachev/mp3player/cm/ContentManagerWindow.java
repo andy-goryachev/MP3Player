@@ -10,6 +10,7 @@ import goryachev.fx.FxWindow;
 import goryachev.fx.GlobalBooleanProperty;
 import goryachev.fx.HPane;
 import goryachev.mp3player.Track;
+import goryachev.mp3player.Version;
 import goryachev.mp3player.db.MusicDB;
 import java.awt.Desktop;
 import java.io.File;
@@ -52,7 +53,7 @@ public class ContentManagerWindow extends FxWindow
 		super("ContentManagerWindow");
 		this.db = db;
 		
-		setTitle("MP3 Player - Content Manager");
+		setTitle("MP3 Player - Content Manager " + Version.VERSION);
 		setMinSize(500, 500);
 		setSize(1000, 600);
 		
