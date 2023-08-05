@@ -70,14 +70,6 @@ public class ContentManagerWindow extends FxWindow
 		
 		fileTreePane = new FileTreePane();
 		fileTreePane.visibleProperty().bind(showFileSystemProperty);
-		fileTreePane.visibleProperty().addListener((p) ->
-		{
-			updateFileSystemPane();
-		});
-		fileTreePane.tree.getSelectionModel().selectedItemProperty().addListener((s,p,c) ->
-		{
-			handleFileTreeSelection(c == null ? null : c.getValue());
-		});
 		
 		mainPane = new CPane();
 		mainPane.setCenter(albumPane);
@@ -112,7 +104,15 @@ public class ContentManagerWindow extends FxWindow
 		});
 		
 		addEventHandler(KeyEvent.KEY_PRESSED, this::handleKeyPress);
-		updateFileSystemPane();
+		FX.addChangeListener(fileTreePane.visibleProperty(), true, () ->
+		{
+			updateFileSystemPane();
+		});
+		fileTreePane.tree.getSelectionModel().selectedItemProperty().addListener((s,p,c) ->
+		{
+			handleFileTreeSelection(c == null ? null : c.getValue());
+		});
+
 	}
 
 
@@ -147,6 +147,9 @@ public class ContentManagerWindow extends FxWindow
 			SplitPane.setResizableWithParent(fileTreePane, Boolean.FALSE);
 			setCenter(sp);
 			FX.restoreSettings(this);
+			
+			File dir = albumPane.getCurrentDir();
+			fileTreePane.setDir(dir);
 		}
 		else
 		{

@@ -503,4 +503,14 @@ public class AlbumPane extends CPane
 			}
 		}
 	}
+
+
+	public File getCurrentDir()
+	{
+		if(currentTrack != null)
+		{
+			return currentTrack.getFile().getParentFile();
+		}
+		return null;
+	}
 }

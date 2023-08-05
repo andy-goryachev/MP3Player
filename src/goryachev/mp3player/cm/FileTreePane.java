@@ -104,30 +104,34 @@ public class FileTreePane extends CPane
 	{
 		if(dir != null)
 		{
-			File root = tree.getRoot().getValue();
-			String[] path = FileTools.pathToRoot(root, dir);
-			if(path != null)
+			TreeItem<File> root = tree.getRoot();
+			if(root != null)
 			{
-				TreeItem<File> item = tree.getRoot();
-				int sz = path.length;
-				for(int i=0; i<sz; i++)
+				File rootFile = root.getValue();
+				String[] path = FileTools.pathToRoot(rootFile, dir);
+				if(path != null)
 				{
-					String name = path[i];
-					item = findByName(item, name);
-					if(item == null)
+					TreeItem<File> item = root;
+					int sz = path.length;
+					for(int i=0; i<sz; i++)
 					{
-						break;
+						String name = path[i];
+						item = findByName(item, name);
+						if(item == null)
+						{
+							break;
+						}
+						item.setExpanded(true);
 					}
-					item.setExpanded(true);
-				}
-				
-				if(item != null)
-				{
-					tree.getSelectionModel().select(item);
-					int ix = tree.getRow(item);
-					if(ix >= 0)
+					
+					if(item != null)
 					{
-						tree.scrollTo(ix);
+						tree.getSelectionModel().select(item);
+						int ix = tree.getRow(item);
+						if(ix >= 0)
+						{
+							tree.scrollTo(ix);
+						}
 					}
 				}
 			}
