@@ -319,6 +319,34 @@ public class FileTools
 	}
 	
 	
+	public static String[] pathToRoot(File root, File file)
+	{
+		CList<String> list = new CList<>();
+		File f = file;
+		
+		for(;;)
+		{
+			list.add(f.getName());
+			f = f.getParentFile();
+			if(f == null)
+			{
+				// not a root
+				return null;
+			}
+			else if(root.equals(f))
+			{
+				int sz = list.size();
+				String[] ss = new String[sz];
+				for(int i=0; i<sz; i++)
+				{
+					ss[i] = list.get(sz - i - 1);
+				}
+				return ss;
+			}
+		}
+	}
+	
+	
 	/** returns an integer file length, or throws a RuntimeException if the length exceeds Integer.MAX_VALUE */
 	public static int getIntFileLength(File f)
 	{

@@ -1,12 +1,14 @@
 // Copyright © 2023 Andy Goryachev <andy@goryachev.com>
 package goryachev.mp3player.cm;
 import goryachev.common.log.Log;
+import goryachev.common.util.FileTools;
 import goryachev.fx.CPane;
 import goryachev.fx.FX;
 import goryachev.fx.FxPopupMenu;
 import goryachev.mp3player.Dirs;
 import java.awt.Desktop;
 import java.io.File;
+import java.util.List;
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeView;
 import javafx.scene.control.cell.TextFieldTreeCell;
@@ -95,5 +97,55 @@ public class FileTreePane extends CPane
 				}
 			}
 		}
+	}
+
+
+	public void setDir(File dir)
+	{
+		if(dir != null)
+		{
+			File root = tree.getRoot().getValue();
+			String[] path = FileTools.pathToRoot(root, dir);
+			if(path != null)
+			{
+				TreeItem<File> item = tree.getRoot();
+				int sz = path.length;
+				for(int i=0; i<sz; i++)
+				{
+					String name = path[i];
+					item = findByName(item, name);
+					if(item == null)
+					{
+						break;
+					}
+					item.setExpanded(true);
+				}
+				
+				if(item != null)
+				{
+					tree.getSelectionModel().select(item);
+					int ix = tree.getRow(item);
+					if(ix >= 0)
+					{
+						tree.scrollTo(ix);
+					}
+				}
+			}
+		}
+	}
+
+
+	protected TreeItem<File> findByName(TreeItem<File> item, String name)
+	{
+		List<TreeItem<File>> cs = item.getChildren();
+		for(TreeItem<File> ch: cs)
+		{
+			String nm = ch.getValue().getName();
+			if(name.equals(nm))
+			{
+				return ch;
+			}
+		}
+		return null;
 	}
 }

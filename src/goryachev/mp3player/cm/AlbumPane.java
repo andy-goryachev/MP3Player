@@ -244,10 +244,11 @@ public class AlbumPane extends CPane
 						}
 						return false;
 					},
+					indexProperty(),
 					Track.currentlyPlayingTrack()
 				);
 				
-				showPlaying.addListener((x) ->
+				FX.addChangeListener(showPlaying, true, () ->
 				{
 					boolean on = showPlaying.get();
 					FX.style(this, on, CURRENT_TRACK);

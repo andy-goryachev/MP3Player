@@ -190,16 +190,28 @@ public class ContentManagerWindow extends FxWindow
 		if(instance == null)
 		{
 			instance = new ContentManagerWindow(t.getDB());
-			instance.albumPane.setTrack(t);
-			instance.setPage(Page.ALBUM);
+			instance.setTrack(t);
 			instance.open();
 		}
 		else
 		{
-			instance.albumPane.setTrack(t);
-			instance.setPage(Page.ALBUM);
+			instance.setTrack(t);
 			instance.requestFocus();
 		}
+	}
+	
+	
+	public void setTrack(Track t)
+	{
+		albumPane.setTrack(t);
+		
+		if(t != null)
+		{
+			File dir = t.getFile().getParentFile(); 
+			fileTreePane.setDir(dir);	
+		}
+
+		setPage(Page.ALBUM);
 	}
 	
 	
