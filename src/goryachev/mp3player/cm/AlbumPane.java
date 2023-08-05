@@ -5,6 +5,7 @@ import goryachev.common.util.CKit;
 import goryachev.common.util.CList;
 import goryachev.common.util.IDisconnectable;
 import goryachev.fx.CPane;
+import goryachev.fx.CssStyle;
 import goryachev.fx.FX;
 import goryachev.fx.FxAction;
 import goryachev.fx.FxDisconnector;
@@ -25,8 +26,11 @@ import java.util.List;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
+import javafx.beans.binding.Bindings;
+import javafx.beans.binding.BooleanBinding;
 import javafx.geometry.Pos;
 import javafx.scene.control.SelectionMode;
+import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
@@ -42,6 +46,7 @@ import javafx.scene.paint.Color;
 public class AlbumPane extends CPane
 {
 	private static final Log log = Log.get("AlbumPane");
+	public static final CssStyle CURRENT_TRACK = new CssStyle("AlbumPane_CURRENT_TRACK");
 	protected final MusicDB db;
 	protected final CoverArtLabel artField;
 	protected final TextField titleField;
@@ -122,6 +127,7 @@ public class AlbumPane extends CPane
 			c.setMinWidth(30);
 			c.setMaxWidth(30);
 			c.setSortable(false);
+			c.setCellFactory(this::cellFactory);
 			c.setCellValueFactory((d) ->
 			{
 				return d.getValue().trackNumberProperty();
@@ -132,6 +138,7 @@ public class AlbumPane extends CPane
 			table.getColumns().add(c);
 			c.setPrefWidth(300);
 			c.setSortable(false);
+			c.setCellFactory(this::cellFactory);
 			c.setCellValueFactory((d) ->
 			{
 				return d.getValue().titleProperty();
@@ -142,6 +149,7 @@ public class AlbumPane extends CPane
 			table.getColumns().add(c);
 			c.setPrefWidth(200);
 			c.setSortable(false);
+			c.setCellFactory(this::cellFactory);
 			c.setCellValueFactory((d) ->
 			{
 				return d.getValue().albumProperty();
@@ -152,6 +160,7 @@ public class AlbumPane extends CPane
 			table.getColumns().add(c);
 			c.setPrefWidth(200);
 			c.setSortable(false);
+			c.setCellFactory(this::cellFactory);
 			c.setCellValueFactory((d) ->
 			{
 				return d.getValue().artistProperty();
@@ -162,6 +171,7 @@ public class AlbumPane extends CPane
 			table.getColumns().add(c);
 			c.setPrefWidth(70);
 			c.setSortable(false);
+			c.setCellFactory(this::cellFactory);
 			c.setCellValueFactory((d) ->
 			{
 				return d.getValue().yearProperty();
@@ -207,6 +217,60 @@ public class AlbumPane extends CPane
 
 		FX.addInvalidationListener(table.getSelectionModel().getSelectedItems(), true, this::handleSelection);
 		table.addEventHandler(MouseEvent.MOUSE_CLICKED, this::handleClick);
+	}
+	
+	
+	protected TableCell cellFactory(TableColumn<?,?> column)
+	{
+		return new TableCell()
+		{
+			private BooleanBinding showPlaying;
+			
+			
+			{
+				showPlaying = Bindings.createBooleanBinding
+				(
+					() ->
+					{
+						int ix = getIndex();
+						if(ix >= 0)
+						{
+							List<Track> ts = (List<Track>)column.getTableView().getItems();
+							if(ix < ts.size())
+							{
+								Track t = ts.get(ix);
+								return t.equals(Track.getCurrentlyPlayingTrack());
+							}
+						}
+						return false;
+					},
+					Track.currentlyPlayingTrack()
+				);
+				
+				showPlaying.addListener((x) ->
+				{
+					boolean on = showPlaying.get();
+					FX.style(this, on, CURRENT_TRACK);
+				});
+			}
+			
+			
+			@Override
+			protected void updateItem(Object item, boolean empty)
+			{
+				super.updateItem(item, empty);
+				
+				if(empty || item == null)
+				{
+					setText(null);
+				}
+				else
+				{
+					setText(item.toString());
+				}
+				setGraphic(null);
+			}
+		};
 	}
 	
 	

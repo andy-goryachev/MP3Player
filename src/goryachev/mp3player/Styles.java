@@ -4,6 +4,7 @@ import goryachev.fx.CommonStyles;
 import goryachev.fx.FxStyleSheet;
 import goryachev.fx.Theme;
 import goryachev.fx.internal.CssTools;
+import goryachev.mp3player.cm.AlbumPane;
 import goryachev.mp3player.util.CoverArtLabel;
 import goryachev.mp3player.util.MSlider;
 import javafx.scene.paint.Color;
@@ -80,6 +81,10 @@ public class Styles
 			    prop("-fx-background-insets", "0, 1, 2"),
 			    prop("-fx-background-radius", "0px, 0px, 0px"),
 			    prop("-fx-padding", 0)
+			),
+			selector(AlbumPane.CURRENT_TRACK).defines
+			(
+				fontWeight("bold")
 			),
 			""
 		);

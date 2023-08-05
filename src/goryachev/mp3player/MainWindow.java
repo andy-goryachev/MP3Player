@@ -55,7 +55,6 @@ public class MainWindow extends FxWindow
 	protected final FxButton nextAlbumButton;
 	protected final FxButton cmButton;
 	private MediaPlayer player;
-	private Track currentTrack;
 
 	
 	public MainWindow()
@@ -263,28 +262,28 @@ public class MainWindow extends FxWindow
 	
 	public void prevAlbum()
 	{
-		Track t = db.fromHistory(currentTrack);
+		Track t = db.fromHistory(Track.getCurrentlyPlayingTrack());
 		play(t);
 	}
 	
 	
 	public void nextAlbum()
 	{
-		Track t = db.nextAlbum(currentTrack);
+		Track t = db.nextAlbum(Track.getCurrentlyPlayingTrack());
 		play(t);
 	}
 	
 	
 	public void prevTrack()
 	{
-		Track t = db.prevTrack(currentTrack);
+		Track t = db.prevTrack(Track.getCurrentlyPlayingTrack());
 		play(t);
 	}
 	
 	
 	public void nextTrack()
 	{
-		Track t = db.nextTrack(currentTrack);
+		Track t = db.nextTrack(Track.getCurrentlyPlayingTrack());
 		play(t);
 	}
 	
@@ -367,7 +366,7 @@ public class MainWindow extends FxWindow
 	
 	protected void openContentManager()
 	{
-		ContentManagerWindow.openAlbum(currentTrack);
+		ContentManagerWindow.openAlbum(Track.getCurrentlyPlayingTrack());
 	}
 	
 	
@@ -440,7 +439,9 @@ public class MainWindow extends FxWindow
 		{
 			nextTrack();
 		});
-		currentTrack = t;
+
+		Track.setCurrentlyPlayingTrack(t);
+		
 		p.play();
 		player = p;
 		player.statusProperty().addListener((x) ->

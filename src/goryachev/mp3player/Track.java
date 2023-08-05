@@ -3,6 +3,7 @@ package goryachev.mp3player;
 import goryachev.common.util.CKit;
 import goryachev.common.util.FH;
 import goryachev.common.util.SB;
+import goryachev.fx.FxBoolean;
 import goryachev.fx.FxObject;
 import goryachev.fx.FxString;
 import goryachev.mp3player.db.MusicDB;
@@ -25,6 +26,8 @@ public class Track
 	private FxString artist;
 	private FxString year;
 	private FxObject<Integer> trackNum;
+	private FxBoolean playing;
+	private static FxObject<Track> currentlyPlaying;
 	
 	
 	public Track(MusicDB db, RTrack track)
@@ -86,7 +89,7 @@ public class Track
 	}
 	
 	
-	public FxString titleProperty()
+	public final FxString titleProperty()
 	{
 		if(title == null)
 		{
@@ -100,13 +103,13 @@ public class Track
 	}
 	
 	
-	public String getAlbum()
+	public final String getAlbum()
 	{
 		return albumProperty().get();
 	}
 	
 	
-	public void setAlbum(String s)
+	public final void setAlbum(String s)
 	{
 		albumProperty().set(s);
 	}
@@ -212,6 +215,28 @@ public class Track
 	}
 	
 	
+	public final FxBoolean playingProperty()
+	{
+		if(playing == null)
+		{
+			playing = new FxBoolean();
+		}
+		return playing;
+	}
+	
+	
+	public final boolean isPlaying()
+	{
+		return playing == null ? false : playing.get();
+	}
+	
+	
+	public final void setPlaying(boolean on)
+	{
+		playingProperty().set(on);
+	}
+	
+	
 	private static boolean a(SB sb, String name, String val, boolean sep)
 	{
 		if(CKit.isNotBlank(val))
@@ -277,5 +302,39 @@ public class Track
 		int h = FH.hash(Track.class);
 		h = FH.hash(h, getIndex());
 		return h;
+	}
+	
+	
+	public static final FxObject currentlyPlayingTrack()
+	{
+		if(currentlyPlaying == null)
+		{
+			currentlyPlaying = new FxObject<>();
+			currentlyPlaying.addListener((s,prev,curr) ->
+			{
+				if(prev != null)
+				{
+					prev.setPlaying(false);
+				}
+				
+				if(curr != null)
+				{
+					curr.setPlaying(true);
+				}
+			});
+		}
+		return currentlyPlaying;
+	}
+	
+	
+	public static final Track getCurrentlyPlayingTrack()
+	{
+		return currentlyPlaying == null ? null : currentlyPlaying.get();
+	}
+	
+	
+	public static final void setCurrentlyPlayingTrack(Track t)
+	{
+		currentlyPlayingTrack().set(t);
 	}
 }
