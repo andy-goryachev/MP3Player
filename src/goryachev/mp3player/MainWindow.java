@@ -2,6 +2,7 @@
 package goryachev.mp3player;
 import goryachev.common.log.Log;
 import goryachev.common.util.CPlatform;
+import goryachev.common.util.D;
 import goryachev.common.util.GlobalSettings;
 import goryachev.fx.CPane;
 import goryachev.fx.CssStyle;
@@ -378,7 +379,6 @@ public class MainWindow extends FxWindow
 			rescanRequired();
 			return;
 		}
-		// TODO if file not found, tell musicDB that a re-scan is required
 
 		String uri = f.toURI().toString();
 		Media media;
@@ -465,5 +465,6 @@ public class MainWindow extends FxWindow
 	protected void rescanRequired()
 	{
 		// TODO dialog? flag?
+		D.p();
 	}
 }

@@ -18,6 +18,7 @@ public class MP3PlayerApp extends Application
 	{
 		// init logging
 		Log.initConsoleForDebug();
+		Log.getRoot().info();
 		
 		File settings = new File(CPlatform.getSettingsFolder(), "MP3Player/settings.conf");
 		GlobalSettings.setFileProvider(settings);
@@ -33,11 +34,5 @@ public class MP3PlayerApp extends Application
 		MainWindow w = new MainWindow();
 		w.open();
 		w.initialize();
-	}
-
-
-	public void stop() throws Exception
-	{
-		Log.getRoot().info();
 	}
 }
