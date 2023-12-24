@@ -37,6 +37,7 @@ public class MainWindow extends FxWindow
 	public static final CssStyle BUTTON_PANE = new CssStyle("MainWindow_BUTTON_PANE");
 	public static final CssStyle MAIN_PANE = new CssStyle("MainWindow_MAIN_PANE");
 	public static final CssStyle INFO_PANE = new CssStyle("MainWindow_INFO_PANE");
+	public static final CssStyle ARMED = new CssStyle("MainWindow_ARMED");
 	protected MusicDB db;
 	protected final CoverArtLabel artField;
 	protected final Label titleField;
@@ -55,12 +56,13 @@ public class MainWindow extends FxWindow
 	protected final FxButton nextAlbumButton;
 	protected final FxButton cmButton;
 	private MediaPlayer player;
+	private boolean armed;
 
 	
 	public MainWindow()
 	{
 		super("MainWindow");
-		setTitle("MP3 Player");
+		setTitle("MP3 Player " + Version.VERSION);
 
 		artField = new CoverArtLabel();
 		artField.setId("art");
@@ -256,12 +258,21 @@ public class MainWindow extends FxWindow
 	{
 		Track t = db.randomJump();
 		play(t);
+		setArmed(true);
 	}
 	
 	
 	public void prevAlbum()
 	{
-		Track t = db.fromHistory(Track.getCurrentlyPlayingTrack());
+		Track t;
+		if(armed)
+		{
+			t = db.firstTrack(Track.getCurrentlyPlayingTrack());
+		}
+		else
+		{
+			t = db.fromHistory(Track.getCurrentlyPlayingTrack());
+		}
 		play(t);
 	}
 	
@@ -380,6 +391,8 @@ public class MainWindow extends FxWindow
 			return;
 		}
 
+		setArmed(false);
+		
 		String uri = f.toURI().toString();
 		Media media;
 		try
@@ -466,5 +479,12 @@ public class MainWindow extends FxWindow
 	{
 		// TODO dialog? flag?
 		D.p();
+	}
+	
+	
+	protected void setArmed(boolean on)
+	{
+		armed = on;
+		FX.style(prevAlbumButton, on, ARMED);
 	}
 }

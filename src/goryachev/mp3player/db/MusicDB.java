@@ -240,6 +240,13 @@ public class MusicDB
 	}
 	
 	
+	public Track firstTrack(Track t)
+	{
+		int ix = t.getNumber0();
+		return changeTrack(t, -ix);
+	}
+	
+	
 	public Track prevTrack(Track t)
 	{
 		return changeTrack(t, -1);
