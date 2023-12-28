@@ -37,7 +37,6 @@ public class MainWindow extends FxWindow
 	public static final CssStyle BUTTON_PANE = new CssStyle("MainWindow_BUTTON_PANE");
 	public static final CssStyle MAIN_PANE = new CssStyle("MainWindow_MAIN_PANE");
 	public static final CssStyle INFO_PANE = new CssStyle("MainWindow_INFO_PANE");
-	public static final CssStyle ARMED = new CssStyle("MainWindow_ARMED");
 	protected MusicDB db;
 	protected final CoverArtLabel artField;
 	protected final Label titleField;
@@ -100,7 +99,7 @@ public class MainWindow extends FxWindow
 		
 		playButton = new FxButton(Icons.play(true), this::togglePlay);
 		jumpButton = new FxButton(Icons.jump(), this::jump);
-		prevAlbumButton = new FxButton(Icons.prevAlbum(), this::prevAlbum);
+		prevAlbumButton = new FxButton(Icons.PREV_ALBUM, this::prevAlbum);
 		prevTrackButton = new FxButton(Icons.prevTrack(), this::prevTrack);
 		nextTrackButton = new FxButton(Icons.nextTrack(), this::nextTrack);
 		nextAlbumButton = new FxButton(Icons.nextAlbum(), this::nextAlbum);
@@ -411,7 +410,7 @@ public class MainWindow extends FxWindow
 		if(Icons.DEBUG)
 		{
 			jumpButton.setGraphic(Icons.jump());
-			prevAlbumButton.setGraphic(Icons.prevAlbum());
+			prevAlbumButton.setGraphic(armed ? Icons.PREV_ALBUM_ARMED : Icons.PREV_ALBUM);
 			prevTrackButton.setGraphic(Icons.prevTrack());
 			nextTrackButton.setGraphic(Icons.nextTrack());
 			nextAlbumButton.setGraphic(Icons.nextAlbum());
@@ -485,6 +484,6 @@ public class MainWindow extends FxWindow
 	protected void setArmed(boolean on)
 	{
 		armed = on;
-		FX.style(prevAlbumButton, on, ARMED);
+		prevAlbumButton.setGraphic(armed ? Icons.PREV_ALBUM_ARMED : Icons.PREV_ALBUM);
 	}
 }

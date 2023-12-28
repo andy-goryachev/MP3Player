@@ -43,10 +43,6 @@ public class Styles
 			    prop("-fx-background-radius", "3px, 2px, 0px"),
 			    prop("-fx-padding", 0)
 			),
-			selector(MainWindow.MAIN_PANE, MainWindow.ARMED).defines
-			(
-			    prop("-fx-background-color", CssTools.toColor(darkBorder) + ", " + CssTools.toColor(lightBorder) + ", " + CssTools.toColor(Color.rgb(255, 172, 172)))
-			),
 			selector(MainWindow.MAIN_PANE, ".button:hover").defines
 			(
 				prop("-fx-background-color", CssTools.toColor(darkBorder) + ", " + CssTools.toColor(lightBorder) + ", white")

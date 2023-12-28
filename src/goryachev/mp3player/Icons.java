@@ -14,9 +14,13 @@ public class Icons
 	public static final boolean DEBUG = false;
 	private static final double size = 25;
 	private static final double smSize = 20;
+	private static final Color ARMED_FILL = Color.rgb(255, 128, 128);
 	private static final Color GRAY_FILL = Color.gray(0.6);
+	private static final Color ARMED_OUTLINE = Color.rgb(192, 64, 64);
 	private static final Color GRAY_OUTLINE = Color.gray(0.3);
 	private static final Color TRANSPARENT = Color.gray(0.0, 0.0);
+	public static final IconBase PREV_ALBUM = prevAlbum(false);
+	public static final IconBase PREV_ALBUM_ARMED = prevAlbum(true);
 	
 	
 	public static IconBase play(boolean play)
@@ -90,15 +94,15 @@ public class Icons
 	}
 	
 	
-	public static IconBase prevAlbum()
+	public static IconBase prevAlbum(boolean armed)
 	{
-		return album(true);
+		return album(true, armed);
 	}
 	
 	
 	public static IconBase nextAlbum()
 	{
-		return album(false);
+		return album(false, false);
 	}
 	
 	
@@ -178,17 +182,17 @@ public class Icons
 	}
 
 	
-	private static IconBase album(boolean flip)
+	private static IconBase album(boolean flip, boolean armed)
 	{
 		double sz2 = size / 2;
 		double scale = 1.1;
 		double stroke = 1.0 / scale;		
 		
 		FxIconBuilder b = new FxIconBuilder(size, sz2, sz2);
-		b.setFill(GRAY_FILL);
+		b.setFill(armed ? ARMED_FILL : GRAY_FILL);
 		b.setStrokeWidth(stroke);
 		b.setStrokeLineCap(StrokeLineCap.ROUND);
-		b.setStrokeColor(GRAY_OUTLINE);
+		b.setStrokeColor(armed ? ARMED_OUTLINE : GRAY_OUTLINE);
 		b.setTranslate(-7, 0);
 		b.setScale(scale);
 		b.setRotateDegrees(flip ? 180 : 0);
