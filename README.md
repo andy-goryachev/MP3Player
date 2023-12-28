@@ -18,7 +18,9 @@ It's got one function that no other MP3 player has - one-click jump to a random 
 
 ## Software Requirements
 
-Requires JDK 20+ with JavaFX 20+.
+Requires JDK 21+ with JavaFX 21+.
+
+The easiest installation bundle might be [Azul JDK FX](https://www.azul.com/downloads/?version=java-21-lts&package=jdk-fx#zulu).
 
 
 
