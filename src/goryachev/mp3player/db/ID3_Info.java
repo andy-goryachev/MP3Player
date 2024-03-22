@@ -1,4 +1,4 @@
-// Copyright © 2006-2023 Andy Goryachev <andy@goryachev.com>
+// Copyright © 2006-2024 Andy Goryachev <andy@goryachev.com>
 package goryachev.mp3player.db;
 import java.io.File;
 import java.util.function.Supplier;
