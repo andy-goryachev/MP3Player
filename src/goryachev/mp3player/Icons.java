@@ -1,5 +1,6 @@
 // Copyright © 2023-2024 Andy Goryachev <andy@goryachev.com>
 package goryachev.mp3player;
+import goryachev.fx.FX;
 import goryachev.fx.FxIconBuilder;
 import goryachev.fx.IconBase;
 import javafx.scene.paint.Color;
@@ -14,10 +15,10 @@ public class Icons
 	public static final boolean DEBUG = false;
 	private static final double size = 25;
 	private static final double smSize = 20;
-	private static final Color ARMED_FILL = Color.rgb(255, 128, 128);
+	private static final Color ARMED_FILL = Color.YELLOW; //Color.rgb(255, 128, 128);
 	private static final Color GRAY_FILL = Color.gray(0.6);
-	private static final Color ARMED_OUTLINE = Color.rgb(192, 64, 64);
 	private static final Color GRAY_OUTLINE = Color.gray(0.3);
+	private static final Color ARMED_OUTLINE = FX.mix(Color.YELLOW, GRAY_OUTLINE, 0.8); //GRAY_OUTLINE; // Color.rgb(192, 64, 64);
 	private static final Color TRANSPARENT = Color.gray(0.0, 0.0);
 	public static final IconBase PREV_ALBUM = prevAlbum(false);
 	public static final IconBase PREV_ALBUM_ARMED = prevAlbum(true);
