@@ -7,6 +7,7 @@ package goryachev.fx;
  */
 public class Formatters
 {
+	// TODO should these be settable somehow?
 	private static FxDecimalFormatter integerFormatter;
 	
 	

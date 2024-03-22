@@ -91,7 +91,7 @@ public class Log
 	{
 		SimpleLogConfig c = new SimpleLogConfig();
 		c.setDefaultLogLevel(level);
-		c.addAppender(new ConsoleAppender(level, System.out));
+		c.addAppender(new ConsoleAppender(System.out));
 		setConfig(c);
 	}
 	

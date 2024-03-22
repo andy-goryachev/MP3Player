@@ -985,6 +985,18 @@ public class TextTools
 	}
 	
 	
+	public static String replace(String text, char pattern, char newPattern)
+	{
+		if(text != null)
+		{
+			SB sb = new SB(text);
+			sb.replace(pattern, newPattern);
+			return sb.toString();
+		}
+		return null;
+	}
+	
+	
 	public static String replaceIgnoreCase(String text, String pattern, String newPattern)
 	{
 		SB sb = new SB(text);

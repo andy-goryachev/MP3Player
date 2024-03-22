@@ -196,7 +196,8 @@ public class FxStyleSheet
 				}
 				else if(x != null)
 				{
-					throw new Error("?" + x);
+					sb.a(x.toString());
+					sb.a('\n');
 				}
 			}
 

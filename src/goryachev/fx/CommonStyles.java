@@ -13,9 +13,9 @@ public class CommonStyles
 	extends FxStyleSheet
 {
 	/** bold type face */
-	public static final CssStyle BOLD = new CssStyle("CommonStyles_BOLD");
+	public static final CssStyle BOLD = new CssStyle("BOLD");
 	/** disables alternative row color */
-	public static final CssStyle DISABLE_ALTERNATIVE_ROW_COLOR = new CssStyle("CommonStyles_DISABLE_ALTERNATIVE_ROW_COLOR");
+	public static final CssStyle DISABLE_ALTERNATIVE_ROW_COLOR = new CssStyle("DISABLE_ALTERNATIVE_ROW_COLOR");
 	
 //	private static String TABLE_ROW_HEIGHT = "1.8em";
 

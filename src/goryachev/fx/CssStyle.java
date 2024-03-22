@@ -6,15 +6,46 @@ import javafx.scene.Node;
 
 /**
  * CSS Style.
+ * 
+ * Usage example:
+ * <pre>
+ * public static final CssStyle EXAMPLE = new CssStyle();
+ * ...
+ * {
+ *     Pane pane = new Pane();
+ *     EXAMPLE.set(pane);
+ * }
+ * <pre>
  */
 public class CssStyle
 {
-	private final String name;
-	
-	
+	private String name;
+	private static long seq;
+
+
 	public CssStyle(String name)
 	{
-		this.name = name;
+		this.name = generateName(name);
+	}
+	
+	
+	public CssStyle()
+	{
+		this.name = generateName(null);
+	}
+	
+	
+	private static synchronized String generateName(String name)
+	{
+		if(CssLoader.dump)
+		{
+			StackTraceElement s = new Throwable().getStackTrace()[2];
+			return s.getClassName() + "-" + s.getLineNumber() + (name == null ? "" : "-" + name);
+		}
+		else
+		{
+			return "S" + (seq++); 
+		}
 	}
 	
 	
@@ -24,10 +55,9 @@ public class CssStyle
 		{
 			return true;
 		}
-		else if(x instanceof CssStyle)
+		else if(x instanceof CssStyle s)
 		{
-			CssStyle z = (CssStyle)x;
-			return name.equals(z.name);
+			return getName().equals(s.getName());
 		}
 		else
 		{
@@ -39,7 +69,7 @@ public class CssStyle
 	public int hashCode()
 	{
 		int h = FH.hash(CssStyle.class);
-		h = FH.hash(h, name);
+		h = FH.hash(h, getName());
 		return h;
 	}
 	
@@ -52,7 +82,7 @@ public class CssStyle
 	
 	public String toString()
 	{
-		return getName();
+		return name;
 	}
 	
 	
