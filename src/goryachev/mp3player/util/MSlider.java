@@ -1,4 +1,4 @@
-// Copyright © 2023 Andy Goryachev <andy@goryachev.com>
+// Copyright © 2023-2024 Andy Goryachev <andy@goryachev.com>
 package goryachev.mp3player.util;
 import goryachev.fx.CssStyle;
 import goryachev.fx.FX;
