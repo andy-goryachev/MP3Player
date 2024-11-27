@@ -254,6 +254,7 @@ public class Track
 	}
 	
 	
+	@Override
 	public String toString()
 	{
 		SB sb = new SB();
@@ -283,6 +284,7 @@ public class Track
 	}
 	
 	
+	@Override
 	public boolean equals(Object x)
 	{
 		if(x == this)
@@ -297,6 +299,7 @@ public class Track
 	}
 	
 	
+	@Override
 	public int hashCode()
 	{
 		int h = FH.hash(Track.class);

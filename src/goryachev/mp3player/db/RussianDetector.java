@@ -39,6 +39,7 @@ public class RussianDetector implements ICharsetDetector
 
 
 	/** supply more data for analysis */
+	@Override
 	public void update(byte[] bytes, int off, int len)
 	{
 		for(Stats st: stats)
@@ -56,6 +57,7 @@ public class RussianDetector implements ICharsetDetector
 	
 	
 	/** returns the best guess, or null */
+	@Override
 	public Charset guessCharset()
 	{
 		Stats best = null;
@@ -238,6 +240,7 @@ public class RussianDetector implements ICharsetDetector
 		}
 		
 		
+		@Override
 		public String toString()
 		{
 			return

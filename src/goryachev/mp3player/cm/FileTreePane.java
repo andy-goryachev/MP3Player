@@ -36,6 +36,7 @@ public class FileTreePane extends CPane
 					return getItem().getName();
 				}
 				
+				@Override
 				public void updateItem(File item, boolean empty)
 				{
 					super.updateItem(item, empty);

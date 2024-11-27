@@ -4,7 +4,10 @@ import java.nio.charset.Charset;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Formatter;
+import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
+import java.util.function.Function;
 
 
 /** An extended version of StringBuilder */
@@ -191,6 +194,7 @@ public class SB
 	}
 	
 	
+	@Override
 	public Appendable append(CharSequence cs)
 	{
 		sb.append(cs);
@@ -198,6 +202,7 @@ public class SB
 	}
 
 
+	@Override
 	public SB append(CharSequence cs, int start, int end)
 	{
 		sb.append(cs, start, end);
@@ -226,6 +231,7 @@ public class SB
 	}
 
 
+	@Override
 	public SB append(char x)
 	{
 		sb.append(x);
@@ -465,12 +471,14 @@ public class SB
 	}
 
 
+	@Override
 	public String toString()
 	{
 		return sb.toString();
 	}
 	
 	
+	@Override
 	public int length()
 	{
 		return getLength();
@@ -495,6 +503,7 @@ public class SB
 	}
 
 
+	@Override
 	public char charAt(int ix)
 	{
 		return sb.charAt(ix);
@@ -520,6 +529,7 @@ public class SB
 	}
 
 
+	@Override
 	public boolean isEmpty()
 	{
 		return sb.length() == 0;
@@ -763,6 +773,7 @@ public class SB
 	}
 
 
+	@Override
 	public CharSequence subSequence(int start, int end)
 	{
 		return sb.subSequence(start, end);
@@ -871,5 +882,129 @@ public class SB
 	public byte[] getBytes(Charset cs)
 	{
 		return toString().getBytes(cs);
+	}
+	
+
+	/**
+	 * Appends "name=value" to the buffer, with proper JSON escaping the key and the value.
+	 */
+	public SB json(Object key, Object value)
+	{
+		jsonKey(key);
+		sb.append('=');
+		jsonValue(value);
+		return this;
+	}
+	
+
+	/**
+	 * Appends the key (with proper JSON escapes) to the buffer.
+	 */
+	public SB jsonKey(Object key)
+	{
+		String s = key.toString();
+		sb.append('\"');
+		safeJson(s);
+		sb.append('\"');
+		return this;
+	}
+	
+	
+	/**
+	 * Appends the value (with proper JSON escapes) to the buffer.
+	 */
+	public SB jsonValue(Object value)
+	{
+		if(value == null)
+		{
+			sb.append("null");
+		}
+		else
+		{
+			if(value instanceof Number n)
+			{
+				if((value instanceof Float) || (value instanceof Double))
+				{
+					double v = n.doubleValue();
+					if(Math.rint(v) == v)
+					{
+						long d = n.longValue();
+						sb.append(String.valueOf(d));
+						return this;
+					}
+				}
+			}
+
+			String s = value.toString();
+			safeJson(s);
+		}
+		return this;
+	}
+	
+
+	// FIX one for each type: array, list, iterable
+	public <T> SB jsonArray(Object array, Function<T,String> toString)
+	{
+		if(array == null)
+		{
+			sb.append("null");
+		}
+		else if(array instanceof Object[] a)
+		{
+			sb.append("[");
+			for(int i=0; i<a.length; i++)
+			{
+				if(i > 0)
+				{
+					sb.append(',');
+				}
+				safeJson(a[i]);
+			}
+			sb.append("]");
+		}
+		else if(array instanceof List c)
+		{
+			sb.append("[");
+			int sz = c.size();
+			for(int i=0; i<sz; i++)
+			{
+				if(i > 0)
+				{
+					sb.append(',');
+				}
+				T v = (T)c.get(i);
+				String s = toString.apply(v);
+				safeJson(s);
+			}
+			sb.append("]");
+		}
+		else if(array instanceof Iterable iterable)
+		{
+			sb.append("[");
+			Iterator<T> it = iterable.iterator();
+			boolean sep = false;
+			while(it.hasNext())
+			{
+				if(sep)
+				{
+					sb.append(',');
+				}
+				else
+				{
+					sep = true;
+				}
+				
+				T v = it.next();
+				String s = toString.apply(v);
+				safeJson(s);
+			}
+			sb.append("]");
+		}
+		else
+		{
+			// not an array!
+			safeJson(array);
+		}
+		return this;
 	}
 }

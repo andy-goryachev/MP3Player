@@ -6,7 +6,7 @@ import java.util.TimeZone;
 
 // TODO why do I have this class?
 public class CTimeZone
-	implements HasProperty, HasDisplayName
+	implements HasProperty, HasDisplayText
 {
 	public final TimeZone tz;
 
@@ -23,21 +23,24 @@ public class CTimeZone
 	}
 
 
-	public String getDisplayName()
+	@Override
+	public String getDisplayText()
 	{
 		return tz.getDisplayName(Locale.getDefault());
 	}
 
 
+	@Override
 	public String getProperty()
 	{
 		return tz.getID();
 	}
 	
 	
+	@Override
 	public String toString()
 	{
-		return getDisplayName() + " - " + getID();
+		return getDisplayText() + " - " + getID();
 	}
 	
 	
@@ -69,6 +72,7 @@ public class CTimeZone
 	}
 	
 	
+	@Override
 	public boolean equals(Object x)
 	{
 		if(this == x)
@@ -86,6 +90,7 @@ public class CTimeZone
 	}
 	
 	
+	@Override
 	public int hashCode()
 	{
 		return CTimeZone.class.hashCode() ^ tz.hashCode();

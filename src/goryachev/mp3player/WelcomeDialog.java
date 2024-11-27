@@ -73,7 +73,7 @@ public class WelcomeDialog extends FxDialog
 		buttonPane().setPadding(0, 10, 10, 10);
 		buttonPane().fill();
 		buttonPane().addButton("Exit", this::exit);
-		buttonPane().addButton("OK", commitAction, FxButton.AFFIRM);
+		buttonPane().addButton("OK", FxButton.AFFIRM, commitAction);
 		setSize(600, 300);
 	}
 	

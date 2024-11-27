@@ -61,7 +61,7 @@ public class MainWindow extends FxWindow
 	public MainWindow()
 	{
 		super("MainWindow");
-		setTitle("MP3 Player " + Version.VERSION);
+		setTitle("MP3 Player " + MP3PlayerApp.VERSION);
 
 		artField = new CoverArtLabel();
 		artField.setId("art");
@@ -200,6 +200,8 @@ public class MainWindow extends FxWindow
 		setCenter(mp);
 		setWidth(550);
 		setResizable(false);
+		
+		FX.later(this::initialize);
 	}
 
 

@@ -5,12 +5,13 @@ import goryachev.common.util.CList;
 import goryachev.common.util.TextTools;
 import goryachev.fx.CPane;
 import goryachev.fx.FX;
+import goryachev.fx.FxFramework;
 import goryachev.fx.FxMenuBar;
 import goryachev.fx.FxWindow;
 import goryachev.fx.GlobalBooleanProperty;
 import goryachev.fx.HPane;
+import goryachev.mp3player.MP3PlayerApp;
 import goryachev.mp3player.Track;
-import goryachev.mp3player.Version;
 import goryachev.mp3player.db.MusicDB;
 import java.awt.Desktop;
 import java.io.File;
@@ -53,7 +54,7 @@ public class ContentManagerWindow extends FxWindow
 		super("ContentManagerWindow");
 		this.db = db;
 		
-		setTitle("MP3 Player - Content Manager " + Version.VERSION);
+		setTitle("MP3 Player - Content Manager " + MP3PlayerApp.VERSION);
 		setMinSize(500, 500);
 		setSize(1000, 600);
 		
@@ -136,7 +137,7 @@ public class ContentManagerWindow extends FxWindow
 	{
 		if(isShowing())
 		{
-			FX.storeSettings(this);
+			FxFramework.store(this);
 		}
 		
 		if(fileTreePane.isVisible())
@@ -147,7 +148,7 @@ public class ContentManagerWindow extends FxWindow
 			sp.setDividerPositions(0.25);
 			SplitPane.setResizableWithParent(fileTreePane, Boolean.FALSE);
 			setCenter(sp);
-			FX.restoreSettings(this);
+			FxFramework.restore(this);
 			
 			File dir = albumPane.getCurrentDir();
 			fileTreePane.setDir(dir);
@@ -155,7 +156,7 @@ public class ContentManagerWindow extends FxWindow
 		else
 		{
 			setCenter(mainPane);
-			FX.restoreSettings(this);
+			FxFramework.restore(this);
 		}
 	}
 

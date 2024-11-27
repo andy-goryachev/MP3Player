@@ -72,6 +72,7 @@ public class CollectRussianStatistics
 		}
 
 
+		@Override
 		public int compareTo(Ctr x)
 		{
 			int d = x.count - count;

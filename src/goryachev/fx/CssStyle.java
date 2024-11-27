@@ -1,6 +1,7 @@
 // Copyright © 2016-2024 Andy Goryachev <andy@goryachev.com>
 package goryachev.fx;
 import goryachev.common.util.FH;
+import goryachev.fx.internal.CssLoader;
 import javafx.scene.Node;
 
 
@@ -37,10 +38,11 @@ public class CssStyle
 	
 	private static synchronized String generateName(String name)
 	{
-		if(CssLoader.dump)
+		if(CssLoader.DUMP)
 		{
 			StackTraceElement s = new Throwable().getStackTrace()[2];
-			return s.getClassName() + "-" + s.getLineNumber() + (name == null ? "" : "-" + name);
+			String c = s.getClassName().replace('.', '_');
+			return c + "-L" + s.getLineNumber() + (name == null ? "" : "-" + name);
 		}
 		else
 		{
@@ -49,6 +51,7 @@ public class CssStyle
 	}
 	
 	
+	@Override
 	public boolean equals(Object x)
 	{
 		if(x == this)
@@ -66,6 +69,7 @@ public class CssStyle
 	}
 	
 	
+	@Override
 	public int hashCode()
 	{
 		int h = FH.hash(CssStyle.class);
@@ -80,6 +84,7 @@ public class CssStyle
 	}
 	
 	
+	@Override
 	public String toString()
 	{
 		return name;

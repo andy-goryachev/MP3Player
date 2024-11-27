@@ -1,9 +1,11 @@
 // Copyright © 2023-2024 Andy Goryachev <andy@goryachev.com>
 package goryachev.mp3player;
 import goryachev.common.log.Log;
+import goryachev.common.util.ASettingsStore;
 import goryachev.common.util.CPlatform;
 import goryachev.common.util.GlobalSettings;
-import goryachev.fx.CssLoader;
+import goryachev.fx.FxFramework;
+import goryachev.fx.settings.FxSettingsSchema;
 import java.io.File;
 import javafx.application.Application;
 import javafx.stage.Stage;
@@ -14,6 +16,10 @@ import javafx.stage.Stage;
  */
 public class MP3PlayerApp extends Application
 {
+	public static final String COPYRIGHT = "copyright © 2024 andy goryachev";
+	public static final String VERSION = "2024.1126.1605";
+
+	
 	public static void main(String[] args) 
 	{
 		// init logging
@@ -27,12 +33,25 @@ public class MP3PlayerApp extends Application
 	}
 	
 	
+	@Override
 	public void start(Stage s) throws Exception
 	{
-		CssLoader.setStyles(Styles::new);
+		FxFramework.setStyleSheet(Styles::new);
 		
-		MainWindow w = new MainWindow();
-		w.open();
-		w.initialize();
+		ASettingsStore store = GlobalSettings.instance();
+		FxFramework.openLayout(new FxSettingsSchema(store)
+		{
+			@Override
+			public Stage createDefaultWindow()
+			{
+				return new MainWindow();
+			}
+
+			@Override
+			protected Stage createWindow(String name)
+			{
+				return new MainWindow();
+			}
+		});
 	}
 }

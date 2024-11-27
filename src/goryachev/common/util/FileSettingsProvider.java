@@ -27,7 +27,8 @@ public class FileSettingsProvider
 	}
 	
 
-	public void save()
+	@Override
+	protected void saveSettings()
 	{
 		try
 		{

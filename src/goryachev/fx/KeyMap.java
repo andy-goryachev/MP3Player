@@ -16,6 +16,7 @@ import javafx.stage.Window;
  * These mappings are designed to be permanent - there is no provision for
  * removing a mapping.
  */
+@Deprecated // TODO replace with InputMap
 public class KeyMap
 {
 	public static final int SHIFT = 0x0000_0001;
@@ -290,6 +291,7 @@ public class KeyMap
 		}
 		
 		
+		@Override
 		public boolean equals(Object x)
 		{
 			if(x == this)
@@ -311,6 +313,7 @@ public class KeyMap
 		}
 		
 		
+		@Override
 		public int hashCode()
 		{
 			int h = FH.hash(KKey.class);

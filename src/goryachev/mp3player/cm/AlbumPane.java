@@ -423,12 +423,14 @@ public class AlbumPane extends CPane
 		
 		updateEncoding(() -> new ICharsetDetector()
 		{
+			@Override
 			public Charset guessCharset()
 			{
 				return cs;
 			}
 			
 			
+			@Override
 			public void update(byte[] bytes, int off, int len)
 			{
 			}

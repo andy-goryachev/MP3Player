@@ -3,6 +3,7 @@ package goryachev.fx;
 import goryachev.common.util.CList;
 import goryachev.common.util.IDisconnectable;
 import java.lang.ref.WeakReference;
+import java.util.function.Consumer;
 import javafx.beans.InvalidationListener;
 import javafx.beans.Observable;
 import javafx.beans.binding.Bindings;
@@ -45,9 +46,9 @@ public class FxDisconnector
 	public static void disconnect(Node n)
 	{
 		Object x = n.getProperties().get(KEY);
-		if(x instanceof FxDisconnector)
+		if(x instanceof FxDisconnector d)
 		{
-			((FxDisconnector)x).disconnect();
+			d.disconnect();
 		}
 	}
 	
@@ -58,6 +59,7 @@ public class FxDisconnector
 	}
 
 
+	@Override
 	public void disconnect()
 	{
 		for(int i=items.size()-1; i>=0; i--)
@@ -81,6 +83,7 @@ public class FxDisconnector
 	{
 		ChLi li = new ChLi()
 		{
+			@Override
 			public void disconnect()
 			{
 				for(ObservableValue p: props)
@@ -90,6 +93,7 @@ public class FxDisconnector
 			}
 
 			
+			@Override
 			public void changed(ObservableValue p, Object oldValue, Object newValue)
 			{
 				onChange.run();
@@ -122,6 +126,7 @@ public class FxDisconnector
 	{
 		IDisconnectable d = new IDisconnectable()
 		{
+			@Override
 			public void disconnect()
 			{
 				prop.removeListener(li);
@@ -139,6 +144,37 @@ public class FxDisconnector
 		
 		return d;
 	}
+	
+	
+	public <T> IDisconnectable addChangeListener(ObservableValue<T> p, boolean fireImmediately, Consumer<T> callback)
+	{
+		ChLi<T> li = new ChLi<>()
+		{
+			@Override
+			public void disconnect()
+			{
+				p.removeListener(this);
+			}
+
+			
+			@Override
+			public void changed(ObservableValue<? extends T> p, T oldValue, T newValue)
+			{
+				callback.accept(newValue);
+			}
+		};
+		
+		items.add(li);
+		p.addListener(li);
+		
+		if(fireImmediately)
+		{
+			T v = p.getValue();
+			callback.accept(v);
+		}
+		
+		return li;
+	}
 
 
 	public IDisconnectable addWeakChangeListener(Runnable onChange, ObservableValue<?> ... props)
@@ -153,6 +189,7 @@ public class FxDisconnector
 
 		ChLi li = new ChLi()
 		{
+			@Override
 			public void disconnect()
 			{
 				for(ObservableValue p: props)
@@ -162,6 +199,7 @@ public class FxDisconnector
 			}
 
 
+			@Override
 			public void changed(ObservableValue p, Object oldValue, Object newValue)
 			{
 				Runnable r = ref.get();
@@ -204,12 +242,14 @@ public class FxDisconnector
 
 		ChLi<T> d = new ChLi<T>()
 		{
+			@Override
 			public void disconnect()
 			{
 				prop.removeListener(this);
 			}
 
 
+			@Override
 			public void changed(ObservableValue<? extends T> p, T oldValue, T newValue)
 			{
 				ChangeListener<T> li = ref.get();
@@ -250,6 +290,7 @@ public class FxDisconnector
 	{
 		InLi li = new InLi()
 		{
+			@Override
 			public void disconnect()
 			{
 				for(ObservableValue p: props)
@@ -259,6 +300,7 @@ public class FxDisconnector
 			}
 
 
+			@Override
 			public void invalidated(Observable p)
 			{
 				onChange.run();
@@ -281,6 +323,19 @@ public class FxDisconnector
 	}
 	
 	
+	public <T> IDisconnectable addInvalidationListener(ObservableValue<T> prop, Runnable callback)
+	{
+		return addInvalidationListener(prop, false, new InvalidationListener()
+		{
+			@Override
+			public void invalidated(Observable observable)
+			{
+				callback.run();
+			}
+		});
+	}
+	
+	
 	public <T> IDisconnectable addInvalidationListener(ObservableValue<T> prop, InvalidationListener li)
 	{
 		return addInvalidationListener(prop, false, li);
@@ -291,6 +346,7 @@ public class FxDisconnector
 	{
 		IDisconnectable d = new IDisconnectable()
 		{
+			@Override
 			public void disconnect()
 			{
 				prop.removeListener(li);
@@ -321,6 +377,7 @@ public class FxDisconnector
 
 		InLi li = new InLi()
 		{
+			@Override
 			public void disconnect()
 			{
 				for(ObservableValue p: props)
@@ -330,6 +387,7 @@ public class FxDisconnector
 			}
 
 
+			@Override
 			public void invalidated(Observable p)
 			{
 				Runnable r = ref.get();
@@ -372,12 +430,14 @@ public class FxDisconnector
 
 		InLi d = new InLi()
 		{
+			@Override
 			public void disconnect()
 			{
 				prop.removeListener(this);
 			}
 
 
+			@Override
 			public void invalidated(Observable p)
 			{
 				InvalidationListener li = ref.get();
@@ -411,6 +471,7 @@ public class FxDisconnector
 	{
 		IDisconnectable d = new IDisconnectable()
 		{
+			@Override
 			public void disconnect()
 			{
 				list.removeListener(listener);
@@ -430,11 +491,13 @@ public class FxDisconnector
 
 		LiChLi<T> li = new LiChLi<T>()
 		{
+			@Override
 			public void disconnect()
 			{
 				list.removeListener(this);
 			}
 
+			@Override
 			public void onChanged(Change<? extends T> ch)
 			{
 				ListChangeListener<T> li = ref.get();
@@ -470,6 +533,7 @@ public class FxDisconnector
 		Bindings.bindBidirectional(p1, p2);
 		IDisconnectable d = new IDisconnectable()
 		{
+			@Override
 			public void disconnect()
 			{
 				Bindings.unbindBidirectional(p1, p2);

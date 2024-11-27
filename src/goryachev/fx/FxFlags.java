@@ -10,7 +10,7 @@ public class FxFlags
 	/**
 	 * To enable polling of css style sheet for changes:
 	 * <pre>
-	 * -Dcss.auto.refresh=true
+	 * -Dcss.refresh=true
 	 * </pre> 
 	 */
 	public static final String CSS_REFRESH = "css.refresh";

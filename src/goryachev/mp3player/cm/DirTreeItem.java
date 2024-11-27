@@ -27,6 +27,7 @@ public class DirTreeItem extends TreeItem<File>
 	}
 	
 	
+	@Override
 	public boolean isLeaf()
 	{
 		if(leaf == null)
@@ -37,6 +38,7 @@ public class DirTreeItem extends TreeItem<File>
 	}
 	
 	
+	@Override
 	public String toString()
 	{
 		return getValue().getName();
@@ -62,6 +64,7 @@ public class DirTreeItem extends TreeItem<File>
 	{
 		FileFilter ff = new FileFilter()
 		{
+			@Override
 			public boolean accept(File f)
 			{
 				return f.isDirectory();

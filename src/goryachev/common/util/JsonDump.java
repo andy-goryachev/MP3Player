@@ -2,6 +2,7 @@
 package goryachev.common.util;
 import java.lang.reflect.Array;
 import java.lang.reflect.Field;
+import java.lang.reflect.InaccessibleObjectException;
 import java.lang.reflect.Modifier;
 import java.util.Collection;
 import java.util.Collections;
@@ -52,6 +53,7 @@ public class JsonDump
 	{
 		return new CComparator<Item>()
 		{
+			@Override
 			public int compare(Item a, Item b)
 			{
 				return collate(a.getName(), b.getName());
@@ -347,6 +349,7 @@ public class JsonDump
 		{
 			items.add(new Item(k, (k == null ? null : k.toString()))
 			{
+				@Override
 				public String getFullyQualifiedName()
 				{
 					if(k == null)
@@ -357,6 +360,7 @@ public class JsonDump
 				}
 				
 
+				@Override
 				public Object getValue()
 				{
 					return x.get(k);
@@ -381,8 +385,14 @@ public class JsonDump
 				int m = f.getModifiers();
 				if(!Modifier.isStatic(m))
 				{
-					f.setAccessible(true);
-					fields.add(f);
+					try
+					{
+						f.setAccessible(true);
+						fields.add(f);
+					}
+					catch(InaccessibleObjectException ignore)
+					{
+					}
 				}
 			}
 			
@@ -394,12 +404,14 @@ public class JsonDump
 		{
 			items.add(new Item(f, f.getName())
 			{
+				@Override
 				public String getFullyQualifiedName()
 				{
 					return f.toString();
 				}
 				
 				
+				@Override
 				public Object getValue()
 				{
 					try

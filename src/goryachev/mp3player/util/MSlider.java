@@ -71,6 +71,7 @@ public class MSlider extends Region
 	}
 
 
+	@Override
 	protected void layoutChildren()
 	{
 		double x = thumbX();

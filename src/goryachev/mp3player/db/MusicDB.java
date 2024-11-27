@@ -137,6 +137,7 @@ public class MusicDB
 	{
 		new CComparator<RTrack>()
 		{
+			@Override
 			public int compare(RTrack a, RTrack b)
 			{
 				return compareAsStrings(a.getFileName(), b.getFileName());
@@ -527,6 +528,7 @@ public class MusicDB
 	{
 		FilenameFilter ff = new FilenameFilter()
 		{
+			@Override
 			public boolean accept(File dir, String name)
 			{
 				int ix = name.lastIndexOf('.');

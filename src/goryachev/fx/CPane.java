@@ -23,6 +23,7 @@ import javafx.scene.layout.Region;
  * CPane is like my Swing CPanel, lays out nodes with an outer border layout and an inner table layout.
  * 
  * TODO ignore unmanaged components
+ * TODO snap to pixel!
  */
 public class CPane
 	extends Pane
@@ -104,6 +105,7 @@ public class CPane
 	}
 
 
+	@Override
 	public List<CssMetaData<? extends Styleable,?>> getCssMetaData()
 	{
 		return SPF.getCssMetaData();
@@ -497,30 +499,35 @@ public class CPane
 	}
 	
 
+	@Override
 	protected double computePrefWidth(double height)
 	{
 		return new Helper().computeWidth(true);
 	}
 	
 	
+	@Override
 	protected double computePrefHeight(double width)
 	{
 		return new Helper().computeHeight(true);	
 	}
 
 
+	@Override
 	protected double computeMinWidth(double height)
 	{
 		return new Helper().computeWidth(false);
 	}
 	
 	
+	@Override
 	protected double computeMinHeight(double width)
 	{
 		return new Helper().computeHeight(false);
 	}
 	
 	
+	@Override
 	protected void layoutChildren()
 	{
 		try
@@ -1107,9 +1114,12 @@ public class CPane
 		{
 			return new Axis(cols, getHGap())
 			{
+				@Override
 				public int start(CC cc) { return cc.col; }
+				@Override
 				public int end(CC cc) { return cc.col2; }
 				
+				@Override
 				public double sizingMethod(boolean pref, Node n, double other)
 				{
 					double d = n.minWidth(other);
@@ -1120,6 +1130,7 @@ public class CPane
 					return d;
 				}
 				
+				@Override
 				public double otherDimension(Entry en, boolean doingLayout)
 				{
 					// asymmetry: horizontal layout is first, and no other dimension is available
@@ -1133,9 +1144,12 @@ public class CPane
 		{
 			return new Axis(rows, getVGap())
 			{
+				@Override
 				public int start(CC cc) { return cc.row; }
+				@Override
 				public int end(CC cc) { return cc.row2; }
 				
+				@Override
 				public double sizingMethod(boolean pref, Node n, double other)
 				{
 					double d = n.minHeight(other);
@@ -1146,6 +1160,7 @@ public class CPane
 					return d;
 				}
 				
+				@Override
 				public double otherDimension(Entry en, boolean doingLayout)
 				{
 					if(doingLayout)
