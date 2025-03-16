@@ -1,4 +1,4 @@
-// Copyright © 2023-2024 Andy Goryachev <andy@goryachev.com>
+// Copyright © 2023-2025 Andy Goryachev <andy@goryachev.com>
 package goryachev.mp3player.util;
 import goryachev.fx.CssStyle;
 import goryachev.fx.FX;
@@ -14,8 +14,8 @@ import javafx.scene.layout.Region;
  */
 public class MSlider extends Region
 {
-	public static final CssStyle TRACK = new CssStyle("MSlider_TRACK");
-	public static final CssStyle THUMB = new CssStyle("MSlider_THUMB");
+	public static final CssStyle TRACK = new CssStyle();
+	public static final CssStyle THUMB = new CssStyle();
 	private final FxDouble value = new FxDouble();
 	private final Region thumb;
 	private static final double ASPECT = 0.25;

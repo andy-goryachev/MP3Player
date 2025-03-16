@@ -1,4 +1,4 @@
-// Copyright © 2023-2024 Andy Goryachev <andy@goryachev.com>
+// Copyright © 2023-2025 Andy Goryachev <andy@goryachev.com>
 package goryachev.mp3player.cm;
 import goryachev.common.log.Log;
 import goryachev.common.util.CKit;
@@ -46,7 +46,7 @@ import javafx.scene.paint.Color;
 public class AlbumPane extends CPane
 {
 	private static final Log log = Log.get("AlbumPane");
-	public static final CssStyle CURRENT_TRACK = new CssStyle("AlbumPane_CURRENT_TRACK");
+	public static final CssStyle CURRENT_TRACK = new CssStyle();
 	protected final MusicDB db;
 	protected final CoverArtLabel artField;
 	protected final TextField titleField;

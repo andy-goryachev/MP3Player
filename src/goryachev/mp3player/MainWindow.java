@@ -1,4 +1,4 @@
-// Copyright © 2023-2024 Andy Goryachev <andy@goryachev.com>
+// Copyright © 2023-2025 Andy Goryachev <andy@goryachev.com>
 package goryachev.mp3player;
 import goryachev.common.log.Log;
 import goryachev.common.util.CPlatform;
@@ -34,9 +34,9 @@ public class MainWindow extends FxWindow
 {
 	protected static final Log log = Log.get("MainWindow");
 	protected static final String CURRENT_TRACK = "CURRENT_TRACK";
-	public static final CssStyle BUTTON_PANE = new CssStyle("MainWindow_BUTTON_PANE");
-	public static final CssStyle MAIN_PANE = new CssStyle("MainWindow_MAIN_PANE");
-	public static final CssStyle INFO_PANE = new CssStyle("MainWindow_INFO_PANE");
+	public static final CssStyle BUTTON_PANE = new CssStyle();
+	public static final CssStyle MAIN_PANE = new CssStyle();
+	public static final CssStyle INFO_PANE = new CssStyle();
 	protected MusicDB db;
 	protected final CoverArtLabel artField;
 	protected final Label titleField;

@@ -1,4 +1,4 @@
-// Copyright © 2016-2024 Andy Goryachev <andy@goryachev.com>
+// Copyright © 2016-2025 Andy Goryachev <andy@goryachev.com>
 package goryachev.fx.settings;
 import goryachev.common.log.Log;
 import goryachev.common.util.ASettingsStore;
@@ -590,7 +590,10 @@ public abstract class FxSettingsSchema
 		Boolean sel = store.getBoolean(FX_PREFIX + name);
 		if(sel != null)
 		{
-			n.setSelected(sel);
+			if(!n.selectedProperty().isBound())
+			{
+				n.setSelected(sel);
+			}
 		}
 	}
 

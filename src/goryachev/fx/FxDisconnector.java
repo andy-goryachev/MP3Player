@@ -1,4 +1,4 @@
-// Copyright © 2021-2024 Andy Goryachev <andy@goryachev.com>
+// Copyright © 2021-2025 Andy Goryachev <andy@goryachev.com>
 package goryachev.fx;
 import goryachev.common.util.CList;
 import goryachev.common.util.IDisconnectable;
@@ -12,6 +12,9 @@ import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
+import javafx.event.Event;
+import javafx.event.EventHandler;
+import javafx.event.EventType;
 import javafx.scene.Node;
 
 
@@ -519,15 +522,49 @@ public class FxDisconnector
 	}
 	
 	
-	// TODO event handlers
+	// event handlers
 	
 	
-	// TODO event filters
+	public <T extends Event> IDisconnectable addEventHandler(Node n, EventType<T> t, EventHandler<T> h)
+	{
+		EvHa<T> d = new EvHa<>(h)
+		{
+			@Override
+			public void disconnect()
+			{
+				n.removeEventHandler(t, this);
+			}
+		};
+
+		items.add(d);
+		n.addEventHandler(t, h);
+		return d;
+	}
+	
+	
+	// event filters
+	
+	
+	public <T extends Event> IDisconnectable addEventFilter(Node n, EventType<T> t, EventHandler<T> h)
+	{
+		EvHa<T> d = new EvHa<>(h)
+		{
+			@Override
+			public void disconnect()
+			{
+				n.removeEventFilter(t, this);
+			}
+		};
+
+		items.add(d);
+		n.addEventFilter(t, h);
+		return d;
+	}
 	
 	
 	// bidirectional binding
 	
-	
+
 	public <T> IDisconnectable bindBidirectional(Property<T> p1, Property<T> p2)
 	{
 		Bindings.bindBidirectional(p1, p2);
@@ -547,9 +584,27 @@ public class FxDisconnector
 	//
 	
 	
-	protected static abstract class ChLi<T> implements IDisconnectable, ChangeListener<T> { }
+	private static abstract class ChLi<T> implements IDisconnectable, ChangeListener<T> { }
 	
-	protected static abstract class InLi implements IDisconnectable, InvalidationListener { }
+	private static abstract class InLi implements IDisconnectable, InvalidationListener { }
 	
-	protected static abstract class LiChLi<T> implements IDisconnectable, ListChangeListener<T> { }
+	private static abstract class LiChLi<T> implements IDisconnectable, ListChangeListener<T> { }
+	
+	private static abstract class EvHa<T extends Event> implements IDisconnectable, EventHandler<T>
+	{
+		private final EventHandler<T> handler;
+
+		
+		public EvHa(EventHandler<T> h)
+		{
+			this.handler = h;
+		}
+
+
+		@Override
+		public void handle(T ev)
+		{
+			handler.handle(ev);
+		}
+	}
 }

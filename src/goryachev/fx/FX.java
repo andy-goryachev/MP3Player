@@ -1,4 +1,4 @@
-// Copyright © 2016-2024 Andy Goryachev <andy@goryachev.com>
+// Copyright © 2016-2025 Andy Goryachev <andy@goryachev.com>
 package goryachev.fx;
 import goryachev.common.log.Log;
 import goryachev.common.util.CKit;
@@ -307,36 +307,23 @@ public final class FX
 	
 	
 	/** adds a style to a Styleable */
+	@Deprecated // use CssStyle.set()
 	public static void style(Styleable n, CssStyle style)
 	{
-		n.getStyleClass().add(style.getName());
+		if(style != null)
+		{
+			style.set(n);
+		}
 	}
 	
 	
 	/** adds or removes the specified style, depending on the condition */
-	public static void style(Styleable n, boolean condition, CssStyle st)
+	@Deprecated // use CssStyle.set()
+	public static void style(Styleable n, boolean condition, CssStyle style)
 	{
-		if(n == null)
+		if(style != null)
 		{
-			return;
-		}
-		else if(st == null)
-		{
-			return;
-		}
-		
-		String name = st.getName();
-		ObservableList<String> ss = n.getStyleClass();
-		if(condition)
-		{
-			if(!ss.contains(name))
-			{
-				ss.add(st.getName());
-			}
-		}
-		else
-		{
-			ss.remove(name);
+			style.set(n, condition);
 		}
 	}
 	
@@ -1302,19 +1289,19 @@ public final class FX
 
 	public static void disableAlternativeRowColor(FxTable<?> table)
 	{
-		FX.style(table.table, CommonStyles.DISABLE_ALTERNATIVE_ROW_COLOR);
+		CommonStyles.DISABLE_ALTERNATIVE_ROW_COLOR.set(table.table);
 	}
 	
 	
 	public static void disableAlternativeRowColor(TableView<?> table)
 	{
-		FX.style(table, CommonStyles.DISABLE_ALTERNATIVE_ROW_COLOR);
+		CommonStyles.DISABLE_ALTERNATIVE_ROW_COLOR.set(table);
 	}
 	
 	
 	public static void disableAlternativeRowColor(ListView<?> v)
 	{
-		FX.style(v, CommonStyles.DISABLE_ALTERNATIVE_ROW_COLOR);
+		CommonStyles.DISABLE_ALTERNATIVE_ROW_COLOR.set(v);
 	}
 
 
