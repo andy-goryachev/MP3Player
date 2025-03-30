@@ -1,12 +1,13 @@
 /build/
 /out/
-/user.home*/
 /user.data*/
-~*
+/user.home*/
 /*.jar
-.settings/
 /*.log
 /*.conf
+~*
 hs_err_pid*
+.DS_Store
+/.settings/
 /test.out/
 /Private Notes.txt
