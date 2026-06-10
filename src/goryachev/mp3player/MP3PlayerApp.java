@@ -1,4 +1,4 @@
-// Copyright © 2023-2025 Andy Goryachev <andy@goryachev.com>
+// Copyright © 2023-2026 Andy Goryachev <andy@goryachev.com>
 package goryachev.mp3player;
 import goryachev.common.log.Log;
 import goryachev.common.util.ASettingsStore;
@@ -16,8 +16,8 @@ import javafx.stage.Stage;
  */
 public class MP3PlayerApp extends Application
 {
-	public static final String COPYRIGHT = "copyright © 2025 andy goryachev";
-	public static final String VERSION = "2025.0316.1325";
+	public static final String COPYRIGHT = "copyright © 2026 andy goryachev";
+	public static final String VERSION = "2026.0609.1838";
 
 	
 	public static void main(String[] args) 
