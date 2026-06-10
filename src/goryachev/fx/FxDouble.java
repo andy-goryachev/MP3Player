@@ -1,10 +1,10 @@
-// Copyright © 2019-2025 Andy Goryachev <andy@goryachev.com>
+// Copyright © 2019-2026 Andy Goryachev <andy@goryachev.com>
 package goryachev.fx;
 import javafx.beans.property.SimpleDoubleProperty;
 
 
 /**
- * Alias for SimpleLongProperty.
+ * Alias for SimpleDoubleProperty.
  */
 public class FxDouble
 	extends SimpleDoubleProperty

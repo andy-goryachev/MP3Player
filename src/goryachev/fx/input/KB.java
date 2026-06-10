@@ -1,4 +1,4 @@
-// Copyright © 2024-2025 Andy Goryachev <andy@goryachev.com>
+// Copyright © 2024-2026 Andy Goryachev <andy@goryachev.com>
 package goryachev.fx.input;
 import goryachev.common.util.CKit;
 import goryachev.common.util.CPlatform;
@@ -22,7 +22,7 @@ public class KB
 	private final EnumSet<KMod> modifiers;
 
 
-	private KB(Object key, EnumSet<KMod> modifiers)
+	KB(Object key, EnumSet<KMod> modifiers)
 	{
 		this.key = key;
 		this.modifiers = modifiers;

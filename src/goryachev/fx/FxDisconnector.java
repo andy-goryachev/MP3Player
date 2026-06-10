@@ -1,4 +1,4 @@
-// Copyright © 2021-2025 Andy Goryachev <andy@goryachev.com>
+// Copyright © 2021-2026 Andy Goryachev <andy@goryachev.com>
 package goryachev.fx;
 import goryachev.common.util.CList;
 import goryachev.common.util.IDisconnectable;
@@ -584,11 +584,11 @@ public class FxDisconnector
 	//
 	
 	
-	private static abstract class ChLi<T> implements IDisconnectable, ChangeListener<T> { }
+	static abstract class ChLi<T> implements IDisconnectable, ChangeListener<T> { }
 	
-	private static abstract class InLi implements IDisconnectable, InvalidationListener { }
+	static abstract class InLi implements IDisconnectable, InvalidationListener { }
 	
-	private static abstract class LiChLi<T> implements IDisconnectable, ListChangeListener<T> { }
+	static abstract class LiChLi<T> implements IDisconnectable, ListChangeListener<T> { }
 	
 	private static abstract class EvHa<T extends Event> implements IDisconnectable, EventHandler<T>
 	{
