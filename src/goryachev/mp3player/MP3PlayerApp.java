@@ -17,7 +17,7 @@ import javafx.stage.Stage;
 public class MP3PlayerApp extends Application
 {
 	public static final String COPYRIGHT = "copyright © 2025 andy goryachev";
-	public static final String VERSION = "2025.0316.1325";
+	public static final String VERSION = "2025.0330.1416";
 
 	
 	public static void main(String[] args) 

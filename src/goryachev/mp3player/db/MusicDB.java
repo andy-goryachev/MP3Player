@@ -10,6 +10,7 @@ import goryachev.fx.FxTimer;
 import goryachev.mp3player.Track;
 import goryachev.mp3player.cm.SearchEntry;
 import goryachev.mp3player.util.Utils;
+import goryachev.tools.randomjump.RandomJumpManager;
 import java.io.BufferedInputStream;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -41,19 +42,18 @@ public class MusicDB
 	protected final File dbDir;
 	protected final CList<RTrack> tracks = new CList<>();
 	protected final SmallImageCache imageCache = new SmallImageCache(8);
-	protected final SecureRandom random;
 	protected final CMap<Integer,WeakReference<Track>> cache = new CMap<>();
-	protected final History history = new History(32);
 	private InfoDB infoDB;
 	private FxTimer saveTimer;
+	private RandomJumpManager rjump;
 	
 	
 	public MusicDB(File musicDir, File dbDir)
 	{
 		this.root = musicDir;
 		this.dbDir = dbDir;
-		this.random = new SecureRandom();
 		this.infoDB = new InfoDB();
+		this.rjump = new RandomJumpManager(new SecureRandom(), infoDB.size());
 	}
 	
 	
@@ -194,7 +194,7 @@ public class MusicDB
 	
 	public Track randomJump()
 	{
-		int ix = random.nextInt(trackCount());
+		int ix = rjump.jump();
 		Track t = getTrack(ix);
 		return t;
 	}
@@ -274,10 +274,9 @@ public class MusicDB
 	}
 	
 	
-	/** from history, or previous album? */
 	public Track fromHistory(Track t)
 	{
-		int ix = history.previous();
+		int ix = rjump.backward();
 		if(ix < 0)
 		{
 			return prevAlbum(t);
@@ -497,7 +496,7 @@ public class MusicDB
 	
 	public void addToHistory(Track t)
 	{
-		history.add(t.getIndex());
+		rjump.addToHistory(t.getIndex());
 	}
 
 
