@@ -7,18 +7,18 @@ import java.nio.charset.Charset;
 
 
 /**
- * Russian Charset Detector.
+ * Cyrillic Charset Detector.
  */
-public class RussianDetector implements ICharsetDetector
+public class CyrillicDetector implements ICharsetDetector
 {
-	private static final Log log = Log.get("RussianDetector");
+	private static final Log log = Log.get("CyrillicDetector");
 	private static final CSet<String> illegal = initIllegal();
 	private static final CSet<String> frequent = initFrequent();
 	private static final String ALPHABET = "абвгдеёжзийклмнопрстуфхцчшщъыьэюя";
 	private Stats[] stats;
 	
 	
-	public RussianDetector()
+	public CyrillicDetector()
 	{
 		Charset[] charsets = new Charset[]
 		{

@@ -8,9 +8,9 @@ import java.nio.charset.Charset;
 
 
 /**
- * Tests RussianDetector.
+ * Tests CyrillicDetector.
  */
-public class TestRussianDetector
+public class TestCyrillicDetector
 {
 	public static void main(String[] args) throws Exception
 	{
@@ -34,7 +34,7 @@ public class TestRussianDetector
 	protected void t(String input, String expected)
 	{
 		byte[] b = input.getBytes(CKit.CHARSET_8859_1);
-		RussianDetector d = new RussianDetector();
+		CyrillicDetector d = new CyrillicDetector();
 		d.update(b, 0, b.length);
 		Charset cs = d.guessCharset();
 		D.print(cs);

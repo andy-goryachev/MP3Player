@@ -29,7 +29,7 @@ public class TestID3_Info
 	
 	protected void t(String file)
 	{
-		ID3_Info d = ID3_Info.parseID3(new File(file), () -> new RussianDetector());
+		ID3_Info d = ID3_Info.parseID3(new File(file), () -> new CyrillicDetector());
 		D.print(d);
 	}
 }

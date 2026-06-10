@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Copyright © 2016-2025 Andy Goryachev <andy@goryachev.com> -->
+<!-- Copyright © 2016-2026 Andy Goryachev <andy@goryachev.com> -->
 
 
 <project default="build-all" basedir=".">
@@ -36,8 +36,8 @@
 			fork="true"
 			nowarn="true"
 			optimize="false"
-			source="23"
-			target="23"
+			source="26"
+			target="26"
 			includeantruntime="false"
 		>
 			<compilerarg value="-Xlint:none"/>

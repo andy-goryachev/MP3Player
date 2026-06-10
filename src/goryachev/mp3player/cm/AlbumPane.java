@@ -17,7 +17,7 @@ import goryachev.mp3player.Track;
 import goryachev.mp3player.db.ICharsetDetector;
 import goryachev.mp3player.db.ID3_Info;
 import goryachev.mp3player.db.MusicDB;
-import goryachev.mp3player.db.RussianDetector;
+import goryachev.mp3player.db.CyrillicDetector;
 import goryachev.mp3player.util.CoverArtLabel;
 import java.awt.Desktop;
 import java.io.File;
@@ -100,7 +100,7 @@ public class AlbumPane extends CPane
 		editButton.item("Open Directory", this::openDirectory);
 		editButton.item("Add Cover Art"); // TODO
 		editButton.separator();
-		editButton.item("Autocorrect: Russian", () -> updateEncoding(() -> new RussianDetector()));
+		editButton.item("Autocorrect: Russian", () -> updateEncoding(() -> new CyrillicDetector()));
 		editButton.item("Autocorrect: Japanese", () -> updateEncoding("x-JISAutoDetect"));
 		FxMenu m = editButton.menu("Encoding");
 		m.separator();

@@ -10,9 +10,9 @@ import java.io.File;
 
 
 /**
- * Collects Russian Statistics.
+ * Collects Cyrillic Statistics.
  */
-public class CollectRussianStatistics
+public class CollectCyrillicStatistics
 {
 	// https://yadro-servis.ru/blog/nevosmosnoe-sochetanie-bukv/
 	// low frequency:

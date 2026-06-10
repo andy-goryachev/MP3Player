@@ -82,7 +82,7 @@ public class TestScan
 	
 	protected static RTrack createTrack(File f)
 	{
-		ID3_Info t = ID3_Info.parseID3(f, () -> new RussianDetector());
+		ID3_Info t = ID3_Info.parseID3(f, () -> new CyrillicDetector());
 		
 		String title;
 		String artist;
