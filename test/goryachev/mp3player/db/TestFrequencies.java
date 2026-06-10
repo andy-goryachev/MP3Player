@@ -95,7 +95,7 @@ public class TestFrequencies
 		
 		protected int index(int prev, int next)
 		{
-			return  (prev & 0xff) + ((next & 0xff) << 8);
+			return (prev & 0xff) + ((next & 0xff) << 8);
 		}
 
 		
