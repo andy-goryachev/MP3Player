@@ -1,10 +1,10 @@
-// Copyright © 2012-2025 Andy Goryachev <andy@goryachev.com>
+// Copyright © 2012-2026 Andy Goryachev <andy@goryachev.com>
 package goryachev.common.util;
 import java.util.function.Consumer;
 
 
 /**
- * Synchronized List of WeakListeners.
+ * Synchronized WeakList.
  */
 public class WeakVector<T>
 	extends WeakList<T>

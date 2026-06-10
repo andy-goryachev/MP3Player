@@ -1,10 +1,11 @@
-// Copyright © 2017-2025 Andy Goryachev <andy@goryachev.com>
+// Copyright © 2017-2026 Andy Goryachev <andy@goryachev.com>
 package goryachev.common.log;
 import goryachev.common.log.internal.ConsoleAppender;
 import goryachev.common.util.CKit;
 import goryachev.common.util.CMap;
 import goryachev.common.util.CSet;
 import goryachev.common.util.SB;
+import java.text.MessageFormat;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.function.Supplier;
@@ -396,11 +397,11 @@ public class Log
 	}
 	
 	
-	protected static String format(String fmt, Object[] args)
+	private static String format(String fmt, Object[] args)
 	{
 		try
 		{
-			return String.format(fmt, args);
+			return MessageFormat.format(fmt, args);
 		}
 		catch(Throwable e)
 		{

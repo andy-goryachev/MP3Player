@@ -1,4 +1,4 @@
-// Copyright © 2016-2025 Andy Goryachev <andy@goryachev.com>
+// Copyright © 2016-2026 Andy Goryachev <andy@goryachev.com>
 package goryachev.fx;
 import goryachev.common.log.Log;
 import goryachev.common.util.CKit;
@@ -425,6 +425,7 @@ public final class FX
 				}
 				else if(a instanceof String s)
 				{
+					// eh? this is a bad idea, just add a style
 					if(n instanceof Labeled c)
 					{
 						c.setText(s);
@@ -2365,10 +2366,20 @@ public final class FX
 				@Override
 				public Object fromString(String s)
 				{
-					throw new Error("not supported");
+					return null;
 				}
 			};
 		}
 		return converter;
+	}
+
+
+	public static List<CssMetaData<? extends Styleable,?>> createStyleables(List<CssMetaData<? extends Styleable,?>> classCssMetaData, CssMetaData<?,?> ... props)
+	{
+		int sz = classCssMetaData.size() + props.length;
+		CList<CssMetaData<? extends Styleable,?>> ss = new CList<>(sz);
+		ss.addAll(classCssMetaData);
+		ss.addAll(props);
+		return Collections.unmodifiableList(ss);
 	}
 }

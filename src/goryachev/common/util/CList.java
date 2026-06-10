@@ -1,4 +1,4 @@
-// Copyright © 2007-2025 Andy Goryachev <andy@goryachev.com>
+// Copyright © 2007-2026 Andy Goryachev <andy@goryachev.com>
 package goryachev.common.util;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -98,17 +98,16 @@ public class CList<T>
 		{
 			return true;
 		}
-		else if(x instanceof CList)
+		else if(x instanceof List list)
 		{
-			CList o = (CList)x;
 			// adding check for size makes it slightly faster than the superclass implementation
 			// in case of different lists
-			if(size() == o.size())
+			if(size() == list.size())
 			{
 				int sz = size();
 				for(int i=0; i<sz; i++)
 				{
-					if(CKit.notEquals(get(i), o.get(i)))
+					if(CKit.notEquals(get(i), list.get(i)))
 					{
 						return false;
 					}

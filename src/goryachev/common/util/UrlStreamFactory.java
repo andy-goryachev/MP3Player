@@ -1,4 +1,4 @@
-// Copyright © 2016-2025 Andy Goryachev <andy@goryachev.com>
+// Copyright © 2016-2026 Andy Goryachev <andy@goryachev.com>
 package goryachev.common.util;
 import java.net.URL;
 import java.net.URLStreamHandler;
@@ -9,6 +9,7 @@ import java.util.Locale;
 /**
  * Global Url Stream Factory simplifies plugging in multiple custom URLStreamHandlers.
  */
+@Deprecated // not needed since we have data URLs now
 public class UrlStreamFactory
 {
 	private static CMap<String,URLStreamHandler> handlers;

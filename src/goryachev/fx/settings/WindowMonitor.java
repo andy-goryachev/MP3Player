@@ -1,4 +1,4 @@
-// Copyright © 2024-2025 Andy Goryachev <andy@goryachev.com>
+// Copyright © 2024-2026 Andy Goryachev <andy@goryachev.com>
 package goryachev.fx.settings;
 import goryachev.common.log.Log;
 import goryachev.common.util.CList;
@@ -6,13 +6,13 @@ import goryachev.common.util.CSet;
 import goryachev.fx.ClosingWindowOperation;
 import goryachev.fx.FX;
 import goryachev.fx.FxFramework;
-import goryachev.fx.FxObject;
 import goryachev.fx.ShutdownChoice;
 import goryachev.fx.internal.CssLoader;
 import goryachev.fx.util.FxTools;
 import java.util.List;
 import javafx.application.Platform;
 import javafx.beans.property.ReadOnlyObjectProperty;
+import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.beans.value.ChangeListener;
 import javafx.event.EventHandler;
 import javafx.scene.Node;
@@ -38,9 +38,9 @@ public class WindowMonitor
 	private static final Object PROP_NON_ESSENTIAL = new Object();
 	/** in reverse order: top window is last */
 	private static final CList<Window> stack = new CList<>();
-	private final static FxObject<Node> lastFocusOwner = new FxObject<>();
-	private static boolean exiting;
-	private static ShutdownChoice shutdownChoice;
+	private final static ReadOnlyObjectWrapper<Node> lastFocusOwner = new ReadOnlyObjectWrapper<>();
+	static boolean exiting;
+	static ShutdownChoice shutdownChoice;
 	
 	static { init(); }
 	
@@ -172,7 +172,7 @@ public class WindowMonitor
 					{
 						if(!isIgnore(w))
 						{
-							log.debug("added: %s", w);
+							log.debug("added: {0}", w);
 							FxFramework.restore(w);
 							applyStyleSheet(w);
 						}
@@ -184,7 +184,7 @@ public class WindowMonitor
 					{
 						if(!isIgnore(w))
 						{
-							log.debug("removed: %s", w);
+							log.debug("removed: {0}", w);
 							// the only problem here is that window is already hidden - does it matter?
 							// if it does, need to listen to WindowEvent.WINDOW_HIDING event
 							FxFramework.store(w);
@@ -508,7 +508,7 @@ public class WindowMonitor
 	}
 	
 	
-	private static int countEssentialWindows(Object caller)
+	static int countEssentialWindows(Object caller)
 	{
 		int count = 0;
 		for(Window w: stack)
@@ -542,7 +542,7 @@ public class WindowMonitor
 	}
 	
 	
-	private static void doExit()
+	static void doExit()
 	{
 		Platform.exit();
 		System.exit(0);
